@@ -65,7 +65,7 @@
 		VALUES(seq_bid.currval, #{moim.moimCategory}, #{moim.moimStart}, #{moim.moimEnd}, #{moim.local}, default)
 		<foreach collection="list" item="item" separator=" " >
 			INTO ATTACHMENT
-			VALUES(seq_fid.nextval, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, 4, seq_bid.currval,'Y')
+			VALUES(new_fid, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, 4, seq_bid.currval,'Y')
 		</foreach>
     	select * from dual
 	</insert>
