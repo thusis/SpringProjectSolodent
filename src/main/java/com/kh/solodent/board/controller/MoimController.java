@@ -47,7 +47,7 @@ public class MoimController {
 		/*******************************************/
 		
 		int currentPage = 1;
-		
+		System.out.println("1");
 		if(page!=null) {
 			currentPage = page;
 		}
