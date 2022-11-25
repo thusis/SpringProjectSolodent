@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="moimMapper">
+
+	<select id="getListCount" resultType="_int">
+		select count(*)
+		from board where board_code = 4
+	</select>
+
+	<select id="selectMoimList" resultMap="moimResultSet">
+		select * 
+		from board 
+		join board_group using (board_id)
+		join member using (user_id)
+		where board.status='Y' and board_code=4
+		order by board_id desc
+	</select>
+	
+	<resultMap type="Moim" id="moimResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="IS_NOTICE" property="isNotice"/>
+		<result column="BOARD_COUNT" property="boardCount"/>
+		<result column="STATUS" property="boardStatus"/>
+		<result column="GROUP_CATE" property="moimCategory"/>
+		<result column="GROUP_START" property="moimStart"/>
+		<result column="GROUP_END" property="moimEnd"/>
+		<result column="LOCAL" property="local"/>
+		<result column="STATUS_1" property="moimStatus"/>
+		<result column="NICKNAME" property="moimWriter"/>
+	</resultMap>
+	
+<!-- 	썸네일만가져오기 -->
+	<select id="selectMoimAttm" resultMap="attachmentResultSet">
+		select * from attachment
+		join board_group using (board_id)
+		where board_id in (
+		<foreach collection="list" item="item" separator=", ">
+			#{item.boardId}
+		</foreach>
+		) and is_thum='Y'
+	</select>
+	
+	<resultMap type="Attachment" id="attachmentResultSet">
+		<id column="file_id" property="fileId"/>
+		<result column="upload_date" property="uploadDate"/>
+		<result column="rawfile_name" property="rawname"/>
+		<result column="editfile_name" property="rename"/>
+		<result column="file_route" property="fileRoute"/>
+		<result column="board_code" property="boardCode"/>
+		<result column="board_id" property="boardId"/>
+		<result column="is_thum" property="isThum"/>
+	</resultMap>
+	
+	<insert id="insertMoim" parameterType="java.util.Map">
+		INSERT ALL 
+		
+		INTO BOARD
+		VALUES(seq_bid.nextval, 4, #{moim.boardTitle}, #{moim.boardContent}, #{moim.userId}, sysdate, sysdate, 'N', 0, 'Y')
+		INTO BOARD_GROUP
+		VALUES(seq_bid.currval, #{moim.moimCategory}, #{moim.moimStart}, #{moim.moimEnd}, #{moim.local}, default)
+		<foreach collection="list" item="item" separator=" " >
+			INTO ATTACHMENT
+			VALUES(seq_fid.nextval, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, 4, seq_bid.currval,'Y')
+		</foreach>
+    	select * from dual
+	</insert>
+	
+	<update id="addCount">
+		UPDATE BOARD
+		SET BOARD_COUNT = BOARD_COUNT+1
+		WHERE BOARD_ID = #{boardId}
+	</update>
+	
+	<select id="selectMoim" resultMap="moimResultSet">
+		SELECT *
+		FROM BOARD
+		JOIN MEMBER USING (USER_ID)
+		JOIN BOARD_GROUP USING (BOARD_ID)
+		WHERE BOARD.STATUS='Y' AND BOARD_ID=#{boardId}
+	</select>
+
+	<select id="selectAttmList" resultMap="attachmentResultSet">
+		SELECT *
+		FROM ATTACHMENT
+		WHERE BOARD_ID=#{boardId}
+	</select>
+	
+
+	
+</mapper>

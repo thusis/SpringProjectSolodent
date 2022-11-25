@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="freeMapper">
+	
+	<resultMap type="Board" id="freeResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="IS_NOTICE" property="isNotice"/>
+		<result column="BOARD_COUNT" property="boardCount"/>
+		<result column="STATUS" property="boardStatus"/>
+		<result column="GROUP_CATE" property="moimCategory"/>
+		<result column="GROUP_START" property="moimStart"/>
+		<result column="GROUP_END" property="moimEnd"/>
+		<result column="LOCAL" property="local"/>
+		<result column="STATUS_1" property="moimStatus"/>
+		<result column= "IS_NOTICE" property="isNotice"/>
+	</resultMap>
+	
+	 <select id="selectNoTice" resultMap="freeResultSet">
+  	select BOARD_TITLE
+  	from board
+  	where IS_NOTICE = 'Y'
+  		  and STATUS = 'Y'
+  		  and BOARD_CODE = 1
+  	</select>
+  </mapper>

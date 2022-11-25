@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="boardMapper">
+	<resultMap type="Board" id="boardResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<result column="BOARD_CODE" property="boardCode"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="IS_NOTICE" property="isNotice"/>
+		<result column="BOARD_COUNT" property="boardCount"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	
+	<resultMap type="Attachment" id="attmResultSet">
+		<id column="FILE_ID" property="fileId"/>
+		<result column="UPLOAD_DATE" property="uploadDate"/>
+		<result column="RAWFILE_NAME" property="rawname"/>
+		<result column="EDITFILE_NAME" property="rename"/>
+		<result column="FILE_ROUTE" property="fileRoute"/>
+		<result column="BOARD_CODE" property="boardCode"/>
+		<result column="BOARD_ID" property="boardId"/>
+		<result column="IS_THUM" property="isThum"/>
+	</resultMap>
+	
+	<resultMap type="Used" id="usedResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<result column="PRODUCT_CATE" property="productCate"/>
+		<result column="LOCAL" property="local"/>
+		<result column="STATUS" property="status"/>
+		<result column="PRICE" property="price"/>
+	</resultMap>
+	
+	<resultMap type="Like" id="likeResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<id column="USER_ID" property="userId"/>
+	</resultMap>
+	
+	<insert id="insertBoard">
+		insert into board values(seq_bid.nextval, #{boardCode}, #{boardTitle}, #{boardContent}, #{userId},
+													sysdate, sysdate, default, default, default)
+	</insert>
+	
+	<insert id="insertAttm">
+		insert all
+		<foreach collection="list" item="item">
+		 into attachment 
+		 values(new_fid, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, #{item.boardCode}, 
+		<if test="item.boardId != 0">
+			#{item.boardId},
+		</if>
+		<if test="item.boardId == 0">
+			 seq_bid.currval, 
+		</if>
+		 #{item.isThum})
+		</foreach>
+		select * from dual
+	</insert>
+	
+	<insert id="insertUsed">
+		insert into board_used
+		values(seq_bid.currval, #{productCate}, #{local}, default, #{price})
+	</insert>
+	
+	<select id="selectUsedList" resultMap="boardResultSet">
+		select * from board where board_code = #{i} and status = 'Y'
+		order by board_id desc
+	</select>
+	
+	<select id="selectUsedDetailList" resultMap="usedResultSet">
+		select * from board_used where status = 'Y' order by board_id desc
+	</select>
+	
+	<select id="selectAttmList" resultMap="attmResultSet">
+		select * from attachment where
+		<if test="bId == null">
+			is_thum = 'Y'
+		</if>
+		<if test="bId != null">
+			board_id = #{bId}
+		</if>
+		order by file_id asc
+	</select>
+	
+	<update id="addCount">
+		update board set board_count = board_count + 1 where board_id = #{bId}
+	</update>
+	
+	<select id="selectBoard" resultMap="boardResultSet">
+		select * from board where board_id = #{bId}
+	</select>
+	
+	<select id="selectUsed" resultMap="usedResultSet">
+		select * from board_used where board_id = #{bId}
+	</select>
+	
+	<select id="isLike" resultType="_int">
+		select count(*) from board_like where board_id = #{boardId} and user_id = #{userId}
+	</select>
+	
+	<insert id="addLike">
+		insert into board_like values(#{ userId }, #{ boardId })
+	</insert>
+	
+	<delete id="deleteLike">
+		delete from board_like where user_id = #{userId} and board_id = #{boardId}
+	</delete>
+	
+	<select id="selectLikeCount" resultType="_int">
+		select count(*) from board_like where board_id = #{boardId}
+	</select>
+	
+	<update id="deleteBoard">
+		update board set status = 'N' where board_id = #{boardId}
+	</update>
+	
+	<update id="deleteUsed">
+		update board_used set status = 'N' where board_id = #{boardId}
+	</update>
+	
+	<select id="searchUsed" resultMap="boardResultSet">
+		select * from board join board_used using(board_id) where
+		<if test="local != null">
+			local = #{local}
+			<if test="category != null">
+				and product_cate = #{category}
+				<if test="word != null">
+					<if test="searchWhere == 'boardContent'">
+						and board_content like '%' || #{word} || '%'
+					</if>
+					<if test="searchWhere == 'boardTitle'">
+						and board_title like '%' || #{word} || '%'
+					</if>
+				</if>
+			</if>
+			<if test="category == null">
+				<if test="word != null">
+					<if test="searchWhere == 'boardContent'">
+						and board_content like '%' || #{word} || '%'
+					</if>
+					<if test="searchWhere == 'boardTitle'">
+						and board_title like '%' || #{word} || '%'
+					</if>
+				</if>
+			</if>
+		</if>
+		<if test="local == null">
+			<if test="category != null">
+				product_cate = #{category}
+				<if test="word != null">
+					<if test="searchWhere == 'boardContent'" >
+						and board_content like '%' || #{word} || '%'
+					</if>
+					<if test="searchWhere == 'boardTitle'">
+						and board_title like '%' || #{word} || '%'
+					</if>
+				</if>
+			</if>
+			<if test="category == null">
+				<if test="word != null">
+					<if test="searchWhere == 'boardContent'">
+						 board_content like '%' || #{word} || '%'
+					</if>
+					<if test="searchWhere == 'boardTitle'">
+						 board_title like '%' || #{word} || '%'
+					</if>
+				</if>
+			</if>
+		</if>
+	</select>
+	
+	<delete id="deleteAttm">
+		delete from attachment
+		where editfile_name in
+		<foreach collection="list" open="(" close=")" item="item" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="updateIsThum">
+		update attachment set
+		is_thum = 'Y' where file_id = (select min(file_id) from attachment where board_id = #{boardId})
+	</update>
+	
+	<update id="updateBoard">
+		update board set board_title = #{boardTitle}, board_content = #{boardContent}, modify_date = sysdate
+		where board_id = #{boardId}
+	</update>
+	
+	<update id="updateUsed">
+		update board_used set product_cate = #{productCate}, local = #{local}, price = #{price} where board_id = #{boardId}
+	</update>
+</mapper>

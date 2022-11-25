@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memberMapper">
+
+	<!--  로그인  -->
+  <select id="login" resultMap="memberResultSet">
+  	select *
+  	from member
+  	where user_id=#{id}
+  		  and STATUS = 'Y'
+  	</select>
+  	<resultMap type="Member" id="memberResultSet">
+  		<id column="USER_ID" property="id"/>
+  		<result column="USER_NAME" property="name"/>
+  		<result column="PASSWORD" property="pwd"/>
+  		<result column="NICKNAME" property="nickName"/>
+  		<result column="EMAIL" property="email"/>
+  		<result column="PHONE" property="phone"/>
+  		<result column="ADDRESS" property="address"/>
+  		<result column="GENDER" property="gender"/>
+  		<result column="BIRTHDATE" property="birthDate"/>
+  		<result column="STATUS" property="status"/>
+  		<result column="IS_MANAGER" property="isManager"/>
+  		<result column="ENROLL_DATE" property="enrollDate"/>
+  		<result column="USER_RATE" property="rate"/>
+  	</resultMap>
+  	
+  	<insert id="insertMember">
+  	insert into member
+  	values(#{id}, #{name}, #{pwd}, #{nickName}, #{email}, #{phone}, #{address},#{gender}, #{birthDate}, default, default, sysdate, default)
+  </insert>
+  <select id="checkNickName" resultType="_int">
+  	select count(*)
+  	from member
+  	where nickName=#{nickName}
+  		 
+  	</select>
+  	
+  	<select id="checkId" resultType="_int">
+  	select count(*)
+  	from member
+  	where USER_ID=#{id}
+  		 
+  	</select>
+  	<update id="updateMember">
+  		update member
+  		set PASSWORD=#{pwd} , NICKNAME=#{nickName}, phone=#{phone}, address=#{address}
+  		WHERE USER_ID = #{id}
+  	</update>
+  	
+  	<select id="selectMyList" resultType="map">
+  	select b.BOARD_ID, BOARD_TITLE, CREATE_DATE, BOARD_COUNT
+		from BOARD_SCRAP b
+		    join board A on b.BOARD_ID = a.BOARD_ID
+		    join member m on b.USER_ID = m.USER_ID
+		where m.USER_ID = #{id}
+		order by b.BOARD_ID DESC
+  	
+  	
+  	</select>
+  </mapper>
