@@ -49,15 +49,18 @@
 		  			<div class="fw">글 등록</div>
 		  			<div class="fw2">
 		  				<div class="fw-bg">
-		  				
-		  				<div>제목
-		  					<input type="text">
+		  				<form action="${contextPath }/freeInsert.fe">
+		  				<div><label for="boardTitle">제목</label>
+		  					<input type="text" name="boardTitle">
 		  				</div>
-		  				<div>내용
-		  					<input type="text">
+		  				<div>
+		  					<span>내용</span>
+		  					<textarea rows="10" name="boardContent" style="resize: none"></textarea>
 		  				</div>
-		  				<div>저장
+		  				<div>
+		  				<button>저장</button>
 		  				</div>
+		  				</form>
 		  			</div>
 		  		</div>
 		  	</div>
