@@ -102,7 +102,7 @@
 	 #bu{
 	 margin-left: 5%;
 	 margin-top:5px;}
-	 #bu1{
+	 #memailconfirm{
 	 width: 64%;
 		height: 42px;
 		text-decoration: none;
@@ -110,7 +110,7 @@
 	color: grey;
 	 border-radius: 10px 10px 10px 10px;
 	 }
-	 #bu2{
+	 #checkEmail{
 	 width: 30%;
 		height: 42px;
 		text-decoration: none;
@@ -252,7 +252,7 @@
 		<div class="container-fluid m2 fadeInDown">
 	  		<div class="row ">
 	  		<div class="col m1">
-	  			<form action="${ contextPath }/insertMember.me" method="POST" >
+	  			<form action="${ contextPath }/insertMember.me" method="POST" id="insertForm" >
 	  		 <ul id="mainIcons1" class="one fadeIn">
 			  <li >solo</li>
 			  <li id="mainIcons2">.</li>
@@ -268,13 +268,13 @@
             <div class="three fadeIn">
 				<label class="la">비밀번호</label><br>
 					<div class="in1">
-				<input type="password" class="in" name="pwd"placeholder="비밀번호" required>
+				<input type="password" class="in" name="pwd" id="pw" placeholder="비밀번호" onkeyup="" required>
 					</div>
 			 </div >
 			 <div class="second fadeIn four">
 				<label class="la">비밀번호 확인</label><br>
 					<div class="in1">
-				<input type="password" class="in" name="pwd1" class="in" placeholder="비밀번호" required>
+				<input type="password" class="in" name="pwd1" id="pw1" class="in" placeholder="비밀번호" required>
 					</div>
 			 </div>
 			 <div class="five fadeIn">
@@ -290,18 +290,17 @@
 					</div>
 			 </div>
 			  <div class="seven fadeIn">
-				<label class="la">이메일</label><br>
+				<label class="la">이메일</label> <label for="memailconfirm" id="memailconfirmTxt" class="check1">인증번호를 입력해주세요</label><br>
 					<div class="in1">
-				<input type="text" class="in" name="email" id="email" class="in" placeholder="이메일" required>
+				<input type="text" class="in" name="email" id="memail" class="in" placeholder="이메일" required>
 					</div>
 					<div id="bu">
-						<input type="text" id="bu1" name="bu1" id="bu1" class="seven" placeholder="인증번호" >
-						<button id="bu2" type="button">인증번호 받기</button>
+						<input type="text"  name="bu1" id="memailconfirm" class="seven" placeholder="인증번호" >
+						<button  type="button" id="checkEmail">인증번호 받기</button>
 					</div>
 					</div>
 	
-						
-			
+				
 			
 			
 			 <div class="eight fadeIn">
@@ -351,7 +350,7 @@
 			 <div class=" fadeIn elee">
 			 	<label class="la"></label>
 			 	<div class="in1">
-			 		<button  class="in VV">가입하기</button>
+			 		<button  type="button" class="in VV">가입하기</button>
 			 	</div>
 			 </div>
 			 <div id="formFooter" class="ele fadeIn">
@@ -362,9 +361,11 @@
   		</div>
   		</div>
   		<script>
-				
+				let okId = false;
+				let okPwd = false;
+				let okEmail = false;
 					window.onload = ()=>{
-						document.getElementById("id").addEventListener('change', function(){
+						document.getElementById("id").addEventListener('keyup', function(){
 							const idResult = document.getElementById('checkId');
 							if(this.value.trim()== ''){
 								idResult.innerText = '닉네임을 입력해주세여';
@@ -377,14 +378,15 @@
 										console.log(data);
 										if(data.trim() == 'yes'){
 											idResult.innerText = "사용가능한 닉네임 입니다.";
-											idResult.style.color= "white";
+											idResult.style.color= "#0D6EFD";
+											okId = true;
 										}else if(data.trim() == 'no'){
 											idResult.innerText = "중복된 닉네임 입니다.";
-											idResult.style.color= "black";
+											idResult.style.color= "red";
 											
 										}
 									},
-									eroor: (data)=>{
+									error: (data)=>{
 										console.log(data);
 									}
 									
@@ -392,7 +394,7 @@
 							}
 						});
 						
-					document.getElementById("nickName").addEventListener('change', function(){
+					document.getElementById("nickName").addEventListener('keyup', function(){
 						const nickNameResult = document.getElementById('checkNickName');
 						if(this.value.trim()== ''){
 							nickNameResult.innerText = '닉네임을 입력해주세여';
@@ -405,55 +407,80 @@
 									console.log(data);
 									if(data.trim() == 'yes'){
 										nickNameResult.innerText = "사용가능한 닉네임 입니다.";
-										nickNameResult.style.color= "white";
+										nickNameResult.style.color= "#0D6EFD";
 									}else if(data.trim() == 'no'){
 										nickNameResult.innerText = "중복된 닉네임 입니다.";
-										nickNameResult.style.color= "black";
+										nickNameResult.style.color= "red";
 										
 									}
 								},
-								eroor: (data)=>{
+								error: (data)=>{
 									console.log(data);
 								}
 								
 							});
 						}
 					});
-				}
-					$('#bu2').click(function() {
-						const emailResult =  $('#email').val() // 이메일 주소값 얻어오기!
-						console.log(emailResult); // 이메일 오는지 확인
-						const checkInput = $('#bu1') // 인증번호 입력하는곳 
+					$(function() {
+				
+						var $pwd = $("#pwd");
+						var $pwd1 = $("#pwd1");
+						var $checkEmail = $("#checkEmail"); // 인증번호 발송 버튼
+						var $memailconfirm = $("#memailconfirm"); // 인증번호 확인input
+						var $memailconfirmTxt = $("#memailconfirmTxt"); // 인증번호 확인 txt
 						
+					// 이메일 인증번호
+					$checkEmail.click(function() {
 						$.ajax({
-							type : 'get',
-							url : '${ contextPath }/mailCheck.me',
-							success : function (data) {
-								console.log("data : " +  data);
-								checkInput.attr('disabled',false);
-								code =data;
-								alert('인증번호가 전송되었습니다.')
-							}			
-						}); 
-					}); // end send eamil
-					
-					$('#bu1').blur(function () {
-						const inputCode = $(this).val();
-						const $resultMsg = $('#mail-check-warn');
-						
-						if(inputCode === code){
-							$resultMsg.html('인증번호가 일치합니다.');
-							$resultMsg.css('color','green');
-							$('#bu2').attr('disabled',true);
-							
-							$('#email').attr('readonly',true);
-							$('#email').attr('onFocus', 'this.initialSelect = this.selectedIndex');
-					         $('#email').attr('onChange', 'this.selectedIndex = this.initialSelect');
-						}else{
-							$resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
-							$resultMsg.css('color','red');
-						}
+							type : "POST",
+							url : '${ contextPath}/pleaseMail.me',
+							data : {
+								"email" : document.getElementById("memail").value
+							},
+							success : function(data){
+								alert("해당 이메일로 인증번호 발송이 완료되었습니다. \n 확인부탁드립니다.")
+								console.log("data : "+data);
+								chkEmailConfirm(data, $memailconfirm, $memailconfirmTxt);
+							}
+						});
 					});
+					function chkEmailConfirm(data, $memailconfirm, $memailconfirmTxt){
+						$memailconfirm.on("keyup", function(){
+							if (data != $memailconfirm.val()) { //
+								emconfirmchk = false;
+								$memailconfirmTxt.html("<span id='emconfirmchk'>인증번호가 잘못되었습니다</span>")
+								$("#emconfirmchk").css({
+									"color" : "#FA3E3E"
+									
+									
+								});
+								//console.log("중복아이디");
+							} else { // 아니면 중복아님
+								emconfirmchk = true;
+								$memailconfirmTxt.html("<span id='emconfirmchk'>인증번호 확인 완료</span>")
+								$("#emconfirmchk").css({
+									"color" : "#0D6EFD"
+									
+									
+								});
+								okEmail = true;
+							}
+						});
+					}
+					
+						
+
+					});
+				}
+				 
+					
+					
+					$('.in.VV').click(function(){
+						
+							$('#insertForm').submit();
+						
+					});
+			
 				</script>
   		</body>
 	</html>
