@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.kh.solodent.board.model.dao.MoimDAO;
 import com.kh.solodent.board.model.vo.Attachment;
+import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
+import com.kh.solodent.board.model.vo.Reply;
 
 @Service("moimService")
 public class MoimServiceImp implements MoimService {
@@ -54,6 +57,73 @@ public class MoimServiceImp implements MoimService {
 	public ArrayList<Attachment> selectAttmList(Integer boardId) {
 		return mDAO.selectAttmList(sqlSession, boardId);
 	}
+
+	@Override
+	public ArrayList<Integer> getPageReplyCount(ArrayList<Moim> list) {
+		return mDAO.getPageReplyCount(sqlSession, list);
+	}
+
+	@Override
+	public ArrayList<Integer> getPageLikeCount(ArrayList<Moim> list) {
+		return mDAO.getPageLikeCount(sqlSession, list);
+	}
+
+	@Override
+	public ArrayList<Integer> getPageScrapCount(ArrayList<Moim> list) {
+		return mDAO.getPageScrapCount(sqlSession, list);
+	}
+
+	@Override
+	public ArrayList<Reply> getBoardReplyList(int boardId) {
+		return mDAO.getBoardReplyList(sqlSession, boardId);
+	}
+
+	@Override
+	public ArrayList<Integer> getBoardReplyLikeCount(ArrayList<Reply> replyList) {
+		return mDAO.getBoardReplyLikeCount(sqlSession, replyList);
+	}
+
+	@Override
+	public int getBoardScrapCount(int boardId) {
+		return mDAO.getBoardScrapCount(sqlSession, boardId);
+	}
+
+	@Override
+	public int getBoardLikeCount(int boardId) {
+		return mDAO.getBoardLikeCount(sqlSession,  boardId);
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		return mDAO.insertReply(sqlSession, r);
+	}
+
+	@Override
+	public int isLike(Like like) {
+		return mDAO.isLike(sqlSession, like);
+	}
+
+	@Override
+	public void setBoardLike(Like likevo) {
+		mDAO.setBoardLike(sqlSession, likevo);
+	}
+
+	@Override
+	public void deleteBoardLike(Like likevo) {
+		mDAO.deleteBoardLike(sqlSession, likevo);
+	}
+
+	@Override
+	public ArrayList<Moim> getTopBoard() {
+		return mDAO.selectTopThree(sqlSession);
+	}
+
+	@Override
+	public int deleteBoard(int boardId) {
+		return mDAO.deleteBoardLike(sqlSession, boardId);
+	}
+	
+	
 
 
 }

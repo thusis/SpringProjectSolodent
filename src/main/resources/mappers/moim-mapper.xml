@@ -2,20 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="moimMapper">
 
-	<select id="getListCount" resultType="_int">
-		select count(*)
-		from board where board_code = 4
-	</select>
-
-	<select id="selectMoimList" resultMap="moimResultSet">
-		select * 
-		from board 
-		join board_group using (board_id)
-		join member using (user_id)
-		where board.status='Y' and board_code=4
-		order by board_id desc
-	</select>
-	
 	<resultMap type="Moim" id="moimResultSet">
 		<id column="BOARD_ID" property="boardId"/>
 		<result column="BOARD_TITLE" property="boardTitle"/>
@@ -25,26 +11,15 @@
 		<result column="MODIFY_DATE" property="modifyDate"/>
 		<result column="IS_NOTICE" property="isNotice"/>
 		<result column="BOARD_COUNT" property="boardCount"/>
-		<result column="STATUS" property="boardStatus"/>
+		<result column="BSTATUS" property="boardStatus"/>
 		<result column="GROUP_CATE" property="moimCategory"/>
 		<result column="GROUP_START" property="moimStart"/>
 		<result column="GROUP_END" property="moimEnd"/>
 		<result column="LOCAL" property="local"/>
-		<result column="STATUS_1" property="moimStatus"/>
+		<result column="MOIMSTATUS" property="moimStatus"/>
 		<result column="NICKNAME" property="moimWriter"/>
 	</resultMap>
-	
-<!-- 	썸네일만가져오기 -->
-	<select id="selectMoimAttm" resultMap="attachmentResultSet">
-		select * from attachment
-		join board_group using (board_id)
-		where board_id in (
-		<foreach collection="list" item="item" separator=", ">
-			#{item.boardId}
-		</foreach>
-		) and is_thum='Y'
-	</select>
-	
+		
 	<resultMap type="Attachment" id="attachmentResultSet">
 		<id column="file_id" property="fileId"/>
 		<result column="upload_date" property="uploadDate"/>
@@ -55,17 +30,104 @@
 		<result column="board_id" property="boardId"/>
 		<result column="is_thum" property="isThum"/>
 	</resultMap>
+
+	<resultMap type="Reply" id="replyResultSet">
+		<id column="REPLY_ID" property="replyId"/>
+		<result column="REPLY_CONTENT" property="replyContent"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="BOARD_ID" property="boardId"/>
+	</resultMap>
+	
+	<resultMap type="ReplyLike" id="replyLikeResultSet">
+		<id column="USER_ID" property="userId"/>
+		<result column="REPLY_ID" property="replyId"/>
+	</resultMap>
+	
+	<resultMap type="Board" id="selectTopMoimResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="NICKNAME" property="userId"/>
+	</resultMap>
+
+	<select id="getListCount" resultType="_int">
+		select count(*)
+		from board where board_code = 4
+	</select>
+	
+	<select id="selectMoimList" resultMap="moimResultSet">
+		select BOARD_ID, BOARD_TITLE, BOARD_CONTENT, BOARD_COUNT, USER_ID, CREATE_DATE, MODIFY_DATE,IS_NOTICE,BOARD.STATUS BSTATUS, 
+		GROUP_CATE, GROUP_START,GROUP_END,LOCAL, BOARD_GROUP.STATUS MOIMSTATUS,NICKNAME
+		from board 
+		join board_group using (board_id)
+		join member using (user_id)
+		where board.status='Y' and board_code=4
+		order by board_id desc
+	</select>
+
+	<!-- 	썸네일만가져오기 -->
+	<select id="selectMoimAttm" resultMap="attachmentResultSet">
+		select * from attachment
+		join board_group using (board_id)
+		join BOARD USING (BOARD_ID)
+		where board_id in (
+		<foreach collection="list" item="item" separator=", ">
+			#{item.boardId}
+		</foreach>
+		) and is_thum='Y'AND BOARD.STATUS='Y' ORDER BY BOARD_ID DESC
+	</select>
+	
+	<!-- ======댓글수 좋아요수 스크랩수======= -->
+	<select id="getPageReplyCount" resultType="_int">
+		SELECT COUNT(REPLY_ID)
+		FROM BOARD 
+		LEFT JOIN REPLY USING (BOARD_ID)
+		WHERE BOARD_ID IN (
+		<foreach collection="list" item="item" separator=",">
+			#{item.boardId}
+		</foreach>
+		)
+		GROUP BY BOARD_ID
+		ORDER BY BOARD_ID DESC
+	</select>
+	
+	<select id="getPageLikeCount" resultType="_int">
+		SELECT COUNT(BOARD_LIKE.USER_ID)
+		FROM BOARD 
+		LEFT JOIN BOARD_LIKE USING (BOARD_ID)
+		WHERE BOARD_ID IN (
+		<foreach collection="list" item="item" separator=",">
+			#{item.boardId}
+		</foreach>
+		)
+		GROUP BY BOARD_ID
+		ORDER BY BOARD_ID DESC
+	</select>
+
+	<select id="getPageScrapCount" resultType="_int">
+		SELECT COUNT(BOARD_SCRAP.USER_ID)
+		FROM BOARD 
+		LEFT JOIN BOARD_SCRAP USING (BOARD_ID)
+		WHERE BOARD_ID IN (
+		<foreach collection="list" item="item" separator=",">
+			#{item.boardId}
+		</foreach>
+		)
+		GROUP BY BOARD_ID
+		ORDER BY BOARD_ID DESC
+	</select>
+	<!-- ======댓글수 좋아요수 스크랩수 끝======= -->
 	
 	<insert id="insertMoim" parameterType="java.util.Map">
 		INSERT ALL 
-		
 		INTO BOARD
 		VALUES(seq_bid.nextval, 4, #{moim.boardTitle}, #{moim.boardContent}, #{moim.userId}, sysdate, sysdate, 'N', 0, 'Y')
 		INTO BOARD_GROUP
 		VALUES(seq_bid.currval, #{moim.moimCategory}, #{moim.moimStart}, #{moim.moimEnd}, #{moim.local}, default)
 		<foreach collection="list" item="item" separator=" " >
 			INTO ATTACHMENT
-			VALUES(new_fid, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, 4, seq_bid.currval,'Y')
+			VALUES(new_fid, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, 4, seq_bid.currval,#{item.isThum})
 		</foreach>
     	select * from dual
 	</insert>
@@ -90,6 +152,102 @@
 		WHERE BOARD_ID=#{boardId}
 	</select>
 	
+	<select id="getBoardReplyList" resultMap="replyResultSet">
+		SELECT REPLY_ID, REPLY_CONTENT, CREATE_DATE, REPLY.STATUS STATUS, NICKNAME USER_ID, BOARD_ID 
+		FROM REPLY JOIN MEMBER USING (USER_ID)
+		WHERE BOARD_ID=#{boardId}
+		AND REPLY.STATUS='Y' ORDER BY REPLY_ID DESC
+	</select>
+	
+	<select id="getBoardReplyLikeCount" resultType="_int">
+        SELECT COUNT(REPLY_LIKE.USER_ID)
+        FROM REPLY
+        LEFT JOIN REPLY_LIKE USING(REPLY_ID)
+        WHERE REPLY_ID IN (
+		<foreach collection="list" item="item" separator=",">
+			#{item.replyId}
+		</foreach>
+        )
+        AND STATUS='Y'
+        GROUP BY REPLY_ID
+        ORDER BY REPLY_ID DESC
+	</select>
+	
+	<select id="getBoardScrapCount" resultType="_int">
+	    SELECT COUNT(*)
+        FROM BOARD_SCRAP
+        WHERE BOARD_ID = #{boardId}
+	</select>
+	
+	<select id="getBoardLikeCount" resultType="_int">
+		SELECT COUNT(*)
+        FROM BOARD_LIKE
+        WHERE BOARD_ID = #{boardId}
+	</select>
+	
+	<!-- 게시글에 대한 좋아요  -->
+	<select id="isBoardLike" resultType="int">SELECT COUNT(*) FROM BOARD_LIKE WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</select>
+	<insert id="setBoardLike">INSERT INTO BOARD_LIKE VALUES (#{userId},#{boardId})</insert>
+	<delete id="deleteBoardLike">DELETE FROM BOARD_LIKE WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</delete>
+		
+	<!-- 댓글에 대한 좋아요 -->
+	<select id="isReplyLike" resultType="int">SELECT COUNT(*) FROM REPLY_LIKE WHERE REPLY_ID=#{replyId} AND USER_ID=#{userId}</select>
+	<insert id="setReplyLike">INSERT INTO REPLY_LIKE VALUES (#{userId},#{replyId})</insert>
+	<delete id="deleteReplyLike">DELETE FROM REPLY_LIKE WHERE REPLY_ID=#{replyId} AND USER_ID=#{userId}</delete>
+	
+	<!-- 게시글에 대한 스크랩 -->
+	<select id="isScrap" resultType="int">SELECT COUNT(*) FROM BOARD_SCRAP WHERE WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</select>
+	<insert id="setScrap">INSERT INTO BOARD_SCRAP VALUES (#{userId},#{boardId})</insert>
+	<delete id="deleteScrap">DELETE BOARD_SCRAP WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</delete>
+	
+	<!-- 검색 -->
+	<select id="searchMoim">
+		SELECT * FROM BOARD
+	</select>
 
+	<insert id="insertReply" parameterType="Reply">
+		INSERT INTO REPLY VALUES(SEQ_RID.NEXTVAL, #{replyContent}, SYSDATE, DEFAULT, #{userId}, #{boardId})
+	</insert>
+
+	<insert id="insertScrap">
+		INSERT INRO BOARD_SCRAP VALUES()
+	</insert>
+
+	<!-- 탑랭크 게시글 상위 세 개 반환 -->
+	<select id="selectTopThree" resultType="int">
+		SELECT * FROM 
+			(SELECT BOARD_ID, COUNT(REPLY.USER_ID)+ COUNT(BOARD_LIKE.USER_ID)+COUNT(BOARD_SCRAP.USER_ID) RANK
+			FROM BOARD
+			LEFT JOIN REPLY USING (BOARD_ID)
+			LEFT JOIN BOARD_LIKE USING (BOARD_ID)
+			LEFT JOIN BOARD_SCRAP USING (BOARD_ID)
+			WHERE BOARD_ID IN (SELECT BOARD_ID FROM BOARD WHERE BOARD_CODE = 4) 
+			GROUP BY BOARD_ID ORDER BY RANK DESC
+			) 
+		<![CDATA[WHERE ROWNUM <= 3]]> 
+	</select>
+	
+	<select id="selectTopBoard" resultMap="moimResultSet">
+		SELECT BOARD_ID, BOARD_CONTENT, NICKNAME, LOCAL, GROUP_CATE, BOARD_TITLE
+		FROM BOARD 
+		LEFT JOIN BOARD_GROUP USING (BOARD_ID)
+		LEFT JOIN MEMBER USING(USER_ID)
+		WHERE BOARD_ID IN (
+		<foreach collection="list" item="item" separator="," >
+			#{item}
+		</foreach>
+		) 
+		ORDER BY (
+		CASE BOARD_ID
+		<foreach collection="list" item="item" index="index" separator=" ">
+		WHEN #{item} THEN #{index}+1
+		</foreach>
+		END)
+	</select>
+	
+	<update id="delectMoimBoard">
+		UPDATE BOARD SET STATUS='N' WHERE BOARD_ID=#{boardId}
+	</update>
+	
 	
 </mapper>

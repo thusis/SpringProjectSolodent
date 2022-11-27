@@ -9,8 +9,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.solodent.board.model.vo.Attachment;
+import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
+import com.kh.solodent.board.model.vo.Reply;
 
 @Repository("moimDAO")
 public class MoimDAO {
@@ -25,7 +28,6 @@ public class MoimDAO {
 		int offset = (pi.getCurrentPage()-1)*pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
 		ArrayList<Moim> moimlist = (ArrayList)sqlSession.selectList("moimMapper.selectMoimList", null, rowBounds);
-		System.out.println(moimlist);
 		return moimlist;
 	}
 
@@ -57,6 +59,62 @@ public class MoimDAO {
 		return (ArrayList)sqlSession.selectList("moimMapper.selectAttmList", boardId);
 	}
 
+	public ArrayList<Integer> getPageReplyCount(SqlSessionTemplate sqlSession, ArrayList<Moim> list) {
+		return (ArrayList)sqlSession.selectList("moimMapper.getPageReplyCount", list);
+	}
+
+	public ArrayList<Integer> getPageLikeCount(SqlSessionTemplate sqlSession, ArrayList<Moim> list) {
+		return (ArrayList)sqlSession.selectList("moimMapper.getPageLikeCount",list);
+	}
+
+	public ArrayList<Integer> getPageScrapCount(SqlSessionTemplate sqlSession, ArrayList<Moim> list) {
+		return (ArrayList)sqlSession.selectList("moimMapper.getPageScrapCount", list);
+	}
+
+	public ArrayList<Reply> getBoardReplyList(SqlSessionTemplate sqlSession, int boardId) {
+		return (ArrayList)sqlSession.selectList("moimMapper.getBoardReplyList", boardId);
+	}
+
+	public ArrayList<Integer> getBoardReplyLikeCount(SqlSessionTemplate sqlSession, ArrayList<Reply> replyList) {
+		return (ArrayList)sqlSession.selectList("moimMapper.getBoardReplyLikeCount", replyList);
+	}
+
+	public int getBoardScrapCount(SqlSessionTemplate sqlSession, int boardId) {
+		return sqlSession.selectOne("moimMapper.getBoardScrapCount",boardId);
+	}
+
+	public int getBoardLikeCount(SqlSessionTemplate sqlSession, int boardId) {
+		return sqlSession.selectOne("moimMapper.getBoardLikeCount",boardId);
+	}
+
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.insert("moimMapper.insertReply", r);
+	}
+
+	public int isLike(SqlSessionTemplate sqlSession, Like like) {
+		int result = sqlSession.selectOne("moimMapper.isBoardLike", like);
+		System.out.println(result);
+		return result;
+	}
+
+	public void setBoardLike(SqlSessionTemplate sqlSession, Like likevo) {
+		System.out.println(sqlSession.insert("moimMapper.setBoardLike",likevo));
+	}
+
+	public void deleteBoardLike(SqlSessionTemplate sqlSession, Like likevo) {
+		System.out.println(sqlSession.delete("moimMapper.deleteBoardLike",likevo));
+	}
+	
+	public ArrayList<Moim> selectTopThree(SqlSessionTemplate sqlSession){
+		ArrayList<Integer> boardIds = (ArrayList)sqlSession.selectList("moimMapper.selectTopThree");
+		return (ArrayList)sqlSession.selectList("moimMapper.selectTopBoard",boardIds);
+	}
+
+	public int deleteBoardLike(SqlSessionTemplate sqlSession, int boardId) {
+		return sqlSession.update("moimMapper.delectMoimBoard", boardId);
+	}
+
+	
 	
 	
 
