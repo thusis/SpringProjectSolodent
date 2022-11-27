@@ -53,7 +53,7 @@
 
 	<select id="getListCount" resultType="_int">
 		select count(*)
-		from board where board_code = 4
+		from board where board_code = 4 and board.status='Y'
 	</select>
 	
 	<select id="selectMoimList" resultMap="moimResultSet">
@@ -71,11 +71,15 @@
 		select * from attachment
 		join board_group using (board_id)
 		join BOARD USING (BOARD_ID)
-		where board_id in (
-		<foreach collection="list" item="item" separator=", ">
-			#{item.boardId}
-		</foreach>
-		) and is_thum='Y'AND BOARD.STATUS='Y' ORDER BY BOARD_ID DESC
+		where
+		<if test="list.size() > 0">
+			board_id in (
+			<foreach collection="list" item="item" separator=", ">
+				#{item.boardId}
+			</foreach>
+			) and
+		</if>
+		 is_thum='Y'AND BOARD.STATUS='Y' and board.board_code=4 ORDER BY BOARD_ID DESC
 	</select>
 	
 	<!-- ======댓글수 좋아요수 스크랩수======= -->
@@ -199,11 +203,6 @@
 	<select id="isScrap" resultType="int">SELECT COUNT(*) FROM BOARD_SCRAP WHERE WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</select>
 	<insert id="setScrap">INSERT INTO BOARD_SCRAP VALUES (#{userId},#{boardId})</insert>
 	<delete id="deleteScrap">DELETE BOARD_SCRAP WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</delete>
-	
-	<!-- 검색 -->
-	<select id="searchMoim">
-		SELECT * FROM BOARD
-	</select>
 
 	<insert id="insertReply" parameterType="Reply">
 		INSERT INTO REPLY VALUES(SEQ_RID.NEXTVAL, #{replyContent}, SYSDATE, DEFAULT, #{userId}, #{boardId})
@@ -228,7 +227,7 @@
 	</select>
 	
 	<select id="selectTopBoard" resultMap="moimResultSet">
-		SELECT BOARD_ID, BOARD_CONTENT, NICKNAME, LOCAL, GROUP_CATE, BOARD_TITLE
+		SELECT BOARD_ID, BOARD_CONTENT, NICKNAME, LOCAL, GROUP_CATE, BOARD_TITLE, USER_ID
 		FROM BOARD 
 		LEFT JOIN BOARD_GROUP USING (BOARD_ID)
 		LEFT JOIN MEMBER USING(USER_ID)
@@ -248,6 +247,48 @@
 	<update id="delectMoimBoard">
 		UPDATE BOARD SET STATUS='N' WHERE BOARD_ID=#{boardId}
 	</update>
+	
+	<select id="selectSearchMoimList" resultMap="moimResultSet" parameterType="java.util.Map">
+		select BOARD_ID, BOARD_TITLE, BOARD_CONTENT, BOARD_COUNT, USER_ID, CREATE_DATE, MODIFY_DATE,IS_NOTICE,BOARD.STATUS BSTATUS, 
+		GROUP_CATE, GROUP_START,GROUP_END,LOCAL, BOARD_GROUP.STATUS MOIMSTATUS,NICKNAME
+		from board 
+		join board_group using (board_id)
+		join member using (user_id)
+		where board.status='Y' and board_code=4
+		
+		<if test="moimStatus != null &amp;&amp; !moimStatus.equals('')">
+			and BOARD_GROUP.STATUS = #{moimStatus}
+		</if>
+		<if test="cates != null &amp;&amp; !cates.equals('')">
+			and group_cate in(
+			<foreach collection='cates' item='cates' separator=','>
+			#{cates}
+			</foreach>
+			)
+		</if>
+		<if test="local != null &amp;&amp; !local.equals('')">
+			and local like #{local}
+		</if>
+		<if test="title != null &amp;&amp; !title.equals('')">
+			and BOARD_TITLE like #{title}
+		</if>
+		<if test="content != null &amp;&amp; !content.equals('')">
+			and BOARD_CONTENT like #{content}
+		</if>
+		<if test="nickname != null &amp;&amp; !nickname.equals('')">
+			AND NICKNAME like #{nickname}
+		</if>
+		order by board_id desc
+	</select>
+	
+	<insert id="declareBoard">
+	INSERT INTO BOARD_SCRAP VALUES (#{userId},#{boardId})
+	</insert>
+	
+	
+	
+	
+	
 	
 	
 </mapper>

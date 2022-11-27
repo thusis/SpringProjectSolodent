@@ -1,6 +1,7 @@
 package com.kh.solodent.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,10 @@ public interface MoimService {
 	ArrayList<Moim> getTopBoard();
 
 	int deleteBoard(int boardId);
+
+	ArrayList<Moim> searchMoim(HashMap paramap);
+
+	int declareBoard(int boardId);
 
 
 }

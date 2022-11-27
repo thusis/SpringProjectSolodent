@@ -44,8 +44,14 @@
 					</c:if>
 					<c:if test="${ !empty loginUser && loginUser.id ne moim.userId }">
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="${contextPath}/declare.moim">신고하기</a></li>
+							<li><a onclick="openPopUp()" class="dropdown-item" href="${contextPath}/declare.moim?bId=${moim.boardId}">신고하기</a></li>
 						</ul>
+						
+						<script type="text/javascript">
+							function openPopUp() {
+								 window.open("declare-popup.jsp", "mypopup", "width=500, height=500, top=150, left=200");
+							}
+						</script>
 					</c:if>
 		        </div>
               </div>
@@ -72,8 +78,10 @@
                     <li class="align-items-center"><i class="bi bi-people-fill"></i> <a href="blog-details.html">${moim.moimCategory}</a></li><!--누르면 모임형태로 검색-->
                     
                     <li class="align-items-center"><i class="bi bi-patch-check-fill"></i>
-	                    <c:if test="${fn:contains(moim.moimStatus, 'N')}">모집종료</c:if>
-	                    <c:if test="${!fn:contains(moim.moimStatus, 'N')}">모집중</c:if>
+                       	<c:if test="${fn:contains(moim.moimStatus , 'Y')}"><p>모집중</p></c:if>
+                       	<c:if test="${fn:contains(moim.moimStatus , 'B')}"><p>모집전</p></c:if>
+                       	<c:if test="${fn:contains(moim.moimStatus , 'N')}"><p>모집종료</p></c:if>
+                   "${moim.moimStatus}"
                     </li>
                   </ul>
               </div><!-- End meta top -->
@@ -225,27 +233,30 @@
           <div class="reply-form">
 
             <div class="bn_replies row  justify-content-center">
-              <ul>
+              <ul class="bn_replies_head">
                 <li class="col-lg">댓글작성자</li>
                 <li class="col-lg-6">내용</li>
                 <li class="col-lg">추천</li>
                 <li class="col-lg">작성날짜</li>
               </ul>
               
-              <div class="bn_replies row justify-content-center" id="boxOfReplies"> 
+              <div class="row justify-content-center" id="boxOfReplies"> 
               
-              <c:if test="${ replyList.size()==0 }">
-              	<h5 class="text-center" style="margin:15px;">등록된 댓글이 없습니다. 첫 댓글을 작성해보세요!</h5>
-              </c:if>
+	              <c:if test="${ replyList.size()==0 }">
+	              	<h5 class="text-center" style="margin:15px;">등록된 댓글이 없습니다. 첫 댓글을 작성해보세요!</h5>
+	              </c:if>
+	              
+	              <c:if test="${ replyList.size()!=0 }">
+	              <c:forEach items="${replyList}" var="r" varStatus="Rstatus">
+		              <ul id="replyUl2" class="row">
+		                <li class="col-lg">${r.userId}</li>
+		                <li class="col-lg-6">${r.replyContent}</li>
+		                <li class="col-lg">${replyLikeCount[Rstatus.index]}</li>
+		                <li class="col-lg">${r.createDate}</li>
+		              </ul>
+	              </c:forEach>
+	              </c:if>
               
-              <c:forEach items="${replyList}" var="r" varStatus="Rstatus">
-	              <ul id="replyUl2">
-	                <li class="col-lg">${r.userId}</li>
-	                <li class="col-lg-6">${r.replyContent}</li>
-	                <li class="col-lg">${replyLikeCount[Rstatus.index]}</li>
-	                <li class="col-lg">${r.createDate}</li>
-	              </ul>
-              </c:forEach>
               </div>
               
               

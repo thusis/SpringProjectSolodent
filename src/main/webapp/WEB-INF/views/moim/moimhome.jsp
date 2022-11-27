@@ -18,7 +18,21 @@
 	<jsp:include page="../home/menubar.jsp"/>
 
     <main id="main" style="margin-top: 70px;">
-
+    
+    <div class="container text-center align-items-center">
+    <c:if test="${ empty list }">
+    	<h2>모임 게시글에 아직 게시글이 없습니다😅😅</h2>
+    	<h2>첫 글의 주인공이 되어보세요!</h2>
+     	<c:if test="${ !empty loginUser }">
+          <button onclick="location.href='${contextPath}/write.moim'" type="button" class="btn btn-outline-primary btn-lg">지금 글쓰러 가기</button>
+		</c:if>
+		<c:if test="${ empty loginUser }">
+			<button onclick="location.href='${contextPath}/loginView.me'" type="button" class="btn btn-outline-primary btn-lg">지금 로그인 하러 가기</button>
+        </c:if>
+    </c:if>
+    </div>
+    
+	<c:if test="${ !empty list }">
     <section id="faq" class="faq"> <!--id와 class는 mostviewd로-->
         <div class="container" > 
   
@@ -40,10 +54,11 @@
             <div class="col-lg-8">
   
                <div class="accordion accordion-flush" id="faqlist" >
+               
                 <div class="accordion-item">
                   <h3 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-1">
-                      <span class="num">1등! ${topBoard[0].boardId}</span>
+                      <span class="num">1등!</span>
                       [<c:if test="${topBoard[0].local eq '전체 전체'}">전체</c:if>
                       <c:if test="${topBoard[0].local ne '전체 전체'}">${topBoard[0].local}</c:if>
                       /${topBoard[0].moimCategory}] ${topBoard[0].boardTitle}
@@ -53,6 +68,8 @@
                     <!--id를 mostviewed-content-1로 바꾸기-->
                     <!--data-bs-parent를 #mostviewedlist로 바꾸기-->
                    <div class="accordion-body">
+                   <span hidden="hidden" class="bId">${topBoard[0].boardId}</span>
+                   <span hidden="hidden" class="userId">${topBoard[0].userId}</span>
                         <!--생략되어보일 수 있게 bn_txt_overflow라는 클래스 임의 생성함-->
                         <p class="bn_txt_overflow">
                         작성자 : ${topBoard[0].moimWriter}<br>
@@ -65,7 +82,7 @@
                 <div class="accordion-item">
                   <h3 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-2">
-                      <span class="num">2등! ${topBoard[1].boardId}</span>
+                      <span class="num">2등!</span>
                       [<c:if test="${topBoard[1].local eq '전체 전체'}">전체</c:if>
                       <c:if test="${topBoard[1].local ne '전체 전체'}">${topBoard[1].local}</c:if>
                       /${topBoard[1].moimCategory}] ${topBoard[1].boardTitle}
@@ -75,6 +92,8 @@
                     <!--id를 mostviewed-content-1로 바꾸기-->
                     <!--data-bs-parent를 #mostviewedlist로 바꾸기-->
                    <div class="accordion-body">
+                   <span hidden="hidden" class="bId">${topBoard[1].boardId}</span>
+                   <span hidden="hidden" class="userId">${topBoard[1].userId}</span>
                         <!--생략되어보일 수 있게 bn_txt_overflow라는 클래스 임의 생성함-->
                         <p class="bn_txt_overflow">
                         작성자 : ${topBoard[1].moimWriter}<br>
@@ -87,16 +106,19 @@
                 <div class="accordion-item">
                   <h3 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-3">
-                      <span class="num">3등! ${topBoard[2].boardId}</span>
+                      <span class="num">3등!</span>
                       [<c:if test="${topBoard[2].local eq '전체 전체'}">전체</c:if>
                       <c:if test="${topBoard[2].local ne '전체 전체'}">${topBoard[2].local}</c:if>
                       /${topBoard[2].moimCategory}] ${topBoard[2].boardTitle}
                     </button>
                   </h3>
+                  <span hidden="hidden" class="userId">${topBoard[2].userId}</span>
                   <div id="faq-content-3" class="accordion-collapse collapse" data-bs-parent="#faqlist" >
                     <!--id를 mostviewed-content-1로 바꾸기-->
                     <!--data-bs-parent를 #mostviewedlist로 바꾸기-->
                    <div class="accordion-body">
+                   <span hidden="hidden" class="bId">${topBoard[2].boardId}</span>
+                   <span hidden="hidden" class="userId">${topBoard[2].userId}</span>
                         <!--생략되어보일 수 있게 bn_txt_overflow라는 클래스 임의 생성함-->
                         <p class="bn_txt_overflow">
                         작성자 : ${topBoard[2].moimWriter}<br>
@@ -116,63 +138,15 @@
 
 
     <!--======= 분류 ===========-->
-
     
     <div class="container">
     
         <hr>
-        <form action="${contextPath }/searchList.moim" method="post">
+        <form action="${contextPath }/search.moim" method="post">
 	        <div class="form-check form-switch">
-	            <input class="form-check-input" type="checkbox" id="selectOngoing" checked>
+	            <input class="form-check-input" type="checkbox" id="selectOngoing" name="moimStatus">
 	            <label class="form-check-label" for="selectOngoing">모집중인 글만 보기</label>
 	        </div>
-	        
-			<script>
-				const selectOngoing = document.getElementById('selectOngoing');
-				const is_checked = selectOngoing.checked;
-				if(is_checked){
-					/***************모집중체크하면 모집중인 게시글만 보이게****************/
-			            $.ajax({
-			               url: '${contextPath}/list.moim',
-			               data: {moimStatus: 'Y',
-			            	   	page:
-			            	   
-			            	   replyContent: document.getElementById('replyContent').value,
-			                     refBoardId:${b.boardId}, 
-			                     replyWriter:'${loginUser.id}'},
-			               success: (data)=>{
-			                  console.log(data);
-			                  const tbody = document.querySelector('tbody');
-			                  tbody.innerHTML = '';
-			                  // 왜 한번 지웠다가 진행할까? 지우지 않으면 내용이 겹치게 자꾸 나옴
-			                  
-			                  for(const r of data){
-			                     const tr = document.createElement('tr');
-			                     
-			                     const writerTd = document.createElement('td');
-			                     writerTd.innerText = r.nickName;
-			                     const contentTd = document.createElement('td');
-			                     contentTd.innerText = r.replyContent;
-			                     const dateTd = document.createElement('td');
-			                     dateTd.innerText = r.replyModifyDate;
-			                     
-			                     tr.append(writerTd);
-			                     tr.append(contentTd);
-			                     tr.append(dateTd);
-			                     
-			                     tbody.append(tr);
-			                  }
-			                  
-			                  document.getElementById("replyContent").value = '';
-			               },
-			               error: (data)=>{
-			                  console.log(data);
-			               }
-			               
-			            });
-			         });
-				}
-			</script>
 			<br>
 	
 		        <div class="row align-items-center">
@@ -262,11 +236,20 @@
         <br>
 
         <div class="row align-items-center">
-            <div class="col-lg-2 bn_txt_strong">내용검색</div>
-            
-            <div class="col-lg-8"><input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"></div>
-            <div class="col-lg-2"><button type="button" class="btn btn-primary btn-lg">검색하기</button></div>
+            <div class="col-lg-2 bn_txt_strong">
+            찾을 내용 검색
+            </div>
+            <div class="col-lg">
+					<select class="col-lg" name="selectOption">
+						<option value="title">제목</option>
+						<option value="content">내용</option>
+						<option value="nickname">작성자</option>
+					</select>
+            </div>
+            <div class="col-lg-7"><input type="text" name="searchContent" class="form-control col-lg-8" aria-label="찾고 싶은 내용을 입력하세요" aria-describedby="inputGroup-sizing-sm"></div>
+            <div class="col-lg-2"><button type="submit" class="btn btn-primary">검색하기</button></div>
         </div>
+        
         <hr>
     </div>
     </form>
@@ -305,7 +288,8 @@
 	                        <span class="col text-end group_status date" style="color:black;">
 	                       		<i class="bi bi-people-fill"></i>${moim.moimCategory}<br>
 	                        	<c:if test="${fn:contains(moim.moimStatus, 'Y')}">모집중</c:if>
-	                        	<c:if test="${!fn:contains(moim.moimStatus, 'Y')}">모집종료</c:if>
+	                        	<c:if test="${fn:contains(moim.moimStatus, 'B')}">모집전</c:if>
+	                        	<c:if test="${fn:contains(moim.moimStatus, 'N')}">모집종료</c:if>
 	                        </span>
 							
 	                    </div>
@@ -337,9 +321,6 @@
         </div>
         </div>
     </section><!-- End Blog Section -->
-    
-    
-    
 	
     <!--========페이지네이션 =======-->
     <div class="bn-pagination">
@@ -373,6 +354,7 @@
     </div>
 
     <br>
+    </c:if>
 
     </main>
 
@@ -393,6 +375,17 @@
 				location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId+'&page='+${pi.currentPage};
 			})
 		}
+		
+		const dives2 = document.getElementsByClassName('accordion-collapse');
+		for(const div of dives2){
+			div.addEventListener('click', function(){
+				const boardId = this.querySelector('.bId').innerText;
+				const userId = this.querySelector('.userId').innerText;
+				location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId+'&page='+${pi.currentPage};
+			})
+		}
+		
+		
 	}
 
 </script>

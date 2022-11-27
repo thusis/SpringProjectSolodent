@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,6 @@ import com.kh.solodent.board.common.Pagination;
 import com.kh.solodent.board.model.exception.BoardException;
 import com.kh.solodent.board.model.service.MoimService;
 import com.kh.solodent.board.model.vo.Attachment;
-import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
@@ -71,23 +71,19 @@ public class MoimController {
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 6);
 		System.out.println("pi:"+pi);
 		ArrayList<Moim> list = mService.selectMoimList(pi);
-		ArrayList<Attachment> attmlist = mService.selectMoimAttm(list);
-//		for(int i=0; i<attmlist.size(); i++) {
-//			System.out.println(attmlist.get(i).getBoardId() + attmlist.get(i).getRename());
-//		}
-		
-		/**** 조회수 / 좋아요수 / 댓글수 / 스크랩수 *****/ 
-		ArrayList<Integer> replyLikeCount = mService.getPageReplyCount(list);
-		ArrayList<Integer> likeCount = mService.getPageLikeCount(list);
-		ArrayList<Integer> scrapCount = mService.getPageScrapCount(list);
-		
+
 		/***********상위랭크 게시글 세 개*************/
 		ArrayList<Moim> topBoard = getTopBoard();
 	
-		if(list !=null) {
+		if(list !=null && list.size()>0 ) {
+			ArrayList<Attachment> attmlist = mService.selectMoimAttm(list);
+			/**** 조회수 / 좋아요수 / 댓글수 / 스크랩수 *****/ 
+			ArrayList<Integer> replyLikeCount = mService.getPageReplyCount(list);
+			ArrayList<Integer> likeCount = mService.getPageLikeCount(list);
+			ArrayList<Integer> scrapCount = mService.getPageScrapCount(list);
+			
 			model.addAttribute("pi",pi);
 			model.addAttribute("list",list);
-//			System.out.println(list);
 			model.addAttribute("attmlist", attmlist);
 			model.addAttribute("replyLikeCount",replyLikeCount);
 			model.addAttribute("likeCount",likeCount);
@@ -95,10 +91,10 @@ public class MoimController {
 			model.addAttribute("topBoard", topBoard);
 			return "moimhome";
 		} else {
-			throw new BoardException("모임게시글 조회 실패");
+			model.addAttribute("msg", "모임게시글이 없습니다!");
+			return "moimhome";
 		}
 	}
-	
 	
 	@RequestMapping("write.moim")
 	public String writeMoim() {
@@ -371,53 +367,116 @@ public class MoimController {
 	 * array.put(json); } return array.toString(); }
 	 */
 
-	
-	
-	/** 댓글 삭제
-	 * 
-	 */
-	
-
-	/** 댓글 좋아요(추천)
-	 * 
-	 */
-	
-	
-	
-	/**스크랩
-	 *
-	 */
-	
 	/** 좋아요 + 조회수 + 스크랩 많은 게시글 상단 노출
 	 * 
 	 */
 	public ArrayList<Moim> getTopBoard(){
 		return mService.getTopBoard();
 	}
-	 
 	
-	/** 좋아요 많은 댓글 상단 노출
-	 * 
-	 */
-	
-	
-	
-	
-	/** 모집중 => 모집완료
-	 * 
-	 */
-	public void setMoimStatusRefDate(Date from, Date to) {
-		LocalDate currentDate = LocalDate.now();
-		// 오늘날짜 , 시작날짜 , 마감날짜
-		// 시작날짜 < 오늘날짜 < 마감날짜
-		// 오늘날짜 < 시작날짜
-		// 마감날짜 < 오늘날짜
+	@RequestMapping("search.moim")
+	public String searchMoim(
+			@RequestParam(value="moimStatus", required=false) String moimStatus,
+			@RequestParam(value="moimCategory", required=false) String moimCate,
+			@RequestParam(value="sido1", required=false) String sido, 
+			@RequestParam(value="gugun1", required=false) String gugun, 
+			@RequestParam(value="selectOption",required=false) String selectOption,
+			@RequestParam(value="searchContent",required=false) String searchContent,
+			Model model,
+			HttpServletRequest request) {
 		
+		/*
+		System.out.println(moimStatus); on이나 null
+		System.out.println(moimCate); 동아리 혹은 동아리,취미활동 혹은 null
+		System.out.println(sido); 전체 혹은 대전광역시 등의 지역명 시/도 선택
+		System.out.println(gugun); 전체 혹은 구 혹은 빈 값
+		System.out.println(selectOption); title이 기본
+		System.out.println(searchContent); 내용 혹은 빈 값
+		*/
+		ArrayList<String> pageMsg = new ArrayList<>();
+		HashMap<String,Object> paramap = new HashMap<>();
 		
+		if(moimStatus!=null) {
+			paramap.put("moimStatus", "Y");
+			pageMsg.add("모집중");
+		}
+		if(moimCate !=null) {
+			String[] categories = moimCate.trim().split(",");
+//			ArrayList<String> cates = new ArrayList<>();
+//			for(String cate : categories){
+//				cates.add(cate);
+//			}
+			paramap.put("cates", categories); // 이건 매퍼에서 LIST로 돌려야 함
+			pageMsg.add("모집 유형이 "+moimCate);
+		} 
+		System.out.println(paramap.get("cates"));
+		
+		if(!(sido.trim().equals("시/도 선택") || sido.trim().equals("전체"))){
+			if(gugun.trim().equals("전체")){
+				paramap.put("local", "%"+sido.trim()+"%");
+				pageMsg.add("지역은 "+paramap.get("local"));
+			} else {
+				paramap.put("local", sido.trim()+" "+gugun.trim());
+				pageMsg.add("지역은 "+paramap.get("local"));
+			}
+		} else {
+			paramap.put("local", "%");
+		}
+
+		if(!searchContent.trim().equals("")) {
+			switch(selectOption) {
+				case "title": paramap.put("title", "%"+searchContent.trim()+"%"); 
+							  pageMsg.add("제목에 \""+searchContent.trim()+"\"을 포함하는");break;
+				case "content": paramap.put("content", "%"+searchContent.trim()+"%"); 
+								pageMsg.add("내용에 \""+searchContent.trim()+"\"을 포함하는");break;
+				case "nickname": paramap.put("nickname", "%"+searchContent.trim()+"%");
+								pageMsg.add("작성자에 \""+searchContent.trim()+"\"을 포함하는");break;
+			}
+		}
+		System.out.println(paramap);
+		ArrayList<Moim> searchList = mService.searchMoim(paramap);
+		
+		/*** 전달 메세지 ***/
+		String str = "";
+		for(String s : pageMsg) {
+			str += " ✅" + s;
+		}
+		
+		if(searchList != null && searchList.size()>0  ) {
+			ArrayList<Attachment> attmlist = mService.selectMoimAttm(searchList);
+			
+			/**** 조회수 / 좋아요수 / 댓글수 / 스크랩수 *****/ 
+			ArrayList<Integer> replyLikeCount = mService.getPageReplyCount(searchList);
+			ArrayList<Integer> likeCount = mService.getPageLikeCount(searchList);
+			ArrayList<Integer> scrapCount = mService.getPageScrapCount(searchList);
+			
+			model.addAttribute("list",searchList);
+			model.addAttribute("attmlist", attmlist);
+			model.addAttribute("replyLikeCount",replyLikeCount);
+			model.addAttribute("likeCount",likeCount);
+			model.addAttribute("scrapCount",scrapCount);
+			model.addAttribute("str",str);
+			return "moimsearch";
+		} else {
+			model.addAttribute("str", str);
+			model.addAttribute("msg", "게시글을 찾을 수 없어요!");
+			return "moimsearch";
+		}
 	}
 	
-	
-	
-	
+	/** 삭제 
+	 */
+	@RequestMapping("declare.moim")
+	public String declareBoard(@RequestParam("bId") int boardId, Model model) {
+		int result = mService.declareBoard(boardId);
+		System.out.println(result);
+		if (result > 0) {
+			model.addAttribute("msg", "신고한 게시글입니다.");
+			return "redirect:selectMoim.moim";
+		} else {
+			model.addAttribute("msg", "신고할 수 없습니다.");
+			return "redirect:selectMoim.moim";
+		}
+	}
 	
 }

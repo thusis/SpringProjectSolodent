@@ -110,8 +110,16 @@ public class MoimDAO {
 		return (ArrayList)sqlSession.selectList("moimMapper.selectTopBoard",boardIds);
 	}
 
-	public int deleteBoardLike(SqlSessionTemplate sqlSession, int boardId) {
+	public int deleteBoard(SqlSessionTemplate sqlSession, int boardId) {
 		return sqlSession.update("moimMapper.delectMoimBoard", boardId);
+	}
+
+	public ArrayList<Moim> searchMoim(SqlSessionTemplate sqlSession, HashMap paramap) {
+		return (ArrayList)sqlSession.selectList("moimMapper.selectSearchMoimList", paramap);
+	}
+
+	public int declareBoard(SqlSessionTemplate sqlSession, int boardId) {
+		return sqlSession.insert("moimMapper.declareBoard", boardId);
 	}
 
 	

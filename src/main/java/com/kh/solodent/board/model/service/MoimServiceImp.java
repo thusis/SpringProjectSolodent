@@ -1,6 +1,7 @@
 package com.kh.solodent.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +121,17 @@ public class MoimServiceImp implements MoimService {
 
 	@Override
 	public int deleteBoard(int boardId) {
-		return mDAO.deleteBoardLike(sqlSession, boardId);
+		return mDAO.deleteBoard(sqlSession, boardId);
+	}
+
+	@Override
+	public ArrayList<Moim> searchMoim(HashMap paramap) {
+		return mDAO.searchMoim(sqlSession, paramap);
+	}
+
+	@Override
+	public int declareBoard(int boardId) {
+		return mDAO.declareBoard(sqlSession, boardId);
 	}
 	
 	
