@@ -2778,10 +2778,6 @@ section {
   color: #a2a2a2;
 }
 
-.bn_replies {
-  color: #6c757d;
-}
-
 .bn_replies ul {
   display: flex;
   flex-wrap: wrap;
@@ -2797,16 +2793,7 @@ section {
   padding-left: 20px;
 }
 
-.bn_replies ul:first-child {
-  font-size: 1rem;
-  font-weight: bolder;
-  line-height: 0;
-  color: var(--color-darkblue);
-  align-items: center;
-}
-
 .bn_replies li{
-  font-size: 1rem;
   line-height: 0;
   align-items: center;
 }
