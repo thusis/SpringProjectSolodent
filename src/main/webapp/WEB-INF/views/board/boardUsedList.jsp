@@ -8,7 +8,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <!-- jQuery menubar.jsp 에 있어서 지워도 될 것 같아요. -->
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <style type="text/css">
 	#listCard:hover {
 		cursor: pointer;

@@ -13,12 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Reply {
-	private int replyId;
-	private String replyContent;
-	private Date createDate;
-	private char status;
+public class BoardScrap {
 	private String userId;
-	private String nickName;
 	private int boardId;
 }

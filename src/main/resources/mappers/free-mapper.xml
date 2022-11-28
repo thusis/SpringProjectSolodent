@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="freeMapper">
 	
-	<resultMap type="Board" id="freeResultSet">
+		<resultMap type="Board" id="freeResultSet">
 		<id column="BOARD_ID" property="boardId"/>
+		<result column="BOARD_CODE" property="boardCode"/>
 		<result column="BOARD_TITLE" property="boardTitle"/>
 		<result column="BOARD_CONTENT" property="boardContent"/>
 		<result column="USER_ID" property="userId"/>
@@ -11,13 +12,7 @@
 		<result column="MODIFY_DATE" property="modifyDate"/>
 		<result column="IS_NOTICE" property="isNotice"/>
 		<result column="BOARD_COUNT" property="boardCount"/>
-		<result column="STATUS" property="boardStatus"/>
-		<result column="GROUP_CATE" property="moimCategory"/>
-		<result column="GROUP_START" property="moimStart"/>
-		<result column="GROUP_END" property="moimEnd"/>
-		<result column="LOCAL" property="local"/>
-		<result column="STATUS_1" property="moimStatus"/>
-		<result column= "IS_NOTICE" property="isNotice"/>
+		<result column="STATUS" property="status"/>
 	</resultMap>
 	
 	 <select id="selectNoTice" resultMap="freeResultSet">
@@ -27,4 +22,25 @@
   		  and STATUS = 'Y'
   		  and BOARD_CODE = 1
   	</select>
+  	
+  	<select id="selectBoardList" resultMap="freeResultSet">
+  		select *
+  		from board
+  		where IS_NOTICE = 'N'
+  		  and STATUS = 'Y'
+  		  and BOARD_CODE = 1
+  		  order by board_id desc
+  	</select>
+  	
+  	<select id="getListCount" resultType="_int">
+  		select count(*)
+  		from board
+  		where board_code = 4 and STATUS = 'Y'
+  	</select>
+  	
+  	<insert id="insertBoard">
+  		
+		insert into board values(seq_bid.nextval, 1, #{boardTitle}, #{boardContent}, #{userId},
+													sysdate, default, default, default, default)
+  	</insert>
   </mapper>

@@ -18,17 +18,28 @@
 	<jsp:include page="../home/menubar.jsp"/>
 
     <main id="main" style="margin-top: 70px;">
-
-    <!-- ======= most viewed Section ======= -->
-    <!--게시판테이블로 활용해도 괜찮을 UI-->
+    
+    <div class="container text-center align-items-center">
+    <c:if test="${ empty list }">
+    	<h2>모임 게시글에 아직 게시글이 없습니다😅😅</h2>
+    	<h2>첫 글의 주인공이 되어보세요!</h2>
+     	<c:if test="${ !empty loginUser }">
+          <button onclick="location.href='${contextPath}/write.moim'" type="button" class="btn btn-outline-primary btn-lg">지금 글쓰러 가기</button>
+		</c:if>
+		<c:if test="${ empty loginUser }">
+			<button onclick="location.href='${contextPath}/loginView.me'" type="button" class="btn btn-outline-primary btn-lg">지금 로그인 하러 가기</button>
+        </c:if>
+    </c:if>
+    </div>
+    
+	<c:if test="${ !empty list }">
     <section id="faq" class="faq"> <!--id와 class는 mostviewd로-->
         <div class="container" > 
   
           <div class="row gy-5">
-            <!--여기 아래로 수정하기-->
             <div class="col-lg-3">
                 <h2>솔로던트 트렌드✨</h2>
-                오늘 하루 가장 조회수가 높은 모집글입니다
+                오늘 하루 가장 인기있는 모집글입니다
                 <br><br>
                 
                 <c:if test="${ !empty loginUser }">
@@ -42,33 +53,28 @@
             <div class="col-lg-1"></div>
             <div class="col-lg-8">
   
-              <div class="accordion accordion-flush" id="faqlist" >
-              <!--id는 mostviewdlist로-->
-              
-  
-                <div class="accordion accordion-flush" id="faqlist" >
-              <!--id는 mostviewdlist로-->
-  
+               <div class="accordion accordion-flush" id="faqlist" >
+               
                 <div class="accordion-item">
                   <h3 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-1">
-                        <!--target를 #mostviewed-content-1로 바꾸기-->
-                      <span class="num">게시글번호1</span>
-                      [지역/형태] 게시글제목 하단내용텍스트누르면게시글로이동
+                      <span class="num">1등!</span>
+                      [<c:if test="${topBoard[0].local eq '전체 전체'}">전체</c:if>
+                      <c:if test="${topBoard[0].local ne '전체 전체'}">${topBoard[0].local}</c:if>
+                      /${topBoard[0].moimCategory}] ${topBoard[0].boardTitle}
                     </button>
                   </h3>
                   <div id="faq-content-1" class="accordion-collapse collapse" data-bs-parent="#faqlist" >
                     <!--id를 mostviewed-content-1로 바꾸기-->
                     <!--data-bs-parent를 #mostviewedlist로 바꾸기-->
                    <div class="accordion-body">
-
+                   <span hidden="hidden" class="bId">${topBoard[0].boardId}</span>
+                   <span hidden="hidden" class="userId">${topBoard[0].userId}</span>
                         <!--생략되어보일 수 있게 bn_txt_overflow라는 클래스 임의 생성함-->
                         <p class="bn_txt_overflow">
-                            지혜는 끝에 거친 찾아다녀도, 피에 풍부하게 있는가? 설산에서 이상은 얼마나 바이며, 있는가? 뛰노는 주며, 위하여 돋고, 든 갑 듣는다. 풀이 그림자는 거선의 이것이다. 우는 눈이 얼음과 피어나기 석가는 그들은 것이다. 새 청춘이 얼마나 더운지라 생생하며, 속잎나고, 눈이 청춘은 이것이다. 이상의 청춘은 싸인 그들은 기관과 피가 투명하되 산야에 그들은 이것이다. 얼음이 낙원을 불러 인생을 같은 크고 철환하였는가? 거친 이상 몸이 피어나는 피는 봄바람이다. 실현에 새가 그들에게 안고, 귀는 같이 그것은 되는 군영과 것이다.
-
-                            간에 구하지 사랑의 대한 청춘의 내려온 대고, 뿐이다. 인생에 피부가  용감하고 싹이 이것이다. 만천하의 보내는 얼음이 귀는 노년에게서 꾸며 위하여, 것이다. 우리 길을 않는 말이다. 이 생명을 군영과 되는 되려니와, 사라지지 꽃이 철환하였는가? 그들에게 현저하게 돋고, 끓는다. 황금시대를 맺어, 할지라도 얼음에 청춘의 무엇이 그들의 무한한 쓸쓸하랴? 이상, 인생에 하는 것이다. 목숨이 청춘의 어디 이상 과실이 못할 속잎나고, 청춘의 것이다.
+                        작성자 : ${topBoard[0].moimWriter}<br>
+                        ${topBoard[0].boardContent}
                         </p>
-
                     </div>
                   </div>
                 </div><!-- # Faq item-->
@@ -76,23 +82,23 @@
                 <div class="accordion-item">
                   <h3 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-2">
-                        <!--target를 #mostviewed-content-2로 바꾸기-->
-                      <span class="num">게시글번호2</span>
-                      [지역/형태] 게시글제목
+                      <span class="num">2등!</span>
+                      [<c:if test="${topBoard[1].local eq '전체 전체'}">전체</c:if>
+                      <c:if test="${topBoard[1].local ne '전체 전체'}">${topBoard[1].local}</c:if>
+                      /${topBoard[1].moimCategory}] ${topBoard[1].boardTitle}
                     </button>
                   </h3>
                   <div id="faq-content-2" class="accordion-collapse collapse" data-bs-parent="#faqlist" >
-                    <!--id를 mostviewed-content-2로 바꾸기-->
+                    <!--id를 mostviewed-content-1로 바꾸기-->
                     <!--data-bs-parent를 #mostviewedlist로 바꾸기-->
                    <div class="accordion-body">
-
+                   <span hidden="hidden" class="bId">${topBoard[1].boardId}</span>
+                   <span hidden="hidden" class="userId">${topBoard[1].userId}</span>
                         <!--생략되어보일 수 있게 bn_txt_overflow라는 클래스 임의 생성함-->
                         <p class="bn_txt_overflow">
-                            지혜는 끝에 거친 찾아다녀도, 피에 풍부하게 있는가? 설산에서 이상은 얼마나 바이며, 있는가? 뛰노는 주며, 위하여 돋고, 든 갑 듣는다. 풀이 그림자는 거선의 이것이다. 우는 눈이 얼음과 피어나기 석가는 그들은 것이다. 새 청춘이 얼마나 더운지라 생생하며, 속잎나고, 눈이 청춘은 이것이다. 이상의 청춘은 싸인 그들은 기관과 피가 투명하되 산야에 그들은 이것이다. 얼음이 낙원을 불러 인생을 같은 크고 철환하였는가? 거친 이상 몸이 피어나는 피는 봄바람이다. 실현에 새가 그들에게 안고, 귀는 같이 그것은 되는 군영과 것이다.
-
-                            간에 구하지 사랑의 대한 청춘의 내려온 대고, 뿐이다. 인생에 피부가  용감하고 싹이 이것이다. 만천하의 보내는 얼음이 귀는 노년에게서 꾸며 위하여, 것이다. 우리 길을 않는 말이다. 이 생명을 군영과 되는 되려니와, 사라지지 꽃이 철환하였는가? 그들에게 현저하게 돋고, 끓는다. 황금시대를 맺어, 할지라도 얼음에 청춘의 무엇이 그들의 무한한 쓸쓸하랴? 이상, 인생에 하는 것이다. 목숨이 청춘의 어디 이상 과실이 못할 속잎나고, 청춘의 것이다.
+                        작성자 : ${topBoard[1].moimWriter}<br>
+                        ${topBoard[1].boardContent}
                         </p>
-
                     </div>
                   </div>
                 </div><!-- # Faq item-->
@@ -100,23 +106,24 @@
                 <div class="accordion-item">
                   <h3 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-3">
-                        <!--target를 #mostviewed-content-3로 바꾸기-->
-                      <span class="num">게시글번호3</span>
-                      [지역/형태] 게시글제목
+                      <span class="num">3등!</span>
+                      [<c:if test="${topBoard[2].local eq '전체 전체'}">전체</c:if>
+                      <c:if test="${topBoard[2].local ne '전체 전체'}">${topBoard[2].local}</c:if>
+                      /${topBoard[2].moimCategory}] ${topBoard[2].boardTitle}
                     </button>
                   </h3>
+                  <span hidden="hidden" class="userId">${topBoard[2].userId}</span>
                   <div id="faq-content-3" class="accordion-collapse collapse" data-bs-parent="#faqlist" >
-                    <!--id를 mostviewed-content-3로 바꾸기-->
+                    <!--id를 mostviewed-content-1로 바꾸기-->
                     <!--data-bs-parent를 #mostviewedlist로 바꾸기-->
                    <div class="accordion-body">
-
+                   <span hidden="hidden" class="bId">${topBoard[2].boardId}</span>
+                   <span hidden="hidden" class="userId">${topBoard[2].userId}</span>
                         <!--생략되어보일 수 있게 bn_txt_overflow라는 클래스 임의 생성함-->
                         <p class="bn_txt_overflow">
-                            지혜는 끝에 거친 찾아다녀도, 피에 풍부하게 있는가? 설산에서 이상은 얼마나 바이며, 있는가? 뛰노는 주며, 위하여 돋고, 든 갑 듣는다. 풀이 그림자는 거선의 이것이다. 우는 눈이 얼음과 피어나기 석가는 그들은 것이다. 새 청춘이 얼마나 더운지라 생생하며, 속잎나고, 눈이 청춘은 이것이다. 이상의 청춘은 싸인 그들은 기관과 피가 투명하되 산야에 그들은 이것이다. 얼음이 낙원을 불러 인생을 같은 크고 철환하였는가? 거친 이상 몸이 피어나는 피는 봄바람이다. 실현에 새가 그들에게 안고, 귀는 같이 그것은 되는 군영과 것이다.
-
-                            간에 구하지 사랑의 대한 청춘의 내려온 대고, 뿐이다. 인생에 피부가  용감하고 싹이 이것이다. 만천하의 보내는 얼음이 귀는 노년에게서 꾸며 위하여, 것이다. 우리 길을 않는 말이다. 이 생명을 군영과 되는 되려니와, 사라지지 꽃이 철환하였는가? 그들에게 현저하게 돋고, 끓는다. 황금시대를 맺어, 할지라도 얼음에 청춘의 무엇이 그들의 무한한 쓸쓸하랴? 이상, 인생에 하는 것이다. 목숨이 청춘의 어디 이상 과실이 못할 속잎나고, 청춘의 것이다.
+                        작성자 : ${topBoard[2].moimWriter}<br>
+                        ${topBoard[2].boardContent}
                         </p>
-
                     </div>
                   </div>
                 </div><!-- # Faq item-->
@@ -131,44 +138,44 @@
 
 
     <!--======= 분류 ===========-->
-
     
     <div class="container">
+    
         <hr>
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-            <label class="form-check-label" for="flexSwitchCheckChecked">모집중인 글만 보기</label>
-        </div>
-
-        <br>
-
-        <div class="row align-items-center">
-            <div class="col-lg-2 bn_txt_strong ">모임분류</div>
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                    <label class="form-check-label" for="inlineCheckbox1">동아리</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">공모전</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">취미활동</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">자기개발</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">기타</label>
-                </div>
-            </div>
-            <div class="col"></div>
-        </div>
-        <br>
+        <form action="${contextPath }/search.moim" method="post">
+	        <div class="form-check form-switch">
+	            <input class="form-check-input" type="checkbox" id="selectOngoing" name="moimStatus">
+	            <label class="form-check-label" for="selectOngoing">모집중인 글만 보기</label>
+	        </div>
+			<br>
+	
+		        <div class="row align-items-center">
+		            <div class="col-lg-2 bn_txt_strong ">모임분류</div>
+		            <div class="col">
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="moimCategory" id="dongari" value="동아리">
+                              <label class="form-check-label" for="dongari">동아리</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="moimCategory" id="gongmojeon" value="공모전">
+                              <label class="form-check-label" for="gongmojeon">공모전</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="moimCategory" id="hobby" value="취미활동">
+                              <label class="form-check-label" for="hobby">취미활동</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="moimCategory" id="jagigebal" value="자기개발">
+                              <label class="form-check-label" for="jagigebal">자기개발</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="moimCategory" id="etc" value="기타">
+                              <label class="form-check-label" for="etc">기타</label>
+                          </div>
+		            </div>
+		            <div class="col"></div>
+	      	  	</div>
+     	<br>
         <div class="row align-items-center">
             <div class="col-lg-2 bn_txt_strong ">모임지역</div>
             <div class="col-lg-8">
@@ -220,7 +227,7 @@
                                 $gugun.append("<option value='"+this+"'>"+this+"</option>");
                             });
                             }
-                        });
+                     });
                 });
             </script>
             </div>  
@@ -229,59 +236,63 @@
         <br>
 
         <div class="row align-items-center">
-            <div class="col-lg-2 bn_txt_strong">내용검색</div>
-            <div class="col-lg-8"><input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"></div>
-            <div class="col-lg-2"><button type="button" class="btn btn-primary btn-lg">검색하기</button></div>
+            <div class="col-lg-2 bn_txt_strong">
+            찾을 내용 검색
+            </div>
+            <div class="col-lg">
+					<select class="col-lg" name="selectOption">
+						<option value="title">제목</option>
+						<option value="content">내용</option>
+						<option value="nickname">작성자</option>
+					</select>
+            </div>
+            <div class="col-lg-7"><input type="text" name="searchContent" class="form-control col-lg-8" aria-label="찾고 싶은 내용을 입력하세요" aria-describedby="inputGroup-sizing-sm"></div>
+            <div class="col-lg-2"><button type="submit" class="btn btn-primary">검색하기</button></div>
         </div>
+        
         <hr>
     </div>
+    </form>
 
 
     <!-- =========게시글================--> 
     <section id="blog" class="blog">
-        <!--아이디와 클래스 moimpost로 수정-->
         <div class="container">
   
             <div class="row gy-4 posts-list">
-                
-                <c:forEach items="${list}" var="moim">
+
+                <c:forEach items="${list}" var="moim" varStatus="status">
+
 	                <div class="col-xl-4 col-md-6">
 	                <article>
 	                	<div style="display:none">
 		                	<span class="bId">${moim.boardId}</span>
 		                	<span class="moimWriter">${moim.moimWriter}</span>
-		                	<span class="userId" hidden="hidden">${moim.userId }</span>
+		                	<span class="userId" hidden="hidden">${moim.userId}</span>
 	                	</div>
 
 	                    <div class="post-img">
-	                    <c:forEach items="${attmlist }" var="att">
-								<c:if test="${moim.boardId eq att.boardId }">
-										<img src="${contextPath }/resources/uploadFiles/${att.rename}" alt="" class="img-fluid">
-								</c:if>
-						</c:forEach>
+							<img src="${contextPath }/resources/uploadFiles/${attmlist[status.index].rename}" alt="" class="img-fluid">
 	                    </div>
 		                    
 	                    <div class="row justify-content-between">
  
 							<c:if test="${moim.local eq '전체 전체'}">
-		                        <span class="col group_type">${moim.moimCategory } / 전체</span>
+		                        <span class="col group_type"><i class="bi bi-geo-alt"></i> 전체</span>
 							</c:if>
 	
 							<c:if test="${moim.local ne '전체 전체'}">
-		                        <span class="col group_type">${moim.moimCategory } / ${moim.local}</span>
+		                        <span class="col group_type"><i class="bi bi-geo-alt"></i> ${moim.local}</span>
 							</c:if>
 							
-	                        <span class="col text-end group_status date">모집중 ${moim.createDate}</span>
-<%-- 							<c:if test="${moim.moimStatus eq 'Y'}"> --%>
-<%-- 		                        <span class="col text-end group_status date">모집중 ${moim.createDate}</span> --%>
-<%-- 							</c:if> --%>
-	
-<%-- 							<c:if test="${moim.moimStatus ne 'N'}"> --%>
-<%-- 		                        <span class="col text-end group_status date">모집종료 ${moim.createDate}</span> --%>
-<%-- 							</c:if> --%>
+	                        <span class="col text-end group_status date" style="color:black;">
+	                       		<i class="bi bi-people-fill"></i>${moim.moimCategory}<br>
+	                        	<c:if test="${fn:contains(moim.moimStatus, 'Y')}">모집중</c:if>
+	                        	<c:if test="${fn:contains(moim.moimStatus, 'B')}">모집전</c:if>
+	                        	<c:if test="${fn:contains(moim.moimStatus, 'N')}">모집종료</c:if>
+	                        </span>
 							
 	                    </div>
-	                    <!--group_type 이랑 group_status, date 속성 추가-->
 	                    <br>
 	                    
 	                    <h2 class="title">
@@ -289,14 +300,17 @@
 	                    </h2>
 	
 	                    <div class="row justify-content-between">
-	                        <span class="col">${moim.moimWriter}</span>
+	                        <span class="col text-start">${moim.moimWriter}</span>
+	                        <span class="col text-end">${moim.createDate}</span>
+	                    </div>
+	                    <div class="row justify-content between">
 	                        <span class="col text-end">
 	                            <i class="view fa-solid fa-eye"></i>&nbsp;${moim.boardCount}&nbsp;
-	                            <i class="like fa-regular fa-heart"></i>&nbsp;1&nbsp;&nbsp;
-	                            <i class="save fa-regular fa-bookmark"></i>&nbsp;1
-	                            <!--view, like 이랑 save 클래스 추가-->
+	                            <i class="like fa-regular fa-heart"></i>&nbsp;${likeCount[status.index]} &nbsp;&nbsp;
+	                          	<i class="fa-regular fa-comment-dots"></i>&nbsp; ${replyLikeCount[status.index]} &nbsp;&nbsp;
+	                            <i class="save fa-regular fa-bookmark"></i>&nbsp;${scrapCount[status.index] }
 	                        </span>
-	                    </div>
+	                     </div>
 	                </article>
 	                
 	                </div><!-- End post list item -->
@@ -307,11 +321,8 @@
         </div>
         </div>
     </section><!-- End Blog Section -->
-    
-    
-    
 	
-    <!--========페이지네이션 수정 필요 =======-->
+    <!--========페이지네이션 =======-->
     <div class="bn-pagination">
         <ul class="justify-content-center">
         
@@ -343,86 +354,13 @@
     </div>
 
     <br>
+    </c:if>
 
     </main>
-
-    <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer">
-
-    <div class="container">
-        <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-info">
-            <a href="index.html" class="logo d-flex align-items-center">
-            <span>Impact</span>
-            </a>
-            <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
-            <div class="social-links d-flex mt-4">
-            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-            </div>
-        </div>
-
-        <div class="col-lg-2 col-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Terms of service</a></li>
-            <li><a href="#">Privacy policy</a></li>
-            </ul>
-        </div>
-
-        <div class="col-lg-2 col-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
-            </ul>
-        </div>
-
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-            <h4>Contact Us</h4>
-            <p>
-            A108 Adam Street <br>
-            New York, NY 535022<br>
-            United States <br><br>
-            <strong>Phone:</strong> +1 5589 55488 55<br>
-            <strong>Email:</strong> info@example.com<br>
-            </p>
-
-        </div>
-
-        </div>
-    </div>
-
-    <div class="container mt-4">
-        <div class="copyright">
-        &copy; Copyright <strong><span>Impact</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/impact-bootstrap-business-website-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-    </div>
-
-    </footer><!-- End Footer -->
-    <!-- End Footer -->
 
     <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <div id="preloader"></div>
-  
-    <!-- Vendor JS Files --> <!--이거 없으면 화면 안 나옴-->
-
 
 </body>
 
@@ -434,10 +372,20 @@
 			div.addEventListener('click', function(){
 				const boardId = this.querySelector('.bId').innerText;
 				const userId = this.querySelector('.userId').innerText;
-				//location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId+'&page='+${pi.currentPage};
-				location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId+'&page='+1;
+				location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId+'&page='+${pi.currentPage};
 			})
 		}
+		
+		const dives2 = document.getElementsByClassName('accordion-collapse');
+		for(const div of dives2){
+			div.addEventListener('click', function(){
+				const boardId = this.querySelector('.bId').innerText;
+				const userId = this.querySelector('.userId').innerText;
+				location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId+'&page='+${pi.currentPage};
+			})
+		}
+		
+		
 	}
 
 </script>
