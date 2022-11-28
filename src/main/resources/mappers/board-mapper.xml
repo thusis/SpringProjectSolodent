@@ -38,25 +38,28 @@
 		<id column="USER_ID" property="userId"/>
 	</resultMap>
 	
+	
 	<insert id="insertBoard">
 		insert into board values(seq_bid.nextval, #{boardCode}, #{boardTitle}, #{boardContent}, #{userId},
 													sysdate, sysdate, default, default, default)
 	</insert>
 	
 	<insert id="insertAttm">
-		insert all
-		<foreach collection="list" item="item">
-		 into attachment 
-		 values(new_fid, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, #{item.boardCode}, 
-		<if test="item.boardId != 0">
-			#{item.boardId},
+		<if test="list != null">  <!--  수정한 부분 -->
+			insert all
+			<foreach collection="list" item="item">
+			 into attachment 
+			 values(new_fid, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, #{item.boardCode}, 
+			<if test="item.boardId != 0">
+				#{item.boardId},
+			</if>
+			<if test="item.boardId == 0">
+				 seq_bid.currval, 
+			</if>
+			 #{item.isThum})
+			</foreach>
+			select * from dual
 		</if>
-		<if test="item.boardId == 0">
-			 seq_bid.currval, 
-		</if>
-		 #{item.isThum})
-		</foreach>
-		select * from dual
 	</insert>
 	
 	<insert id="insertUsed">
@@ -90,6 +93,7 @@
 	
 	<select id="selectBoard" resultMap="boardResultSet">
 		select * from board where board_id = #{bId}
+		
 	</select>
 	
 	<select id="selectUsed" resultMap="usedResultSet">
@@ -191,5 +195,165 @@
 	
 	<update id="updateUsed">
 		update board_used set product_cate = #{productCate}, local = #{local}, price = #{price} where board_id = #{boardId}
+	</update>
+	
+<!-- 	여기서부터 팁 부분 -->
+	
+	<resultMap type="Tip"  id="tipResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<result column="TIP_CATE" property="tipCate"/>
+	</resultMap> 
+	
+	<insert id="insertTip">
+		insert into board_tip values(seq_bid.currval, #{category})
+	</insert>
+	
+	<select id="selectBoardList" resultMap="boardResultSet">
+		select * from board where board_code = #{i} and status = 'Y'
+		order by board_id desc
+	</select>
+
+	<select id="selectTipList" resultMap="tipResultSet">
+		select * from board_tip
+	</select>
+	
+	<select id="getListCount" resultType="_int">
+		select count(*) from board where board_code = #{i} and status = 'Y'
+	</select>
+	
+	<select id="searchTip" resultMap="boardResultSet">
+		select * from board join board_tip using(board_id) where
+		<if test="category != null">
+			tip_cate = #{category}
+			<if test="word != null">
+					<if test="searchWhere == 'boardContent'" >
+						and board_content like '%' || #{word} || '%'
+					</if>
+					<if test="searchWhere == 'boardTitle'">
+						and board_title like '%' || #{word} || '%'
+					</if>
+			</if>
+		</if>
+		<if test="category == null">
+			<if test="word  != null">
+					<if test="searchWhere == 'boardTitle'">
+						 board_title like '%' || #{word} || '%'
+					</if>
+				<if test="searchWhere == 'boardContent'">
+						 board_content like '%' || #{word} || '%'
+					</if>
+			</if>
+		</if>
+			and board_code = #{boardCode} and status = 'Y'
+	</select>
+	
+	<select id="selectSearchTipList" resultMap="boardResultSet">
+		select * from board join board_tip using(board_id) where
+		<if test="category != null">
+			tip_cate = #{category}
+			<if test="word != null">
+				<if test="searchWhere == boardTitle">
+					and board_title = '%' || #{word} || '%'
+				</if>
+				<if test="searchWhere == boardContent">
+					and board_content = '%' || #{word} || '%'
+				</if>
+			</if>
+		</if>
+		<if test="category == null">
+			<if test="word  != null">
+				<if test="searchWhere == 'boardContent'">
+						 board_content like '%' || #{word} || '%'
+					</if>
+					<if test="searchWhere == 'boardTitle'">
+						 board_title like '%' || #{word} || '%'
+					</if>
+			</if>
+		</if>
+			and board_code = #{boardCode} and status = 'Y'
+	</select>
+	
+	<select id="selectTip" resultMap="tipResultSet">
+		select * from board_tip where board_id = #{bId}
+	</select>
+	
+	<update id="updateTip">
+		update board_tip set tip_cate = #{tipCate} where board_id = #{boardId}
+	</update>
+	
+	<delete id="deleteTip">
+		delete from board_tip where board_id = #{boardId}
+	</delete>
+	
+	<select id="selectNickName" resultType="string">
+		select nickname from member where user_id = #{userId}
+	</select>
+	
+	<resultMap type="Reply" id="replyResultSet">
+		<id column="REPLY_ID" property="replyId"/>
+		<result column="REPLY_CONTENT" property="replyContent"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="NICKNAME" property="nickName"/>
+		<result column="BOARD_ID" property="boardId"/>
+	</resultMap>
+	
+	<insert id="insertReply">
+		insert into reply values(seq_rid.nextval, #{replyContent}, sysdate, default, #{userId}, #{boardId})
+	</insert>
+	
+	<select id="selectReply" resultMap="replyResultSet">
+		select * from reply join member using(user_id) where board_id = #{boardId} order by create_date asc
+	</select>
+	
+	<resultMap type="ReplyLike" id="replyLikeResultSet">
+		<id column="REPLY_ID" property="replyId"/>
+		<result column="USER_ID" property="userId"/>
+	</resultMap>
+	
+	<select id="replyLikeCount" resultType="integer">
+		select count(*) from reply_like where reply_id = #{replyId}
+	</select>
+	
+	<select id="isReplyLikeList" resultType="integer">
+		select count(*) from reply_like where user_id = #{userId} and reply_id = #{replyId}
+	</select>
+	
+	<insert id="addReplyLike">
+		insert into reply_like values(#{userId}, #{replyId})
+	</insert>
+	
+	<delete id="deleteReplyLike">
+		delete from reply_like where user_id = #{userId} and reply_id = #{replyId}
+	</delete>
+	
+	<select id="boardLikeCount" resultType="integer">
+		select count(*) from board_like where board_id = #{boardId}
+	</select>
+	
+	<select id="isScrap" resultType="_int">
+		select count(*) from board_scrap where user_id = #{userId} and board_id = #{boardId}
+	</select>
+	
+	<resultMap type="BoardScrap" id="boardLikeResultSet">
+		<id column="USER_ID" property="userId"/>
+		<id column="BOARD_ID" property="boardId"/>
+	</resultMap>
+	
+	<insert id="boardScrap">
+		insert into board_scrap values(#{userId}, #{boardId})
+	</insert>
+	
+	<delete id="deleteScrap">
+		delete from board_scrap where user_id = #{userId} and board_id = #{boardId}
+	</delete>
+	
+	<delete id="deleteReply">
+		delete from reply where reply_id = #{replyId}
+	</delete>
+	
+	<update id="updateReply">
+		update reply set reply_content = #{replyContent} where reply_id = #{replyId}
 	</update>
 </mapper>

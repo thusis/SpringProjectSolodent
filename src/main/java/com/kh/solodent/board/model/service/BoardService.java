@@ -10,7 +10,12 @@ import org.springframework.stereotype.Service;
 import com.kh.solodent.board.model.dao.BoardDAO;
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.BoardScrap;
 import com.kh.solodent.board.model.vo.Like;
+import com.kh.solodent.board.model.vo.PageInfo;
+import com.kh.solodent.board.model.vo.Reply;
+import com.kh.solodent.board.model.vo.ReplyLike;
+import com.kh.solodent.board.model.vo.Tip;
 import com.kh.solodent.board.model.vo.Used;
 
 import oracle.net.aso.b;
@@ -105,7 +110,100 @@ public class BoardService {
 		return bDAO.updateUsed(sqlSession, used);
 	}
 
+	//여기서부터 팁 부분
 	
+	public int insertTip(String category) {
+		return bDAO.insertTip(sqlSession, category);
+	}
+
+	public ArrayList<Board> selectBoardList(PageInfo pi, int i) {
+		return bDAO.selectBoardList(sqlSession, pi, i);
+	}
+
+	public ArrayList<Tip> selectTipList() {
+		return bDAO.selectTipList(sqlSession);
+	}
+
+	public int getListCount(int i) {
+		return bDAO.getListCount(sqlSession, i);
+	}
+
+	public ArrayList<Board> searchTip(HashMap<String, Object> map) {
+		return bDAO.searchTip(sqlSession, map);
+	}
+
+	public ArrayList<Board> selectSearchTipList(HashMap<String, Object> map, PageInfo pi) {
+		return bDAO.selectSearchTipList(sqlSession, map, pi);
+	}
+
+	public Tip selectTip(int bId) {
+		return bDAO.selectTip(sqlSession, bId);
+	}
+
+	public int updateTip(Tip tip) {
+		return bDAO.updateTip(sqlSession, tip);
+	}
+
+	public int deleteTip(int boardId) {
+		return bDAO.deleteTip(sqlSession, boardId);
+	}
+
+	public String selectNickName(String userId) {
+		return bDAO.selectNickName(sqlSession, userId);
+	}
+
+	public int insertReply(Reply r) {
+		return bDAO.insertReply(sqlSession, r);
+	}
+
+	public ArrayList<Reply> selectReply(int boardId) {
+		return bDAO.selectReply(sqlSession, boardId);
+	}
+
+	public Integer replyLikeCount(int boardId) {
+		return bDAO.replyLikeCount(sqlSession, boardId);
+	}
+
+	public Integer isReplyLikeList(HashMap<String, Object> map) {
+		return bDAO.isReplyLikeList(sqlSession, map);
+	}
+
+	public void addReplyLike(ReplyLike r) {
+		bDAO.addReplyLike(sqlSession, r);
+	}
+
+	public void deleteReplyLike(ReplyLike r) {
+		bDAO.deleteReplyLike(sqlSession, r);
+	}
+
+	public Integer boardLikeCount(int boardId) {
+		return bDAO.boardLikeCount(sqlSession, boardId);
+	}
+
+	public int isScrap(HashMap<String, Object> scrapMap) {
+		return bDAO.isScrap(sqlSession, scrapMap);
+	}
+
+	public void boardScrap(BoardScrap bs) {
+		bDAO.boardScrap(sqlSession, bs);
+	}
+
+	public void deleteScrap(BoardScrap bs) {
+		bDAO.deleteScrap(sqlSession, bs);
+	}
+
+	public int deleteReply(int replyId) {
+		return bDAO.deleteReply(sqlSession, replyId);
+	}
+
+	public int updateReply(Reply r) {
+		return bDAO.updateReply(sqlSession, r);
+	}
+
+	
+
+
+
 	
 
 }
