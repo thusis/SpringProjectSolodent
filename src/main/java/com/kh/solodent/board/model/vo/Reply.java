@@ -19,5 +19,6 @@ public class Reply {
 	private Date createDate;
 	private char status;
 	private String userId;
+	private String nickName;
 	private int boardId;
 }
