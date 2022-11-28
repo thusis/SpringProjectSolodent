@@ -119,7 +119,7 @@
 	    		</div>
 	    		
 			    <div class="col-lg-1 d-none d-sm-block middle">
-			    	<a href="">자취꿀팁</a>
+			    	<a href="${ contextPath }/tipList.bo">자취꿀팁</a>
 			    </div>
 			    
 			    <div class="col-lg-1 d-none d-md-block middle">
