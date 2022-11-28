@@ -34,7 +34,7 @@
 	<link href="/solodent/resources/assets/css/main.css" rel="stylesheet">
 		
     <style>
-	    nav{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed;}
+	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed;}
 	    
 		a{
 		text-decoration: none;
@@ -101,8 +101,8 @@
   
   <body>
     <c:set var="contextPath" value="${ pageContext.request.contextPath }" scope="application"/>
-    <header id="header"  class="header align-items-center">
-	   <nav>
+    <header id="header"  align-items-center">
+	   <nav class="nav1">
 	   	<div class="container-fluid text-center">
 	  		<div class="row">
 				<div class="col-lg-2 "  id="icon">
