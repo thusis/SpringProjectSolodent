@@ -7,6 +7,7 @@
 	String boardId = request.getParameter("boardId");
 	String loginUserId = request.getParameter("loginUserId");
  %>    
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
 <!DOCTYPE html>
 <html>
@@ -21,8 +22,10 @@
             <br><h1>신고하기</h1>
         </div>
         
+        
         <div class="container">
-            <form action="${contextPath}/declare.moim" method="post">
+        <c:if test="${ empty dclmsg }">
+            <form action="${contextPath}/declare.moim" method="post" id="goToDeclare">
 	            <div class="boardInfo" style="margin:30px;">
 	                <h5>작성자 : <%=moimWriter %></h5>
 	                <h5>글 제목 : <%=boardTitle %></h5>
@@ -51,17 +54,21 @@
 	            <hr>
 	            <div class="footer justify-content-md-between text-end">
 	            	<input type="button" value="신고하지 않고 닫기" class="btn" onclick="self.close();"/>
-	            	<button type="submit" class="btn" onclick="declareClose();">신고하기</button>
+	            	<button type="submit" class="btn">신고하기</button>
 	            </div>
 			</form>
+			</c:if>
+			
+			<c:if test="${ !empty dclmsg }">
+			<h3>${ dclmsg}</h3>
+			 신고가 정상제출되었습니다.
+			 
+			</c:if>
         </div>
         
-    <script>
-		function declareClose(){
-			opener.location.href="${contextPath}/declare.moim";
-			self.close();
-		}
-	</script>
+<!--     <script> -->
+
+<!-- 	</script> -->
         
 
 
