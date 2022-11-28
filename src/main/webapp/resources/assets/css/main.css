@@ -2780,7 +2780,7 @@ section {
 
 .bn_replies ul {
   display: flex;
-  flex-wrap: wrap;
+  /*flex-wrap: wrap;*/
   list-style: none;
   align-items: center;
   padding: 0;
@@ -2794,7 +2794,7 @@ section {
 }
 
 .bn_replies li{
-  line-height: 0;
+  line-height: normal;
   align-items: center;
 }
 
