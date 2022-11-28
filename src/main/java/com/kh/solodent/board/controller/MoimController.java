@@ -490,17 +490,16 @@ public class MoimController {
 		System.out.println(isDeclared);
 		if(isDeclared>0) {
 			model.addAttribute("dclmsg","이미 신고한 게시글입니다.");
-			return "redirect:selectMoim.moim";
+			return "redirect:declare.moim";
 		} else {
 			int result = mService.declareBoard(dcl);
 			System.out.println("신고결과"+result);
-			
 			if (result > 0) {
 				model.addAttribute("dclmsg", "신고한 게시글입니다.");
-				return "redirect:selectMoim.moim";
+				return "redirect:declare.moim";
 			} else {
 				model.addAttribute("dclmsg", "신고할 수 없습니다.");
-				return "redirect:selectMoim.moim";
+				return "redirect:declare.moim";
 			}
 		}
 	}
