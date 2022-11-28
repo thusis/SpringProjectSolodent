@@ -132,7 +132,7 @@
 			    
 			    
 			    
-	    		<div class="col-lg d-none d-lg-block "> </div>
+	    		<div class="col-lg d-none d-lg-block "></div>
 	    
 			    <div class="col-lg-1 d-none d-lg-block middle">
 			   		<c:if test="${ empty loginUser }">
