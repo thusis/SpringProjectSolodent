@@ -77,7 +77,7 @@
 	<div style="height: 35px;"></div>
 		<div class="row row-cols-auto justify-content-end pb-4">
 			<select class="form-select d-flex" aria-label="Default select example" style="width:  150px;" name="tipCate" id="category">
-				<option value="" selected="selected">카테고리</option>
+				<option value="" selected="selected">카테고리 선택</option>
 				<option value="취미/여가" >취미/여가</option>
 				<option value="요리">요리</option>
 				<option value="쇼핑">쇼핑</option>
