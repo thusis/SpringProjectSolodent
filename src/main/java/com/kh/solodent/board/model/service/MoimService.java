@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
@@ -55,7 +56,9 @@ public interface MoimService {
 
 	ArrayList<Moim> searchMoim(HashMap paramap);
 
-	int declareBoard(int boardId);
+	int declareBoard(Declare dcl);
+
+	int getIsDeclared(Declare dcl);
 
 
 }

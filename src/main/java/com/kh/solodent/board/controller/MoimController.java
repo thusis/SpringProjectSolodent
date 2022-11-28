@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,6 +28,7 @@ import com.kh.solodent.board.common.Pagination;
 import com.kh.solodent.board.model.exception.BoardException;
 import com.kh.solodent.board.model.service.MoimService;
 import com.kh.solodent.board.model.vo.Attachment;
+import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
@@ -72,8 +72,6 @@ public class MoimController {
 		System.out.println("pi:"+pi);
 		ArrayList<Moim> list = mService.selectMoimList(pi);
 
-		/***********상위랭크 게시글 세 개*************/
-		ArrayList<Moim> topBoard = getTopBoard();
 	
 		if(list !=null && list.size()>0 ) {
 			ArrayList<Attachment> attmlist = mService.selectMoimAttm(list);
@@ -88,7 +86,11 @@ public class MoimController {
 			model.addAttribute("replyLikeCount",replyLikeCount);
 			model.addAttribute("likeCount",likeCount);
 			model.addAttribute("scrapCount",scrapCount);
-			model.addAttribute("topBoard", topBoard);
+			if(list.size()>2) {
+				/***********상위랭크 게시글 세 개*************/
+				ArrayList<Moim> topBoard = getTopBoard();
+				model.addAttribute("topBoard", topBoard);
+			}
 			return "moimhome";
 		} else {
 			model.addAttribute("msg", "모임게시글이 없습니다!");
@@ -213,7 +215,7 @@ public class MoimController {
 	public ModelAndView selectMoim(
 			@RequestParam("boardId") int boardId, 
 			@RequestParam("userId") String userId,
-			@RequestParam("page") int page,
+			@RequestParam(value="page", required=false) Integer page,
 			ModelAndView mv,
 			HttpSession session) {
 
@@ -229,6 +231,9 @@ public class MoimController {
 		}
 		
 		Moim moim = mService.selectMoim(boardId, yn);
+		
+		System.out.println(moim);
+		
 		ArrayList<Attachment> list = mService.selectAttmList((Integer) boardId);
 		ArrayList<Reply> replyList = mService.getBoardReplyList(boardId);
 
@@ -248,7 +253,11 @@ public class MoimController {
 		}
 		
 		if(moim!=null) {
-			mv.addObject("moim",moim).addObject("page",page).addObject("list",list).addObject("replyList",replyList).addObject("replyLikeCount",replyLikeCount).addObject("boardScrapCount",boardScrapCount).addObject("boardLikeCount",boardLikeCount).addObject("isLike",isLike).setViewName("moimdetail");
+			if(page!=null) {
+				mv.addObject("moim",moim).addObject("page",page).addObject("list",list).addObject("replyList",replyList).addObject("replyLikeCount",replyLikeCount).addObject("boardScrapCount",boardScrapCount).addObject("boardLikeCount",boardLikeCount).addObject("isLike",isLike).setViewName("moimdetail");
+			}else {
+				mv.addObject("moim",moim).addObject("list",list).addObject("replyList",replyList).addObject("replyLikeCount",replyLikeCount).addObject("boardScrapCount",boardScrapCount).addObject("boardLikeCount",boardLikeCount).addObject("isLike",isLike).setViewName("moimdetail");
+			}
 		} else {
 			throw new BoardException("모임 게시글 상세보기 실패");
 		}
@@ -464,18 +473,35 @@ public class MoimController {
 		}
 	}
 	
-	/** 삭제 
-	 */
+	@RequestMapping("declare-popup.moim")
+	public String declarePopup() {
+		return "declare-popup";
+	}
+	
 	@RequestMapping("declare.moim")
-	public String declareBoard(@RequestParam("bId") int boardId, Model model) {
-		int result = mService.declareBoard(boardId);
-		System.out.println(result);
-		if (result > 0) {
-			model.addAttribute("msg", "신고한 게시글입니다.");
+	public String declareBoard(
+			@ModelAttribute Declare dcl, 
+			Model model,
+			HttpServletRequest request) {
+
+		System.out.println(dcl);
+		
+		int isDeclared = mService.getIsDeclared(dcl);
+		System.out.println(isDeclared);
+		if(isDeclared>0) {
+			model.addAttribute("dclmsg","이미 신고한 게시글입니다.");
 			return "redirect:selectMoim.moim";
 		} else {
-			model.addAttribute("msg", "신고할 수 없습니다.");
-			return "redirect:selectMoim.moim";
+			int result = mService.declareBoard(dcl);
+			System.out.println("신고결과"+result);
+			
+			if (result > 0) {
+				model.addAttribute("dclmsg", "신고한 게시글입니다.");
+				return "redirect:selectMoim.moim";
+			} else {
+				model.addAttribute("dclmsg", "신고할 수 없습니다.");
+				return "redirect:selectMoim.moim";
+			}
 		}
 	}
 	

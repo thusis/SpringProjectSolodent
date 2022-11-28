@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
@@ -107,6 +108,7 @@ public class MoimDAO {
 	
 	public ArrayList<Moim> selectTopThree(SqlSessionTemplate sqlSession){
 		ArrayList<Integer> boardIds = (ArrayList)sqlSession.selectList("moimMapper.selectTopThree");
+		System.out.println(boardIds);
 		return (ArrayList)sqlSession.selectList("moimMapper.selectTopBoard",boardIds);
 	}
 
@@ -118,9 +120,14 @@ public class MoimDAO {
 		return (ArrayList)sqlSession.selectList("moimMapper.selectSearchMoimList", paramap);
 	}
 
-	public int declareBoard(SqlSessionTemplate sqlSession, int boardId) {
-		return sqlSession.insert("moimMapper.declareBoard", boardId);
+	public int getIsDeclared(SqlSessionTemplate sqlSession, Declare dcl) {
+		return sqlSession.selectOne("moimMapper.getIsDeclared", dcl);
 	}
+	
+	public int declareBoard(SqlSessionTemplate sqlSession, Declare dcl) {
+		return sqlSession.insert("moimMapper.declareBoard", dcl);
+	}
+
 
 	
 	

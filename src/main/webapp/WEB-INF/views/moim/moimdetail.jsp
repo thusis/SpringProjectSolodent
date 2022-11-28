@@ -22,6 +22,8 @@
     <!-- ======= Blog Details Section ======= -->
     <section id="blog" class="blog">
       <div class="container" data-aos="fade-up">
+      
+      	<c:if test="${ !empty dclmsg }"><div class="row mb-3"><h5>${ dclmsg }</h5></div></c:if>
 
         <div class="row g-5">
 
@@ -44,15 +46,15 @@
 					</c:if>
 					<c:if test="${ !empty loginUser && loginUser.id ne moim.userId }">
 						<ul class="dropdown-menu">
-							<li><a onclick="openPopUp()" class="dropdown-item" href="${contextPath}/declare.moim?bId=${moim.boardId}">신고하기</a></li>
+							<li><a onclick="openPopUp();" class="dropdown-item">신고하기</a></li>
 						</ul>
-						
-						<script type="text/javascript">
-							function openPopUp() {
-								 window.open("declare-popup.jsp", "mypopup", "width=500, height=500, top=150, left=200");
-							}
-						</script>
 					</c:if>
+							<form id="declareForm">
+								<input type="hidden" name="moimWriter" value="${ moim.moimWriter }">
+								<input type="hidden" name="boardTitle" value="${ moim.boardTitle }">
+								<input type="hidden" name="boardId" value="${ moim.boardId }">
+								<input type="hidden" name="loginUserId" value="${ loginUser.id }">
+							</form>
 		        </div>
               </div>
               
@@ -69,19 +71,18 @@
                     <li class="align-items-center"> | </li>
                     
 					<c:if test="${moim.local eq '전체 전체'}">
-	                    <li class="align-items-center"><i class="bi bi-geo-alt"></i> <a href="blog-details.html">전체</a></li><!--누르면 지역으로 검색-->
+	                    <li class="align-items-center"><i class="bi bi-geo-alt"></i> <a>전체</a></li><!--누르면 지역으로 검색-->
 					</c:if>
 
 					<c:if test="${moim.local ne '전체 전체'}">
-	                    <li class="align-items-center"><i class="bi bi-geo-alt"></i> <a href="blog-details.html">${moim.local}</a></li><!--누르면 지역으로 검색-->
+	                    <li class="align-items-center"><i class="bi bi-geo-alt"></i> <a>${moim.local}</a></li><!--누르면 지역으로 검색-->
 					</c:if>
-                    <li class="align-items-center"><i class="bi bi-people-fill"></i> <a href="blog-details.html">${moim.moimCategory}</a></li><!--누르면 모임형태로 검색-->
+                    <li class="align-items-center"><i class="bi bi-people-fill"></i> <a>${moim.moimCategory}</a></li><!--누르면 모임형태로 검색-->
                     
                     <li class="align-items-center"><i class="bi bi-patch-check-fill"></i>
-                       	<c:if test="${fn:contains(moim.moimStatus , 'Y')}"><p>모집중</p></c:if>
-                       	<c:if test="${fn:contains(moim.moimStatus , 'B')}"><p>모집전</p></c:if>
-                       	<c:if test="${fn:contains(moim.moimStatus , 'N')}"><p>모집종료</p></c:if>
-                   "${moim.moimStatus}"
+                       	<c:if test="${fn:contains(moim.moimStatus , 'Y')}"><a>모집중</a></c:if>
+                       	<c:if test="${fn:contains(moim.moimStatus , 'B')}"><a>모집전</a></c:if>
+                       	<c:if test="${fn:contains(moim.moimStatus , 'N')}"><a>모집종료</a></c:if>
                     </li>
                   </ul>
               </div><!-- End meta top -->
@@ -121,102 +122,6 @@
                 
               </div>
 
-             <script type="text/javascript">
-                
-					var isLike = ${isLike};
-                	var boardId = ${moim.boardId};
-                	var userId = '${loginUser.id}';
-        			window.onload=()=>{
-        				document.getElementById('btnh').addEventListener('click', function(){
-        					const boardLikeCountSpan = document.getElementById('boardLikeCount');
-        					console.log(boardLikeCountSpan);
-        					if(isLike==1){
-	                			$.ajax({
-	                				url:'${contextPath}/deleteBoardLike.moim',
-	                				data :{boardId:boardId,userId:userId},
-	                				success : (data)=>{
-	                					console.log(data);
-	                					alert('취소성공');
-	                					document.getElementById('btnh').style.color = "grey";
-	                					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
-	                					boardLikeCountSpan.innerText = data;
-	                				},
-	                				error:(data)=>{
-	                					console.log(data);
-	                					console.log("실패...");
-	                				}
-	                			}); // ajax 좋아요 취소
-        					} else {
-        						$.ajax({
-        			  				url:'${contextPath}/setBoardLike.moim',
-	                				data :{boardId:boardId,userId:userId},
-	                				success : (data)=>{
-	                					console.log(data);
-
-	                					alert('추가성공');
-	                					document.getElementById('btnh').style.color="var(--color-primary)";
-	                					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
-	                					boardLikeCountSpan.innerText = data;
-	                				}
-	                			}); // ajax 좋아요 추가
-        					}
-       					})
-        			}
-                	
-                	
-// 	                	if(isLike>0){
-// 	                		console.log("1입니다.")
-// 	                		btnvar4.style.color='#8cdcffd3';
-// 	                		btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
-// 	                		btnvar4.click(function(){
-// 	                			$.ajax({
-// 	                				type:'post',
-// 	                				url:'${contextPath}/deleteBoardLike.moim',
-// 	                				contentType: 'application/json',
-// 	                				data : JSON.stringify(
-// 	                					{
-// 	                						"boardId":boardId,
-// 	                						"userId":userId
-// 	                					}
-// 	                				),
-// 	                				success : function(data){
-// 	                					alert('취소성공');
-// 	                				}
-// 	                			})//ajax취소기능 
-// 	                		})
-// 	                	} else {
-// 	                		btnvar4.style.color="grey"
-// 	                		btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
-// 	                		btnvar4.click(function(){
-// 	                			$.ajax({
-// 	                				type:'post',
-// 	                				url:'${contextPath}/setBoardLike.moim',
-// 	                				contentType:'application/json',
-// 	                				data: JSON.stringigy(
-// 	                					{
-// 	                						"boardId": boardId,
-// 	                						"userId":userId
-// 	                					}		
-// 	                				),
-// 	                				success:function(data){
-// 	                					alert('좋아요Up 성공');
-// 	                				}
-// 	                			}) // ajax 좋아요기능
-// 	                		})
-// 	                	}
-                
-//                    function Toggle4(){
-//                     if(btnvar4.style.color=="var(--color-primary)"){
-//                       btnvar4.style.color="grey";
-//                       btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
-                      
-//                     } else {
-//                       btnvar4.style.color = "var(--color-primary)";
-//                       btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
-//                     }
-//                   }
-                </script>
-                
               <div class="col-lg">
                   <textarea name="comment" class="form-control" placeholder="Your Comment*" id="replyContent"></textarea>
               </div>
@@ -233,7 +138,7 @@
           <div class="reply-form">
 
             <div class="bn_replies row  justify-content-center">
-              <ul class="bn_replies_head">
+              <ul>
                 <li class="col-lg">댓글작성자</li>
                 <li class="col-lg-6">내용</li>
                 <li class="col-lg">추천</li>
@@ -248,9 +153,9 @@
 	              
 	              <c:if test="${ replyList.size()!=0 }">
 	              <c:forEach items="${replyList}" var="r" varStatus="Rstatus">
-		              <ul id="replyUl2" class="row">
+		              <ul>
 		                <li class="col-lg">${r.userId}</li>
-		                <li class="col-lg-6">${r.replyContent}</li>
+		                <li class="col-lg-6"><div>${r.replyContent}</div></li>
 		                <li class="col-lg">${replyLikeCount[Rstatus.index]}</li>
 		                <li class="col-lg">${r.createDate}</li>
 		              </ul>
@@ -263,7 +168,128 @@
             </div>
 
         </div><!-- End blog comments -->
-         <script>
+    </article><!-- End blog post -->
+    
+          </div>
+        </div>
+      </div>
+    </section><!-- End Blog Details Section -->
+
+  </main><!-- End #main -->
+  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+  
+  <script>
+	//=======신고===========
+	function openPopUp(){
+		var url = "${contextPath}/declare-popup.moim";
+		var title = "신고창";
+		var status ="width=500, height=400, top=150, left=200"
+		
+		const form = document.getElementById("declareForm");
+		console.log(form);
+		
+		form.target=title;
+		form.action=url;
+		form.method="post";
+		window.open(url, title, status);
+		form.submit();
+		
+	}
+ 	//=======좋아요 불러오기
+	var isLike = ${isLike};
+ 	var boardId = ${moim.boardId};
+ 	var userId = '${loginUser.id}';
+		window.onload=()=>{
+			document.getElementById('btnh').addEventListener('click', function(){
+				const boardLikeCountSpan = document.getElementById('boardLikeCount');
+				console.log(boardLikeCountSpan);
+				if(isLike==1){
+     			$.ajax({
+     				url:'${contextPath}/deleteBoardLike.moim',
+     				data :{boardId:boardId,userId:userId},
+     				success : (data)=>{
+     					console.log(data);
+     					alert('취소성공');
+     					document.getElementById('btnh').style.color = "grey";
+     					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
+     					boardLikeCountSpan.innerText = data;
+     				},
+     				error:(data)=>{
+     					console.log(data);
+     					console.log("실패...");
+     				}
+     			}); // ajax 좋아요 취소
+				} else {
+					$.ajax({
+		  				url:'${contextPath}/setBoardLike.moim',
+     				data :{boardId:boardId,userId:userId},
+     				success : (data)=>{
+     					console.log(data);
+
+     					alert('추가성공');
+     					document.getElementById('btnh').style.color="var(--color-primary)";
+     					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
+     					boardLikeCountSpan.innerText = data;
+     				}
+     			}); // ajax 좋아요 추가
+				}
+			})
+		}
+ 	
+ 	
+//      	if(isLike>0){
+//      		console.log("1입니다.")
+//      		btnvar4.style.color='#8cdcffd3';
+//      		btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
+//      		btnvar4.click(function(){
+//      			$.ajax({
+//      				type:'post',
+//      				url:'${contextPath}/deleteBoardLike.moim',
+//      				contentType: 'application/json',
+//      				data : JSON.stringify(
+//      					{
+//      						"boardId":boardId,
+//      						"userId":userId
+//      					}
+//      				),
+//      				success : function(data){
+//      					alert('취소성공');
+//      				}
+//      			})//ajax취소기능 
+//      		})
+//      	} else {
+//      		btnvar4.style.color="grey"
+//      		btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
+//      		btnvar4.click(function(){
+//      			$.ajax({
+//      				type:'post',
+//      				url:'${contextPath}/setBoardLike.moim',
+//      				contentType:'application/json',
+//      				data: JSON.stringigy(
+//      					{
+//      						"boardId": boardId,
+//      						"userId":userId
+//      					}		
+//      				),
+//      				success:function(data){
+//      					alert('좋아요Up 성공');
+//      				}
+//      			}) // ajax 좋아요기능
+//      		})
+//      	}
+ 
+//     function Toggle4(){
+//      if(btnvar4.style.color=="var(--color-primary)"){
+//        btnvar4.style.color="grey";
+//        btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
+       
+//      } else {
+//        btnvar4.style.color = "var(--color-primary)";
+//        btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
+//      }
+//    }
+         
 			window.onload=()=>{
 				document.getElementById('replySubmit').addEventListener('click', ()=>{
 					$.ajax({
@@ -276,10 +302,7 @@
 					    success: (data)=>{
 
 					      const replyDiv = document.querySelector('#boxOfReplies');
-					      console.log(replyDiv);
 					      replyDiv.innerHTML = "" ;
-					      alert('성공');	
-					      console.log(data);
 					      
 					      for(const r of data){
 					    	 const ul = document.createElement('ul');
@@ -292,19 +315,25 @@
 					    	 const ContentLi = document.createElement('li');
 					    	 ContentLi.classList.add('col-lg-6');
 					    	 ContentLi.innerText = r.replyContent;
+					    	 console.log(ContentLi);
 					    	 
 					    	 const replyLikeCountLi = document.createElement('li');
 					    	 replyLikeCountLi.classList.add('col-lg');				    		 
 					    	 replyLikeCountLi.innerText = "${replyLikeCount[status.index]}";
+					    	 console.log(replyLikeCountLi);
 					    	 
 					    	 const createDateLi = document.createElement('li');
 					    	 createDateLi.classList.add('col-lg');
 					    	 createDateLi.innerText = r.createDate;
+					    	 console.log(createDateLi);
 					    	 
 					    	 ul.append(writerLi);
 					    	 ul.append(ContentLi);
 					    	 ul.append(replyLikeCountLi);
 					    	 ul.append(createDateLi);
+					    	 console.log(ul);
+					    	 
+					    	 replyDiv.append(ul);
 					      }
 					      document.getElementById("replyContent").value = "";
 					   },
@@ -316,20 +345,8 @@
 	        	 });
 			}
 		</script>
-
-    </article><!-- End blog post -->
-    
-          </div>
-        </div>
-      </div>
-    </section><!-- End Blog Details Section -->
-
-  </main><!-- End #main -->
-
-
-  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <div id="preloader"></div>
+  
+  
 
 </body>
 </html>

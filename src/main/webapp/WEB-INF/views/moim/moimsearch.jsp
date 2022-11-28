@@ -215,11 +215,12 @@
 <script>
 	window.onload=()=>{
 		const dives = document.getElementsByTagName('article');
+		console.log(dives);
 		for(const div of dives){
 			div.addEventListener('click', function(){
 				const boardId = this.querySelector('.bId').innerText;
 				const userId = this.querySelector('.userId').innerText;
-				location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId+'&page='+${pi.currentPage};
+				location.href='${contextPath}/selectMoim.moim?boardId='+boardId+'&userId='+userId;
 			})
 		}
 	}
