@@ -18,6 +18,13 @@
 	<jsp:include page="../home/menubar.jsp"/>
 
     <main id="main" style="margin-top: 70px;">
+    <c:if test="${ loginUser.isManager eq 'Y'}">
+    	<button onclick="location.href='${contextPath }/declaremanage.mng'" type="button" class="btn btn-outline primary btn-lg">
+    	신고관리버튼
+    	</button>
+    </c:if>
+    
+    
     
     <div class="container text-center align-items-center">
     <c:if test="${ empty list }">

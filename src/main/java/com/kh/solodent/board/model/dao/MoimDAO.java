@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.BoardScrap;
 import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
@@ -94,16 +95,15 @@ public class MoimDAO {
 
 	public int isLike(SqlSessionTemplate sqlSession, Like like) {
 		int result = sqlSession.selectOne("moimMapper.isBoardLike", like);
-		System.out.println(result);
 		return result;
 	}
 
 	public void setBoardLike(SqlSessionTemplate sqlSession, Like likevo) {
-		System.out.println(sqlSession.insert("moimMapper.setBoardLike",likevo));
+		sqlSession.insert("moimMapper.setBoardLike",likevo);
 	}
 
 	public void deleteBoardLike(SqlSessionTemplate sqlSession, Like likevo) {
-		System.out.println(sqlSession.delete("moimMapper.deleteBoardLike",likevo));
+		sqlSession.delete("moimMapper.deleteBoardLike",likevo);
 	}
 	
 	public ArrayList<Moim> selectTopThree(SqlSessionTemplate sqlSession){
@@ -126,6 +126,18 @@ public class MoimDAO {
 	
 	public int declareBoard(SqlSessionTemplate sqlSession, Declare dcl) {
 		return sqlSession.insert("moimMapper.declareBoard", dcl);
+	}
+
+	public int isScrap(SqlSessionTemplate sqlSession, BoardScrap scrap) {
+		return sqlSession.selectOne("moimMapper.isScrap", scrap);
+	}
+
+	public void setScrap(SqlSessionTemplate sqlSession, BoardScrap scrapvo) {
+		sqlSession.insert("moimMapper.setScrap",scrapvo);
+	}
+
+	public void deleteScrap(SqlSessionTemplate sqlSession, BoardScrap scrapvo) {
+		sqlSession.delete("moimMapper.deleteScrap",scrapvo);
 	}
 
 

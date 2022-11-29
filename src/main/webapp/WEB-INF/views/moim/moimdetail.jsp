@@ -11,6 +11,11 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>솔로던트 모임게시판-상세글</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alexandria:wght@200;300;400;500&family=Black+Han+Sans&family=Do+Hyeon&family=Hahmlet:wght@100;200;300;400;500;600;700&family=Jost:wght@500;600;700;800&family=Nanum+Gothic+Coding:wght@400;700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -32,8 +37,13 @@
             <article class="blog-details">
               <div class="row">
                 <div class="col-10"><h2 class="title">${moim.boardTitle} ( ${moim.moimStart}~${moim.moimEnd} )</h2></div>
-
-				<div class="dropdown col-2 d-flex align-items-center justify-content-center">
+                
+				<button class="col-lg-1 d-flex align-items-center justify-content-center btn" id="isScrap" onclick="changeScrap()"><h2>
+					<c:if test="${ isScrap eq 0 }"><i class="save fa-regular fa-bookmark"></i></c:if>
+					<c:if test="${ isScrap ne 0 }"><i class="fa-solid fa-bookmark"></i></c:if>
+				</h2></button>
+				
+				<div class="dropdown col-lg-1 d-flex align-items-center justify-content-center">
 					<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 						<i class="bi lg bi-three-dots" style="font-size: 2rem; color:darkgray;"></i>
 					</button>
@@ -68,6 +78,7 @@
                     <li class="align-items-center"><i class="bi bi-chat-dots"></i> <a href="#comments">${replyList.size()}</a></li><!--누르면댓글로이동-->
                     <li class="align-items-center"><i class="bi bi-heart-fill"></i>${ boardLikeCount }</li> 
                     <li class="align-items-center"><i class="view fa-solid fa-eye"></i>${moim.boardCount}</li>
+                    <li class="align-items-center" id="scrapCount"><i class="save fa-regular fa-bookmark"></i>${ boardScrapCount }</li>
                     <li class="align-items-center"> | </li>
                     
 					<c:if test="${moim.local eq '전체 전체'}">
@@ -101,25 +112,29 @@
         <!--댓글 쓰는 곳-->
         <div class="reply-form" id="comments">
           <div class="row">
-            <div class="col-lg-1">
-              <h5> 댓글 ${replyList.size()}개 </h5>
+            <div class="col-lg-1 d-inline" style="margin:0; padding:0;">
+              <h6 class="d-inline">&nbsp; &nbsp;댓글&nbsp;<h5 class="d-inline">${replyList.size()}</h5>&nbsp;개</h6>
             </div>
-            <div class="col-lg">
-              <h4>댓글을 남기세요</h4>
+            <div class="col-lg d-flex align-items-center" >
+              <h4 class="bn_txt_strong">댓글을 남기세요&nbsp;&nbsp;<i class="bi bi-chat-dots"></i></h4>
             </div>
           </div>
 
           <form action="">
             <div class="row justify-content-center align-items-center">
-              <div class="col-1">
-              <c:if test="${isLike==1}">
-              	<button type="button" id="btnh" class="btn" style="color:var(--color-primary);"><i class="bn_btnh bi bi-suit-heart-fill"></i><h5 id="boardLikeCount">${boardLikeCount}</h5></button>
-              	
-              </c:if>
-              <c:if test="${isLike==0}">
-              	<button type="button" id="btnh" class="btn" style="color:grey;"><i class="bn_btnh bi bi-suit-heart"></i><h5 id="boardLikeCount">${boardLikeCount}</h5></button>
-              </c:if>
-                
+              <div class="col-1" style="position: relative;display:flex;text-align:center;justify-content:center;">
+	              <c:if test="${isLike==1}">
+	              	<button type="button" onclick="changeHeart()" class="btn" id="btnh" style="color:var(--color-primary);">
+	              	<i class="bn_btnh bi bi-suit-heart-fill"></i></button>
+	                <h5 id="boardLikeCount" style="color:white;font-family:Jost;font-weight:600;font-size:1rem;position: relative; text-align: center;position: absolute;top: 50%;left: 50%;transform: translate( -50%, -50% );">${boardLikeCount}</h5>
+	              </c:if>
+	              
+	              <c:if test="${isLike==0}">
+	              	<button type="button" onclick="changeHeart()" class="btn" id="btnh" style="color:grey;">
+	              	<i class="bn_btnh bi bi-suit-heart"></i></button>
+	                <h5 id="boardLikeCount" style="color:grey;font-family:Jost;font-weight:600;font-size:1rem;position: relative; text-align: center;position: absolute;top: 50%;left: 50%;transform: translate( -50%, -50% );">${boardLikeCount}</h5>
+	              </c:if>
+	                
               </div>
 
               <div class="col-lg">
@@ -138,13 +153,13 @@
           <div class="reply-form">
 
             <div class="bn_replies row  justify-content-center">
-              <ul>
+              <ul style="font-weight: 900; color:#0067a3; font-size:1.2rem;">
                 <li class="col-lg">댓글작성자</li>
                 <li class="col-lg-6">내용</li>
                 <li class="col-lg">추천</li>
                 <li class="col-lg">작성날짜</li>
               </ul>
-              
+              <hr>
               <div class="row justify-content-center" id="boxOfReplies"> 
               
 	              <c:if test="${ replyList.size()==0 }">
@@ -152,18 +167,19 @@
 	              </c:if>
 	              
 	              <c:if test="${ replyList.size()!=0 }">
-	              <c:forEach items="${replyList}" var="r" varStatus="Rstatus">
-		              <ul>
-		                <li class="col-lg">${r.userId}</li>
-		                <li class="col-lg-6"><div>${r.replyContent}</div></li>
-		                <li class="col-lg">${replyLikeCount[Rstatus.index]}</li>
-		                <li class="col-lg">${r.createDate}</li>
-		              </ul>
-	              </c:forEach>
+		              <c:forEach items="${replyList}" var="r" varStatus="Rstatus">
+<%-- 		              	<c:if test="${ loginUser.id eq }"> --%>
+			              <ul>
+			                <li class="col-lg">${r.userId}</li>
+			                <li class="col-lg-6"><div>${r.replyContent}</div></li>
+			                <li class="col-lg">${replyLikeCount[Rstatus.index]}</li>
+			                <li class="col-lg">${r.createDate}</li>
+			              </ul>
+<%-- 			          	</c:if> --%>
+		              </c:forEach>
 	              </c:if>
               
               </div>
-              
               
             </div>
 
@@ -187,166 +203,130 @@
 		var status ="width=500, height=400, top=150, left=200"
 		
 		const form = document.getElementById("declareForm");
-		console.log(form);
+// 		console.log(form);
 		
 		form.target=title;
 		form.action=url;
 		form.method="post";
 		window.open(url, title, status);
 		form.submit();
-		
 	}
  	//=======좋아요 불러오기
-	var isLike = ${isLike};
+
  	var boardId = ${moim.boardId};
  	var userId = '${loginUser.id}';
-		window.onload=()=>{
-			document.getElementById('btnh').addEventListener('click', function(){
-				const boardLikeCountSpan = document.getElementById('boardLikeCount');
-				console.log(boardLikeCountSpan);
-				if(isLike==1){
-     			$.ajax({
-     				url:'${contextPath}/deleteBoardLike.moim',
-     				data :{boardId:boardId,userId:userId},
-     				success : (data)=>{
-     					console.log(data);
-     					alert('취소성공');
-     					document.getElementById('btnh').style.color = "grey";
-     					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
-     					boardLikeCountSpan.innerText = data;
-     				},
-     				error:(data)=>{
-     					console.log(data);
-     					console.log("실패...");
-     				}
-     			}); // ajax 좋아요 취소
-				} else {
-					$.ajax({
-		  				url:'${contextPath}/setBoardLike.moim',
-     				data :{boardId:boardId,userId:userId},
-     				success : (data)=>{
-     					console.log(data);
-
-     					alert('추가성공');
-     					document.getElementById('btnh').style.color="var(--color-primary)";
-     					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
-     					boardLikeCountSpan.innerText = data;
-     				}
-     			}); // ajax 좋아요 추가
-				}
-			})
+	var isLike = ${isLike};
+	var boardLikeCountSpan = document.getElementById('boardLikeCount');
+	var isScrap = ${isScrap};
+	
+	function changeHeart(){
+		console.log("isLike은" + isLike +" 이고, boardLikeCountSpan은 " + boardLikeCountSpan.innerText);
+		
+		if(isLike==1){
+   			$.ajax({
+   				url:'${contextPath}/deleteBoardLike.moim',
+   				data :{boardId:boardId,userId:userId},
+   				success : (data)=>{
+    				boardLikeCountSpan.innerText = "";
+					document.getElementById('btnh').style.color = "grey";
+					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
+    				boardLikeCountSpan.style.color = "grey";
+    				boardLikeCountSpan.innerText = data;
+    				isLike = 0;
+   				}
+   			}); // ajax 좋아요 취소
+		} else {
+			$.ajax({
+  				url:'${contextPath}/setBoardLike.moim',
+   				data :{boardId:boardId,userId:userId},
+   				success : (data)=>{
+    				boardLikeCountSpan.innerText = "";
+   					document.getElementById('btnh').style.color = "var(--color-primary)";
+   					document.getElementById('btnh').innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
+    				boardLikeCountSpan.style.color = "white";
+    				boardLikeCountSpan.innerText = data;
+    				isLike = 1;
+  				}
+  			}); // ajax 좋아요 추가
 		}
- 	
- 	
-//      	if(isLike>0){
-//      		console.log("1입니다.")
-//      		btnvar4.style.color='#8cdcffd3';
-//      		btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
-//      		btnvar4.click(function(){
-//      			$.ajax({
-//      				type:'post',
-//      				url:'${contextPath}/deleteBoardLike.moim',
-//      				contentType: 'application/json',
-//      				data : JSON.stringify(
-//      					{
-//      						"boardId":boardId,
-//      						"userId":userId
-//      					}
-//      				),
-//      				success : function(data){
-//      					alert('취소성공');
-//      				}
-//      			})//ajax취소기능 
-//      		})
-//      	} else {
-//      		btnvar4.style.color="grey"
-//      		btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
-//      		btnvar4.click(function(){
-//      			$.ajax({
-//      				type:'post',
-//      				url:'${contextPath}/setBoardLike.moim',
-//      				contentType:'application/json',
-//      				data: JSON.stringigy(
-//      					{
-//      						"boardId": boardId,
-//      						"userId":userId
-//      					}		
-//      				),
-//      				success:function(data){
-//      					alert('좋아요Up 성공');
-//      				}
-//      			}) // ajax 좋아요기능
-//      		})
-//      	}
- 
-//     function Toggle4(){
-//      if(btnvar4.style.color=="var(--color-primary)"){
-//        btnvar4.style.color="grey";
-//        btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart"></i>';
-       
-//      } else {
-//        btnvar4.style.color = "var(--color-primary)";
-//        btnvar4.innerHTML = '<i class="bn_btnh bi bi-suit-heart-fill"></i>';
-//      }
-//    }
-         
-			window.onload=()=>{
-				document.getElementById('replySubmit').addEventListener('click', ()=>{
-					$.ajax({
-					   url: '${contextPath}/insertReply.moim',
-					   data: {
-						    replyContent: document.getElementById('replyContent').value,
-							boardId:'${moim.boardId}', 
-							userId:'${loginUser.id}'
-						},
-					    success: (data)=>{
+	} // changeHeart 함수 끝
+	
+	function changeScrap(){
+		console.log("isScrap은" + isScrap);
+		
+		if(isScrap==1){
+   			$.ajax({
+   				url:'${contextPath}/deleteScrap.moim',
+   				data :{boardId:boardId,userId:userId},
+   				success : (data)=>{
+   					
+					document.getElementById('isScrap').innerHTML = '<h2><i class="save fa-regular fa-bookmark"></i></h2>';
+// 					this.innerHTML = '<h2><i class="save fa-regular fa-bookmark"></i></h2>';
+					document.getElementById('scrapCount').innerHTML = '<i class="save fa-regular fa-bookmark"></i>' + data;
+    				isScrap = 0;
+   				}
+   			}); // ajax 좋아요 취소
+		} else {
+			$.ajax({
+  				url:'${contextPath}/setScrap.moim',
+   				data :{boardId:boardId,userId:userId},
+   				success : (data)=>{
+   					document.getElementById('isScrap').innerHTML = '<h2><i class="fa-solid fa-bookmark"></i></h2>';
+					document.getElementById('scrapCount').innerHTML = '<i class="fa-solid fa-bookmark"></i>' + data;
+    				isScrap = 1;
+  				}
+  			}); // ajax 좋아요 추가
+		}
+	} // changeScrap 함수 끝
 
-					      const replyDiv = document.querySelector('#boxOfReplies');
-					      replyDiv.innerHTML = "" ;
-					      
-					      for(const r of data){
-					    	 const ul = document.createElement('ul');
-					    	 
-					    	 const writerLi = document.createElement('li');
-					    	 writerLi.classList.add('col-lg');
-					    	 writerLi.innerText = r.userId;
-					    	 console.log(writerLi);
-					    	 
-					    	 const ContentLi = document.createElement('li');
-					    	 ContentLi.classList.add('col-lg-6');
-					    	 ContentLi.innerText = r.replyContent;
-					    	 console.log(ContentLi);
-					    	 
-					    	 const replyLikeCountLi = document.createElement('li');
-					    	 replyLikeCountLi.classList.add('col-lg');				    		 
-					    	 replyLikeCountLi.innerText = "${replyLikeCount[status.index]}";
-					    	 console.log(replyLikeCountLi);
-					    	 
-					    	 const createDateLi = document.createElement('li');
-					    	 createDateLi.classList.add('col-lg');
-					    	 createDateLi.innerText = r.createDate;
-					    	 console.log(createDateLi);
-					    	 
-					    	 ul.append(writerLi);
-					    	 ul.append(ContentLi);
-					    	 ul.append(replyLikeCountLi);
-					    	 ul.append(createDateLi);
-					    	 console.log(ul);
-					    	 
-					    	 replyDiv.append(ul);
-					      }
-					      document.getElementById("replyContent").value = "";
-					   },
-					   error: (data)=>{
-						  alert("실패!");
-					      console.log(data);
-					   }
-					});
-	        	 });
-			}
+	//=====================댓글 달기===========================
+	window.onload=()=>{
+		document.getElementById('replySubmit').addEventListener('click', ()=>{
+			$.ajax({
+			   url: '${contextPath}/insertReply.moim',
+			   data: {
+				    replyContent: document.getElementById('replyContent').value,
+					boardId:'${moim.boardId}', 
+					userId:'${loginUser.id}'
+				},
+			    success: (data)=>{
+
+			      const replyDiv = document.querySelector('#boxOfReplies');
+			      replyDiv.innerHTML = "" ;
+			      
+			      for(const r of data){
+			    	 const ul = document.createElement('ul');
+			    	 
+			    	 const writerLi = document.createElement('li');
+			    	 writerLi.classList.add('col-lg');
+			    	 writerLi.innerText = r.userId;
+			    	 
+			    	 const ContentLi = document.createElement('li');
+			    	 ContentLi.classList.add('col-lg-6');
+			    	 ContentLi.innerText = r.replyContent;
+			    	 
+			    	 const replyLikeCountLi = document.createElement('li');
+			    	 replyLikeCountLi.classList.add('col-lg');				    		 
+			    	 replyLikeCountLi.innerText = "${replyLikeCount[status.index]}";
+			    	 
+			    	 const createDateLi = document.createElement('li');
+			    	 createDateLi.classList.add('col-lg');
+			    	 createDateLi.innerText = r.createDate;
+			    	 
+			    	 ul.append(writerLi);
+			    	 ul.append(ContentLi);
+			    	 ul.append(replyLikeCountLi);
+			    	 ul.append(createDateLi);
+			    	 replyDiv.append(ul);
+			      }
+			      document.getElementById("replyContent").value = "";
+			   },
+			   error: (data)=>{
+				  alert("실패!");
+			   }
+			});
+       	 });
+	}
 		</script>
-  
-  
-
 </body>
 </html>

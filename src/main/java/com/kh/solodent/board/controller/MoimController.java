@@ -28,6 +28,7 @@ import com.kh.solodent.board.common.Pagination;
 import com.kh.solodent.board.model.exception.BoardException;
 import com.kh.solodent.board.model.service.MoimService;
 import com.kh.solodent.board.model.vo.Attachment;
+import com.kh.solodent.board.model.vo.BoardScrap;
 import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
@@ -38,15 +39,21 @@ import com.kh.solodent.member.model.vo.Member;
 @Controller
 public class MoimController {
 	
+	/**
+	 * 남은 것****************************
+	 * [ ]✳ 게시글 상세 수정
+	 * [ ]✳ 댓글 삭제
+	 * [ ]✳ 메인 페이지 최신 글 모아 보여주기
+	 * [ ]✳ 오라클 스케줄러 세팅
+	 * [ ]   댓글 수정 ? 
+	 * [ ]   게시글 줄 바꿈 적용 (안 될 듯)
+	 * *********************************
+	 */
 
 	@Autowired
 	private MoimService mService;
 
 	/** 모임게시판 리스트 조회
-	 * 
-	 * @param page
-	 * @param model
-	 * @return
 	 */
 	@RequestMapping("list.moim")
 	public String selectMoimList(@RequestParam(value="page", required=false) Integer page, Model model) {
@@ -69,7 +76,6 @@ public class MoimController {
 //		System.out.println("모임 listcount :" + listCount);
 		
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 6);
-		System.out.println("pi:"+pi);
 		ArrayList<Moim> list = mService.selectMoimList(pi);
 
 	
@@ -210,7 +216,7 @@ public class MoimController {
 		return returnArr;
 	}
 	
-	/**모임게시글 상세 조회**/
+	/**모임게시글 상세detail 조회**/
 	@RequestMapping("selectMoim.moim")
 	public ModelAndView selectMoim(
 			@RequestParam("boardId") int boardId, 
@@ -232,7 +238,7 @@ public class MoimController {
 		
 		Moim moim = mService.selectMoim(boardId, yn);
 		
-		System.out.println(moim);
+//		System.out.println(moim);
 		
 		ArrayList<Attachment> list = mService.selectAttmList((Integer) boardId);
 		ArrayList<Reply> replyList = mService.getBoardReplyList(boardId);
@@ -244,19 +250,28 @@ public class MoimController {
 		int boardScrapCount = mService.getBoardScrapCount(boardId);
 		int boardLikeCount = mService.getBoardLikeCount(boardId);
 		
-		
 		// 로그인시 1이나 0을 반영하는 좋아요 조회
 		int isLike = 0;
+		int isScrap = 0;
 		if(loginId != null) {
 			Like like = new Like(boardId, loginId);
 			isLike = isLike(like);
+			BoardScrap scrap = new BoardScrap(loginId, boardId);
+			isScrap = isScrap(scrap);
 		}
 		
 		if(moim!=null) {
 			if(page!=null) {
-				mv.addObject("moim",moim).addObject("page",page).addObject("list",list).addObject("replyList",replyList).addObject("replyLikeCount",replyLikeCount).addObject("boardScrapCount",boardScrapCount).addObject("boardLikeCount",boardLikeCount).addObject("isLike",isLike).setViewName("moimdetail");
+				mv.addObject("moim",moim).addObject("page",page).addObject("list",list).
+				addObject("replyList",replyList).addObject("replyLikeCount",replyLikeCount).
+				addObject("boardScrapCount",boardScrapCount).addObject("boardLikeCount",boardLikeCount).
+				addObject("isLike",isLike).addObject("isScrap", isScrap).
+				setViewName("moimdetail");
 			}else {
-				mv.addObject("moim",moim).addObject("list",list).addObject("replyList",replyList).addObject("replyLikeCount",replyLikeCount).addObject("boardScrapCount",boardScrapCount).addObject("boardLikeCount",boardLikeCount).addObject("isLike",isLike).setViewName("moimdetail");
+				mv.addObject("moim",moim).addObject("list",list).
+				addObject("replyList",replyList).addObject("replyLikeCount",replyLikeCount).
+				addObject("boardScrapCount",boardScrapCount).addObject("boardLikeCount",boardLikeCount).
+				addObject("isLike",isLike).addObject("isScrap",isScrap).setViewName("moimdetail");
 			}
 		} else {
 			throw new BoardException("모임 게시글 상세보기 실패");
@@ -265,33 +280,62 @@ public class MoimController {
 		return mv;
 	}
 
-
 	private int isLike(Like like) {
 		return mService.isLike(like);
 	}
 	
 	@RequestMapping(value = "setBoardLike.moim")
 	@ResponseBody
-	public String setBoardLike(@ModelAttribute Like likevo, HttpServletResponse response) {
-		System.out.println("setBoardLike들어옴");
-		mService.setBoardLike(likevo);
+	public String setBoardLike(@ModelAttribute Like likevo, 
+			HttpServletResponse response,
+			Model model) {
+		if(isLike(likevo)==0) { // 한 번 더 문턱 걸기
+			mService.setBoardLike(likevo);
+		}
 		int count = mService.getBoardLikeCount(likevo.getBoardId());
-		System.out.println(count);
 		return String.valueOf(count);
-		
 	}
 	
 	@RequestMapping(value = "deleteBoardLike.moim")
 	@ResponseBody
-	public String deleteBoardLike(@ModelAttribute Like likevo, HttpServletResponse response) {
-		System.out.println("deleteBoardLike들어옴");
-		mService.deleteBoardLike(likevo);
+	public String deleteBoardLike(@ModelAttribute Like likevo, 
+			HttpServletResponse response,
+			Model model) {
+		if(isLike(likevo)==1) {
+			mService.deleteBoardLike(likevo);
+		}
 		int count = mService.getBoardLikeCount(likevo.getBoardId());
-		System.out.println(count);
 		return String.valueOf(count);
 	}
 	
-
+	private int isScrap(BoardScrap scrap) {
+		return mService.isScrap(scrap);
+	}
+	
+	@RequestMapping(value = "setScrap.moim")
+	@ResponseBody
+	public String setScrap(@ModelAttribute BoardScrap scrapvo, 
+			HttpServletResponse response,
+			Model model) {
+		if(isScrap(scrapvo)==0) { // 한 번 더 문턱 걸기
+			mService.setScrap(scrapvo);
+		}
+		int count = mService.getBoardScrapCount(scrapvo.getBoardId());
+		return String.valueOf(count);
+	}
+	
+	@RequestMapping(value = "deleteScrap.moim")
+	@ResponseBody
+	public String deleteScrap(@ModelAttribute BoardScrap scrapvo, 
+			HttpServletResponse response,
+			Model model) {
+		if(isScrap(scrapvo)==1) {
+			mService.deleteScrap(scrapvo);
+		}
+		int count = mService.getBoardScrapCount(scrapvo.getBoardId());
+		return String.valueOf(count);
+	}
+	
 	/**
 	 * 모임게시글 수정
 	 */
@@ -307,7 +351,6 @@ public class MoimController {
 		model.addAttribute("list",list);
 		return "edit";
 	}
-
 	
 	/** 삭제 
 	 */
@@ -321,22 +364,11 @@ public class MoimController {
 			throw new BoardException("게시글 삭제 실패");
 		}
 	}
-	
-	/** 좋아요 조회
-	 * 
-	 */
-	/** 좋아요 수정
-	 * 
-	 */
 
 	/** 댓글 작성
-	 * 
 	 */
 	@RequestMapping(value = "insertReply.moim")
 	public void insertReply(@ModelAttribute Reply r, HttpServletResponse response) {
-		
-		System.out.println(r);
-		System.out.println(response);
 		
 		int result = mService.insertReply(r);
 		if(result>0) {
@@ -355,34 +387,14 @@ public class MoimController {
 			e.printStackTrace();
 		}
 	}	
-	
-	// (1) 한글 인코딩 (2) 객체형식
-	/*
-	 * @RequestMapping(value="insertReply.bo",
-	 * produces="application/json; charset=UTF-8")
-	 * 
-	 * @ResponseBody public String insertReply(@ModelAttribute Reply r) { int result
-	 * = bService.insertReply(r); ArrayList<Reply> list =
-	 * bService.selectReply(r.getRefBoardId());
-	 * 
-	 * JSONArray array = new JSONArray(); for(Reply reply : list) { JSONObject json
-	 * = new JSONObject(); json.put("replyId", reply.getReplyId());
-	 * json.put("replyContent", reply.getReplyContent()); json.put("refBoardId",
-	 * reply.getRefBoardId()); json.put("replyWriter", reply.getReplyWriter());
-	 * json.put("replyCreateDate", reply.getReplyCreateDate());
-	 * json.put("replyModifyDate", reply.getReplyModifyDate());
-	 * json.put("replyStatus", reply.getReplyStatus());
-	 * 
-	 * array.put(json); } return array.toString(); }
-	 */
 
 	/** 좋아요 + 조회수 + 스크랩 많은 게시글 상단 노출
-	 * 
 	 */
 	public ArrayList<Moim> getTopBoard(){
 		return mService.getTopBoard();
 	}
 	
+	/************ 검색 ***************/
 	@RequestMapping("search.moim")
 	public String searchMoim(
 			@RequestParam(value="moimStatus", required=false) String moimStatus,
@@ -442,7 +454,6 @@ public class MoimController {
 								pageMsg.add("작성자에 \""+searchContent.trim()+"\"을 포함하는");break;
 			}
 		}
-		System.out.println(paramap);
 		ArrayList<Moim> searchList = mService.searchMoim(paramap);
 		
 		/*** 전달 메세지 ***/
@@ -481,25 +492,21 @@ public class MoimController {
 	@RequestMapping("declare.moim")
 	public String declareBoard(
 			@ModelAttribute Declare dcl, 
-			Model model,
-			HttpServletRequest request) {
-
-		System.out.println(dcl);
-		
+			Model model) {
 		int isDeclared = mService.getIsDeclared(dcl);
-		System.out.println(isDeclared);
+//		System.out.println(isDeclared);
 		if(isDeclared>0) {
 			model.addAttribute("dclmsg","이미 신고한 게시글입니다.");
-			return "redirect:declare.moim";
+			return "declared-popup";
 		} else {
 			int result = mService.declareBoard(dcl);
-			System.out.println("신고결과"+result);
+//			System.out.println("신고결과"+result);
 			if (result > 0) {
 				model.addAttribute("dclmsg", "신고한 게시글입니다.");
-				return "redirect:declare.moim";
+				return "declared-popup";
 			} else {
 				model.addAttribute("dclmsg", "신고할 수 없습니다.");
-				return "redirect:declare.moim";
+				return "declared-popup";
 			}
 		}
 	}
