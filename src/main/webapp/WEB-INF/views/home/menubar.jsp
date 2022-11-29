@@ -163,6 +163,23 @@
 			    
 			    
 	    		<div class="col-lg d-none d-lg-block "> </div>
+	    		
+                 <c:if test="${not empty loginUser }">
+                     <div class="col-lg-1 d-none d-md-block middle">
+                        <div class="dropdown" style="top: 32px;left: -65px;">
+                          <a class="btn  dropdown-toggle" href="#" style="position: relative;"
+                           role="button" id="notificationListBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                           <span  class="alert" >
+                               <i class="fas fa-bell fa-fw"></i>
+                               <span id="ntcntSpan"></span>                       
+                          </span>
+                            알림 메시지
+                          </a>
+                               <div  id="notificationList">
+                               </div>     
+                         </div>
+                     </div>
+                </c:if>    
 	    
 			    <div class="col-lg-1 d-none d-lg-block middle">
 			   		<c:if test="${ empty loginUser }">
