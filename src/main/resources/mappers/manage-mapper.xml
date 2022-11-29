@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="manageMapper">
+
+	<resultMap type="DeclareManager" id="dclmngResultSet">
+		<id column="DECLARE_CODE" property="declareCode"/>
+		<result column="WHODECLARE" property="whoDeclare"/>
+		<result column="WHOISDECLARED" property="whoIsDeclared"/>
+		<result column="BOARD_CODE" property="boardCode"/>
+		<result column="DECLARE_TO" property="declareTo"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="DECLARE_TYPE" property="declareType"/>
+		<result column="DECLARE_DATE" property="declareDate"/>
+		<result column="DECLARE.STATUS" property="declareStatus"/>
+	</resultMap>
+
+	<select id="getDeclareList" resultMap="dclmngResultSet">
+		SELECT 
+		  DECLARE_CODE, DECLARE.USER_ID WHODECLARE, BOARD.USER_ID WHOISDECLARED,
+		  BOARD_CODE, DECLARE_TO,  BOARD_TITLE, BOARD_CONTENT, 
+		  DECLARE_TYPE, DECLARE_DATE, DECLARE.STATUS
+		FROM DECLARE
+		JOIN BOARD ON(DECLARE_TO = BOARD_ID)
+		JOIN MEMBER ON(BOARD.USER_ID = MEMBER.USER_ID) 
+		ORDER BY DECLARE_CODE DESC
+	</select>
+	
+	<update id="updateDeleteMember">
+		UPDATE MEMBER SET STATUS = 'N' 
+		WHERE USER_ID IN (
+		<foreach collection="array" item="item" separator=", ">
+			#{item}
+		</foreach>
+		)
+	</update>
+
+
+</mapper>

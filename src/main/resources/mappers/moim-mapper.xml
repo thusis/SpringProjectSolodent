@@ -38,6 +38,7 @@
 		<result column="STATUS" property="status"/>
 		<result column="USER_ID" property="userId"/>
 		<result column="BOARD_ID" property="boardId"/>
+		<result column="NICKNAME" property="nickName"/>
 	</resultMap>
 	
 	<resultMap type="ReplyLike" id="replyLikeResultSet">
@@ -158,7 +159,7 @@
 	</select>
 	
 	<select id="getBoardReplyList" resultMap="replyResultSet">
-		SELECT REPLY_ID, REPLY_CONTENT, CREATE_DATE, REPLY.STATUS STATUS, NICKNAME USER_ID, BOARD_ID 
+		SELECT REPLY_ID, REPLY_CONTENT, CREATE_DATE, REPLY.STATUS STATUS, NICKNAME, USER_ID, BOARD_ID 
 		FROM REPLY JOIN MEMBER USING (USER_ID)
 		WHERE BOARD_ID=#{boardId}
 		AND REPLY.STATUS='Y' ORDER BY REPLY_ID DESC
@@ -201,7 +202,7 @@
 	<delete id="deleteReplyLike">DELETE FROM REPLY_LIKE WHERE REPLY_ID=#{replyId} AND USER_ID=#{userId}</delete>
 	
 	<!-- 게시글에 대한 스크랩 -->
-	<select id="isScrap" resultType="int">SELECT COUNT(*) FROM BOARD_SCRAP WHERE WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</select>
+	<select id="isScrap" resultType="int">SELECT COUNT(*) FROM BOARD_SCRAP WHERE USER_ID=#{userId} AND BOARD_ID=#{boardId}</select>
 	<insert id="setScrap">INSERT INTO BOARD_SCRAP VALUES (#{userId},#{boardId})</insert>
 	<delete id="deleteScrap">DELETE BOARD_SCRAP WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</delete>
 
@@ -287,10 +288,5 @@
 	</insert>
 	
 	<select id="getIsDeclared" resultType="int">SELECT COUNT(*) FROM DECLARE WHERE DECLARE_TO = #{declareTo} AND USER_ID = #{userId} </select>
-	
-	
-	
-	
-	
 	
 </mapper>

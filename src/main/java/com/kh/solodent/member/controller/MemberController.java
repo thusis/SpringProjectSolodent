@@ -142,9 +142,9 @@ public class MemberController {
 		String pwd = null;
 		System.out.println("확인" + m);
 		System.out.println(pwd1);
-		if (!pwd1.trim().equals("")) {
-			pwd = "${ loginUser.pwd }";
-			m.setPwd(pwd);
+		if (pwd1.trim().equals("")) {
+			String nuPwd = pwd1;
+			m.setPwd(nuPwd);
 		} else {
 			m.setPwd(bcrypt.encode(pwd1));
 		}
@@ -170,5 +170,39 @@ public class MemberController {
 	public String dealRegister() {
 		return "dealRegister";
 	}
-
+	@RequestMapping("findIdDetail.me")
+	public String findIdDetail(@RequestParam("email") String email, Model model) {
+		String findEmail = mService.finEmail(email);
+		if(findEmail !=null){
+			model.addAttribute("findEmail", findEmail);
+			return "findIdDetail";
+		}else {
+			throw new MemberException("등록된 이메일이 없습니다.");
+		}
+	}
+	@RequestMapping("findPwdDetail.me")
+	public String findPwdDetail(@ModelAttribute Member m, Model model) {
+		String findPwd = mService.findPwd(m);
+		if(findPwd != null) {
+			model.addAttribute("findPwd", findPwd);
+			return "changePwd";
+		}else {
+			throw new MemberException("등록된 회원정보가 없습니다.");
+		}
+		
+	}
+	@RequestMapping("changePwd.me")
+	public String changePwd(@RequestParam("findPwd") String id, @ModelAttribute Member m) {
+		String bpwd = bcrypt.encode(m.getPwd());
+		m.setPwd(bpwd);
+		m.setId(id);
+		System.out.println(m);
+		int change = mService.changePwd(m);
+		System.out.println(change);
+		if(change > 0) {
+			return "login";
+		}else {
+			throw new MemberException("비밀번호 변경이 작동되지 않았습니다.");
+		}
+	}
 }

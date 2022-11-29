@@ -23,7 +23,7 @@
 	<jsp:include page="../home/menubar.jsp"/>
 	<input type="hidden" id="aLength" value="${ fn:length(aList) }">
 	<!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
+    <section id="contact" class="contact" style="margin-top: 70px;">
       <div class="container" data-aos="fade-up">
 
         <div class="section-header">
