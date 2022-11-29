@@ -180,6 +180,7 @@
                          </div>
                      </div>
                 </c:if>    
+	    
 			    <div class="col-lg-1 d-none d-lg-block middle">
 			   		<c:if test="${ empty loginUser }">
 			    		<a href="${ contextPath  }/loginView.me">로그인</a>
