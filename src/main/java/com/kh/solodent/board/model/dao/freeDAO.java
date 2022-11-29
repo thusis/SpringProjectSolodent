@@ -35,4 +35,29 @@ public class freeDAO {
 		return sqlSession.insert("freeMapper.insertBoard", b);
 	}
 
+	public int addCount(SqlSessionTemplate sqlSession, int bId) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("freeMapper.addCount", bId);
+	}
+
+	public Board selectBoard(SqlSessionTemplate sqlSession, int bId) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("freeMapper.selectBoard", bId);
+	}
+
+	public ArrayList<Board> selectNoticeList(SqlSessionTemplate sqlSession) {
+		
+		return (ArrayList)sqlSession.selectList("freeMapper.selectNoticeList");
+	}
+
+	public ArrayList<Board> selectBoardList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("freeMapper.selectBoard5");
+		
+	}
+
+	public ArrayList<Board> selectBoardListM(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("freeMapper.selectBoardM");
+		
+	}
+
 }

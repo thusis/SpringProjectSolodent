@@ -19,6 +19,16 @@ public interface MemberService {
 
 	ArrayList<HashMap<String, Object>> selectMyList(String id);
 
+	String finEmail(String email);
+
+	String findPwd(Member m);
+
+	
+
+	
+
+	int changePwd(Member m);
+
 	
 	
 
