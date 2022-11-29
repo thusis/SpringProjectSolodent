@@ -85,4 +85,9 @@
   		  order by  BOARD_COUNT desc 
   		 ]]>
   	</select>
+  	<insert id="DboardInsert">
+  		
+		insert into board values(seq_bid.nextval, 1, #{boardTitle}, #{boardContent}, #{userId},
+													sysdate, default, default, default, default)
+  	</insert>
   </mapper>

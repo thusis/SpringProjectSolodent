@@ -74,6 +74,13 @@ public class FreeServiceimpl implements FreeService {
 		return fDAO.selectBoardListM(sqlSession);
 	}
 
+	@Override
+	public int insertDboard(String id) {
+		// TODO Auto-generated method stub
+		return fDAO.insertDboardInsert(sqlSession, id);
+	}
+
+	
 }
 	
 	

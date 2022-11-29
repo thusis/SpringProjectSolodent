@@ -36,6 +36,14 @@ public interface FreeService {
 
 
 
+	int insertDboard(String id);
+
+
+
+	
+
+
+
 	
 
 

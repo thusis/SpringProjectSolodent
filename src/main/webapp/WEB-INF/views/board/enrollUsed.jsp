@@ -18,7 +18,7 @@
 </style>
 
 </head>
-<body >
+<body>
 	<jsp:include page="../home/menubar.jsp"/>
 	<!-- ======= Contact Section ======= -->
     <section id="contact" class="contact" style="margin-top: 70px;">

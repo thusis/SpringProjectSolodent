@@ -216,7 +216,7 @@
     
     
     <!-- ============================채팅=======================-->
-    <%@ include   file="../chat/chatModal.jsp" %>
+   <%--  <%@ include   file="../chat/chatModal.jsp" %> --%>
 	<script>
 	$(function(){
 	   const loginUser =$("#loginUser").val();

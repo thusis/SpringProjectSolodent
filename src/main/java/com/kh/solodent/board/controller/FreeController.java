@@ -107,5 +107,26 @@ public class FreeController {
 		 }
 		
 	 }
-	
+
+	 @RequestMapping("freeUpdate.fe")
+	 public String updateBoard(HttpSession session, Model model) {
+		 Board b = ((Board) session.getAttribute("b"));
+		 System.out.println("b" + b);
+		 model.addAttribute("b",b);
+		 return "freeEdit";
+	 }
+	 @RequestMapping(value ="DboardInsert.fe", method = RequestMethod.POST) 
+	  public String DboardInsert(HttpSession session) { 
+		  String id =((Member)session.getAttribute("loginUser")).getId(); 
+		 
+		  
+		  int result = fService.insertDboard(id); 
+		  
+		  if(result > 0) {
+			  return "redirect:freeHome.fe";
+		  }else {
+			  throw new BoardException("게시글 작성 실패");
+		  }
+		  
+	  }
 }
