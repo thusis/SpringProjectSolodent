@@ -34,7 +34,7 @@
 	<link href="/solodent/resources/assets/css/main.css" rel="stylesheet">
 		
     <style>
-	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed;}
+	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed; z-index:1;}
 	    
 		a{
 		text-decoration: none;
