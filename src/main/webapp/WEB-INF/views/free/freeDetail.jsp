@@ -18,7 +18,7 @@
     	 align-items: center;
     	
     	}
-    .dtm{	
+    .dtm{	background: white;
     		 height: 400px;
     		 width:70%;
     		 box-shadow:1px 1px 4px #cacaca,
@@ -53,19 +53,19 @@
     		 }
     </style>
   </head>
-  <body style="margin-top:15%;">
+  <body style="margin-top:15%; background:#F2F2F2;">
  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
      <jsp:include page="../home/menubar.jsp"/>
-     	<div class="container-fluid">
-	  		<div class="row row1">
+     	<div class="container-fluid ">
+	  		<div class="row row1 justify-content-md-center">
 	  			<div class="col col1">
 			  				<div>
 			  				<img alt="1" src="${contextPath }/resources/img/read.png" width="200px" height="100px;"  style="margin-left: 0%;" class="Z1">
 			  				<div class="dtm">
 			  					<ul>
 			  					<li style="font-weight: 700; font-size: 40px; margin-top: 20px; border-bottom: 1px solid black; width:100%;">     ${ b.boardTitle }  
-			  					<div class="butt2"><button class="butt1" onclick="local" style="margin-right:10px;">수정</button><button class="butt1"">삭제</button></div>
+			  					<div class="butt2"><button class="butt1" onclick="location.href='${contextPath}/freeUpdate.fe'" style="margin-right:10px;">수정</button><button class="butt1"">삭제</button></div>
 			  					 </li>
 			  					
 			  					
@@ -91,14 +91,26 @@
 						  		
 						  			</div>
 						  		</div>
-						  		
+						  	</div>
 			  					
-			  					
-			  					
-			  				
+	  				</div>
+	  				<div class="row row1 justify-content-md-center">
+	  				<div class="col col1">
+	  					<div style="margin-top:820px; width: 73%; margin-left:14.5%;
+	  								height:100%; " >
+			  						<input type="text" style="width:78%; height:100px; float: left; border-radius:10px; 
+			  										border: none;   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);">
+			  						<button style="height: 100px; width:20%; float:right;;
+			  						border-radius:10px; border-radius:10px;  box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);
+			  						border:none; background: white; font-weight: 700"
+			  						onclick="location.href='${ contextPath }/DboardInsert.fe'">댓글</button>
+			  						
+			  			</div>			
+			  			
+	  					
 	  					</div>
 	  				</div>
-	  			</div>
-	  				  					  			
+	  			
+	  				</div>  					  			
   </body>
 </html>

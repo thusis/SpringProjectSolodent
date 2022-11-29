@@ -60,4 +60,9 @@ public class freeDAO {
 		
 	}
 
+	public int insertDboardInsert(SqlSessionTemplate sqlSession, String id) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("freeMapper.DboardInsert", id);
+	}
+
 }
