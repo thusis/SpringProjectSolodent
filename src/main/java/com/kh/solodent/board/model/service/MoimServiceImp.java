@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.kh.solodent.board.model.dao.MoimDAO;
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.BoardScrap;
 import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
@@ -138,6 +139,21 @@ public class MoimServiceImp implements MoimService {
 	@Override
 	public int declareBoard(Declare dcl) {
 		return mDAO.declareBoard(sqlSession, dcl);
+	}
+
+	@Override
+	public int isScrap(BoardScrap scrap) {
+		return mDAO.isScrap(sqlSession, scrap);
+	}
+
+	@Override
+	public void setScrap(BoardScrap scrapvo) {
+		mDAO.setScrap(sqlSession, scrapvo);
+	}
+
+	@Override
+	public void deleteScrap(BoardScrap scrapvo) {
+		mDAO.deleteScrap(sqlSession, scrapvo);
 	}
 
 	

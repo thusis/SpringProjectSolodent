@@ -24,7 +24,6 @@
         
         
         <div class="container">
-        <c:if test="${ empty dclmsg }">
             <form action="${contextPath}/declare.moim" method="post" id="goToDeclare">
 	            <div class="boardInfo" style="margin:30px;">
 	                <h5>작성자 : <%=moimWriter %></h5>
@@ -57,13 +56,7 @@
 	            	<button type="submit" class="btn">신고하기</button>
 	            </div>
 			</form>
-			</c:if>
 			
-			<c:if test="${ !empty dclmsg }">
-			<h3>${ dclmsg}</h3>
-			 신고가 정상제출되었습니다.
-			 
-			</c:if>
         </div>
         
 <!--     <script> -->

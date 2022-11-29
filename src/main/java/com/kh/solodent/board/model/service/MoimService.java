@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.BoardScrap;
 import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
@@ -59,6 +60,12 @@ public interface MoimService {
 	int declareBoard(Declare dcl);
 
 	int getIsDeclared(Declare dcl);
+
+	int isScrap(BoardScrap scrap);
+
+	void setScrap(BoardScrap scrapvo);
+
+	void deleteScrap(BoardScrap scrapvo);
 
 
 }
