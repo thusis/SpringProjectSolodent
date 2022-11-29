@@ -39,7 +39,10 @@
 <body>
 	<jsp:include page="../home/menubar.jsp"/>
 	<input type="hidden" value="${ loginUser.id }" id="loginUserId">
-	 <section id="portfolio-details" class="portfolio-details">
+<%-- 	<input type="hidden" value="${ b.boardId }" id="declareBoardId"> --%>
+<%-- 	<input type="hidden" value="${ b.userId }" id="declareUserName"> --%>
+<%--      <input type="hidden" value="${ b.boardTitle }" id="declareBoardTitle"> --%>
+	 <section id="portfolio-details" class="portfolio-details" style="margin-top: 70px;">
       <div class="container" data-aos="fade-up" >
 		<c:if test="${ aList != null }">
 	        <div class="position-relative h-100" style="width: 800px; margin: 0 auto;">
@@ -62,7 +65,6 @@
 		</c:if>
 
         <div class="row justify-content-between gy-4 mt-4">
-        <input type="hidden" value="${ b.boardId }" name="boardId">
         <input type="hidden" value="${ isLike }" id="isLike">
 		
 		<div class="col-2"></div>
@@ -141,7 +143,13 @@
             			<c:set var="scrapResult" value="${ isScrap }" ></c:set>
             			<button type="button" class="btn btn-outline-info"  style="margin-left: 10px;" id="scrapBtn">스크랩</button>
             			<button type="button" class="btn btn-outline-info"  style="margin-left: 10px; "id="scrapDeleteBtn" >스크랩 취소</button>
-            		<div>신고 부분</div>
+            			<form action="${ contextPath }/declareBoard.bo" method="post" id="declareForm">
+            				<input type="hidden" value="${ b.userId }"  name="boardWriter">
+     						<input type="hidden" value="${ b.boardTitle }"  name="boardTitle">	
+<%--      						<input type="hidden" value="${ loginUser.id }" id="loginUserId"> --%>
+							<input type="hidden" value="${ b.boardId }"  name="boardId">
+	            			<button type="button" class="btn btn-outline-info" id="declareBtn">게시글 신고</button>
+            			</form>
 	            </c:if>
             	<c:if test="${ loginUser.id eq b.userId }">
             			<c:set var="scrapResult" value="${ isScrap }" ></c:set>
@@ -194,6 +202,7 @@
     
     <script type="text/javascript">
 		window.onload=()=> {
+			
 			
 			const isLike = document.getElementById('isLike');
 			const icon = document.getElementById('likeIcon');
@@ -328,6 +337,20 @@
 			
 			//window.onload 끝부분
 			
+			document.getElementById('declareBtn').addEventListener('click', function() {
+				var url = "${contextPath}/declareBoard.bo";
+			      var title = "신고창";
+			      var status ="width=500, height=400, top=150, left=200";
+			      
+			    const form = document.getElementById("declareForm");
+			      console.log(form);
+			      
+			      form.target=title;
+			      form.action=url;
+			      form.method="post";
+			      window.open(url, title, status);
+			      form.submit();
+			});
 			
 		}
 			function deleteReply() {
@@ -520,7 +543,6 @@
 				});
 				
 			}
-			
 			
 			
   	</script> 

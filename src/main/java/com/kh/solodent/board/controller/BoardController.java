@@ -29,6 +29,7 @@ import com.kh.solodent.board.model.service.BoardService;
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.BoardScrap;
+import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.PageInfo;
 import com.kh.solodent.board.model.vo.Reply;
@@ -831,4 +832,31 @@ public class BoardController {
 		}
 	}
 	
+	@RequestMapping("declareBoard.bo")
+	public String declareBoard(@RequestParam("boardWriter") String writer, @RequestParam("boardId") int boardId,
+												   @RequestParam("boardTitle") String boardTitle, HttpServletRequest req, Model model) {
+		
+		model.addAttribute("boardId", boardId);
+		model.addAttribute("boardWriter", writer);
+		model.addAttribute("boardTitle", boardTitle);
+		model.addAttribute("loginUser", ((Member)req.getSession().getAttribute("loginUser")).getId());
+		
+		System.out.println("팝업");
+		return "dPopup";
+	}
+	
+	@RequestMapping("insertDeclare.bo")
+	public String insertDeclare(@ModelAttribute Declare d, Model model) {
+		
+		//이미 신고했나 확인해야함
+		int result = bService.insertDeclare(d);
+		
+		if(result > 0) {
+			model.addAttribute("dclmsg", "신고가 정상적으로 접수되었습니다.");
+		} else {
+			model.addAttribute("dclmsg", "이미 신고한 게시물이거나 접수되지 않았습니다.");
+		}
+		
+		return "declareResult";
+	}
 }
