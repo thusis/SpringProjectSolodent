@@ -356,4 +356,18 @@
 	<update id="updateReply">
 		update reply set reply_content = #{replyContent} where reply_id = #{replyId}
 	</update>
+	
+	<resultMap type="Declare" id="declareResultSet">
+		<id column="DECLARE_CODE" property="declareCode"/>
+		<result column="DECLARE_DATE" property="declareDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="DECLARE_TYPE" property="declareType"/>
+		<result column="DECLARE_TO" property="declareTo"/>
+		<result column="USER_ID" property="userId"/>
+	</resultMap>
+	
+	<insert id="insertDeclare">
+		insert into declare values(seq_did.nextval, sysdate, default, #{declareType}, #{declareTo}, #{userId})
+	</insert>
+	
 </mapper>

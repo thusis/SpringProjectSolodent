@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.BoardScrap;
+import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.PageInfo;
 import com.kh.solodent.board.model.vo.Reply;
@@ -199,6 +200,10 @@ public class BoardDAO {
 
 	public int updateReply(SqlSessionTemplate sqlSession, Reply r) {
 		return sqlSession.update("boardMapper.updateReply", r);
+	}
+
+	public int insertDeclare(SqlSessionTemplate sqlSession, Declare d) {
+		return sqlSession.insert("boardMapper.insertDeclare", d);
 	}
 
 

@@ -64,7 +64,16 @@
 	            		<i class="bi bi-hand-thumbs-up-fill"  id="likeIcon"></i>
 	            	</c:if>
             			<span id="likeCount" style="margin-right: 10px;">${ likeCount }</span>
-            		<button type="button" class="btn btn-outline-info">판매자 채팅</button>
+<!--             			<div style="display: inline;"> -->
+	            			<button type="button" class="btn btn-outline-info">판매자 채팅</button>
+	            			<form action="${ contextPath }/declareBoard.bo" method="post" id="declareForm">
+	            				<input type="hidden" value="${ b.userId }"  name="boardWriter">
+	     						<input type="hidden" value="${ b.boardTitle }"  name="boardTitle">	
+	<%--      						<input type="hidden" value="${ loginUser.id }" id="loginUserId"> --%>
+								<input type="hidden" value="${ b.boardId }"  name="boardId">
+		            			<button type="button" class="btn btn-outline-info" id="declareBtn" style="display: inline-block;">게시글 신고</button>
+	            			</form>
+<!--             			</div> -->
 	            </c:if>
             	<c:if test="${ loginUser.id eq b.userId }">
 	            	<i class="bi bi-hand-thumbs-up-fill" style="font-size: 30px; margin: 10px;" ></i>
@@ -162,6 +171,20 @@
 				location.href='${ contextPath }/delete.bo?boardId=${ b.boardId }';
 			});
 			
+			document.getElementById('declareBtn').addEventListener('click', function() {
+				var url = "${contextPath}/declareBoard.bo";
+			      var title = "신고창";
+			      var status ="width=500, height=400, top=150, left=200";
+			      
+			    const form = document.getElementById("declareForm");
+			      console.log(form);
+			      
+			      form.target=title;
+			      form.action=url;
+			      form.method="post";
+			      window.open(url, title, status);
+			      form.submit();
+			});
 		}
   	</script> 
     

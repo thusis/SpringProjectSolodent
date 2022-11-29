@@ -11,6 +11,7 @@ import com.kh.solodent.board.model.dao.BoardDAO;
 import com.kh.solodent.board.model.vo.Attachment;
 import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.BoardScrap;
+import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.PageInfo;
 import com.kh.solodent.board.model.vo.Reply;
@@ -198,6 +199,10 @@ public class BoardService {
 
 	public int updateReply(Reply r) {
 		return bDAO.updateReply(sqlSession, r);
+	}
+
+	public int insertDeclare(Declare d) {
+		return bDAO.insertDeclare(sqlSession, d);
 	}
 
 	
