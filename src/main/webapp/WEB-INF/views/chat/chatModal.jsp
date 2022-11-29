@@ -24,6 +24,11 @@
 					<div class="msg_history">
 					
 					
+					
+					
+					
+					<span></span>
+					
 					</div>
 					<div class="type_msg">
 						<div class="input_msg_write">
