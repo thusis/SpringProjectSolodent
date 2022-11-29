@@ -34,7 +34,7 @@
 	<link href="/solodent/resources/assets/css/main.css" rel="stylesheet">
 		
     <style>
-	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed; z-index:1;}
+	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed; z-index:9999;}
 	    
 		a{
 		text-decoration: none;
@@ -166,6 +166,51 @@
 
     <!-- Template Main JS File -->
     <script src="/solodent/resources/assets/js/main.js"></script>
+    
+    
+    <!-- ============================채팅=======================-->
+    <%@ include   file="../chat/chatModal.jsp" %>
+	<script>
+	$(function(){
+	   const loginUser =$("#loginUser").val();
+	   //console.log(loginUser);
+	   if(loginUser!=""){   
+	      notificationList();
+	      setInterval(() => {
+	         //notificationList();
+	      }, 3000);
+	   }
+	});
+	
+	function notificationList(){
+	   const home=$("#home").val();   
+	   $.ajax({
+	      url:home+"/chat/notificationList.do",
+	      type:"post",      
+	      success:function(res){
+	         //console.log(" res : ", res);
+	         $("#notificationList").html(res);
+	         const notificationCnt=parseInt($("#notificationCnt").val());
+	         console.log("notificationCnt  : " + notificationCnt);
+	         
+	         if(notificationCnt==0){
+	            $(".badge-danger").hide();
+	            $("#notificationListBtn").on("click", function(){
+	               //alert("도착한 메시지가 없습니다.");
+	            })
+	         }else{
+	            const html ='<span class="badge badge-danger badge-counter " id="ntcntSpan">'+notificationCnt +'+</span>';
+	            $("#ntcntSpan").html(html);
+	         }
+	      },
+	      error:function(error){
+	         console.log("에러 : ",error);
+	      }      
+	   });
+	}
+	
+	
+	</script>    
     
 	</body>
 </html>
