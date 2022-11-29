@@ -95,11 +95,41 @@
 		width: 200px;
 		margin-left: 20px;
 		border-radius: 50px;}
-  	</style>
-  </head>
+		.dropdown-toggle{
+		    background: #60cfff;
+		    border:none;    
+		    color: white;
+		    font-weight: 700;
+		    text-shadow: 1px 1px 4px #cacaca, 2px 2px 4px rgb(0 0 0 / 30%), 3px 3px 6px rgb(0 0 0 / 20%), 4px 4px 11px rgb(0 0 0 / 10%);
+		}
+		.dropdown-toggle:hover, .dropdown-toggle:active{
+		    background: #60cfff;
+		     color: #dee2e6 !important;
+		}
+		.badge-danger {
+		    color: #fff;
+		          
+		    background-color: #e74a3b;
+		    /* width: 30px; */
+		    font-size: 10px;
+		    border: none;
+		    left: -10px;
+		    top: -13px !important;
+		    position: relative;
+		    position: relative !important;
+		}
+		.dropdown  .alert{
+		    position: absolute;
+		    top: -11px;
+		    left: -43px;
+		}       
+		  	</style>
+		  </head>
   
   
   <body>
+  	 <input type="hidden" id="home" value="${pageContext.request.contextPath}">  
+    <input type="hidden" id="loginUser" value="${loginUser}"> 
     <c:set var="contextPath" value="${ pageContext.request.contextPath }" scope="application"/>
     <header id="header"  align-items-center">
 	   <nav class="nav1">
