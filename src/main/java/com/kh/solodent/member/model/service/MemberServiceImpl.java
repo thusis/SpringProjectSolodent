@@ -61,4 +61,24 @@ public class MemberServiceImpl implements MemberService {
 	public ArrayList<HashMap<String, Object>> selectMyList(String id) {
 		return mDAO.selectMyList(sqlSession, id);
 	}
+
+	@Override
+	public String finEmail(String email) {
+		// TODO Auto-generated method stub
+		return mDAO.findEmail(sqlSession, email);
+	}
+
+	@Override
+	public String findPwd(Member m) {
+		// TODO Auto-generated method stub
+		return mDAO.finPwd(sqlSession, m);
+	}
+
+
+
+	@Override
+	public int changePwd(Member m) {
+		// TODO Auto-generated method stub
+		return mDAO.changePwd(sqlSession, m);
+	}
 }
