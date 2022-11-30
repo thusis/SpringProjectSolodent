@@ -34,6 +34,7 @@
 	.bi:hover {
 		cursor: pointer;
 	}
+
 </style>
 </head>
 <body>
@@ -83,7 +84,7 @@
 							<div class="col-2" style="margin: auto;" id="otherIndex${ status.index+1 }">
 								<c:if test="${ loginUser.id ne rList[i].userId }">
 									<c:if test="${ isReplyLikeList[i] == 0 }">
-										<i class="bi bi-hand-thumbs-up-fill likeIcon"   id="likeIcon${ status.index+1 }"  style="margin-right: 10px;"></i>
+										<i class="bi bi-hand-thumbs-up-fill likeIcon"   id="likeIcon${ status.index+1 }"  style="margin-right: 10px; color:  #52cbffd3;"></i>
 										<span id="likeCount${ status.index+1 }">${ likeCountList[i] }<br></span>
 									</c:if>
 									<c:if test="${ isReplyLikeList[i] == 1 }">
@@ -142,7 +143,7 @@
             		<span id="likeCount" style="margin-right: 10px;">${ likeCount }</span>
             			<c:set var="scrapResult" value="${ isScrap }" ></c:set>
             			<button type="button" class="btn btn-outline-info"  style="margin-left: 10px;" id="scrapBtn">스크랩</button>
-            			<button type="button" class="btn btn-outline-info"  style="margin-left: 10px; "id="scrapDeleteBtn" >스크랩 취소</button>
+            			<button type="button" class="btn btn-outline-info"  style="margin-left: 10px; margin-bottom: 10px;" id="scrapDeleteBtn" >스크랩 취소</button>
             			<form action="${ contextPath }/declareBoard.bo" method="post" id="declareForm">
             				<input type="hidden" value="${ b.userId }"  name="boardWriter">
      						<input type="hidden" value="${ b.boardTitle }"  name="boardTitle">	
@@ -168,7 +169,7 @@
 
       </div>
     </section><!-- End Portfolio Details Section -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice" style="top: 50%;">
 		<div class="modal-dialog" role="document">
     		<div class="modal-content rounded-3 shadow">
       			<div class="modal-body p-4 text-center">
@@ -185,7 +186,7 @@
   		</div>
 	</div>
 	
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalScrap">
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalScrap" style="top: 50%;">
 		<div class="modal-dialog" role="document">
     		<div class="modal-content rounded-3 shadow">
       			<div class="modal-body p-4 text-center">
@@ -337,24 +338,26 @@
 			
 			//window.onload 끝부분
 			
-			document.getElementById('declareBtn').addEventListener('click', function() {
-				var url = "${contextPath}/declareBoard.bo";
-			      var title = "신고창";
-			      var status ="width=500, height=400, top=150, left=200";
-			      
-			    const form = document.getElementById("declareForm");
-			      console.log(form);
-			      
-			      form.target=title;
-			      form.action=url;
-			      form.method="post";
-			      window.open(url, title, status);
-			      form.submit();
-			});
+			const declareBtn = document.getElementById('declareBtn');
+			if(declareBtn != null) {
+				declareBtn.addEventListener('click', function() {
+					var url = "${contextPath}/declareBoard.bo";
+				      var title = "신고창";
+				      var status ="width=500, height=400, top=150, left=200";
+				      
+				    const form = document.getElementById("declareForm");
+				      console.log(form);
+				      
+				      form.target=title;
+				      form.action=url;
+				      form.method="post";
+				      window.open(url, title, status);
+				      form.submit();
+				});
+			}
 			
 		}
 			function deleteReply() {
-				console.log("gg");
 				const deleteReplyIcon = document.getElementsByClassName('deleteReply');
 				
 				for(let i=0 ; i<deleteReplyIcon.length ; i++) {
@@ -414,7 +417,7 @@
 					divOther.id = "otherIndex" + i;
 					if(loginUserId != data.rList[i].userId) {
 						if(data.isReplyLikeList[i] == 0) {
-							divOther.innerHTML = '<i class="bi bi-hand-thumbs-up-fill likeIcon"  id="likeIcon' + i + '" style="margin-right :10px;" ></i><span id="likeCount' + i + '">' + data.likeCountList[i] +
+							divOther.innerHTML = '<i class="bi bi-hand-thumbs-up-fill likeIcon"  id="likeIcon' + i + '" style="margin-right :10px; color : #52cbffd3" ></i><span id="likeCount' + i + '">' + data.likeCountList[i] +
 																	'<br></span><input type="hidden" id="isReplyLike' + i +  '" value="' + data.isReplyLikeList[i] + '"><input type="hidden" id="replyLike' + i + '" value="' + data.rList[i].replyId 
 																	+ '">' + data.rList[i].createDate + '</div>';
 						} else {
@@ -424,7 +427,7 @@
 						}
 					} else {
 						if(data.isReplyLikeList[i] == 0) {
-							divOther.innerHTML = '<i class="bi bi-hand-thumbs-up-fill "  id="likeIcon' + i + '" style="margin-right :10px;" ></i><span id="likeCount' + i + '">' + data.likeCountList[i] +
+							divOther.innerHTML = '<i class="bi bi-hand-thumbs-up-fill "  id="likeIcon' + i + '" style="margin-right :10px; color : #52cbffd3" ></i><span id="likeCount' + i + '">' + data.likeCountList[i] +
 																	'<br></span><input type="hidden" id="isReplyLike' + i +  '" value="' + data.isReplyLikeList[i] + '"><input type="hidden" id="replyLike' + i + '" value="' + data.rList[i].replyId 
 																	+ '"><i class="bi bi-trash-fill deleteReply" style="border: 1px solid #52cbffd3; border-radius: 5px; background: #52cbffd3; color: white;">댓글 삭제</i><br><i class="bi bi-pencil"  id="contentIndex' + i + '" onclick="editReply(this);" style="border: 1px solid #52cbffd3; border-radius: 5px; background: #52cbffd3; color: white;">댓글 수정</i>' 
 																	+ data.rList[i].createDate + '</div>';

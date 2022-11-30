@@ -304,7 +304,7 @@
 	</insert>
 	
 	<select id="selectReply" resultMap="replyResultSet">
-		select * from reply join member using(user_id) where board_id = #{boardId} order by create_date asc
+		select * from reply join member using(user_id) where board_id = #{boardId} and reply.status = 'Y' order by create_date asc
 	</select>
 	
 	<resultMap type="ReplyLike" id="replyLikeResultSet">
@@ -350,7 +350,7 @@
 	</delete>
 	
 	<delete id="deleteReply">
-		delete from reply where reply_id = #{replyId}
+		update reply set status = 'N' where reply_id = #{replyId}
 	</delete>
 	
 	<update id="updateReply">
@@ -369,5 +369,13 @@
 	<insert id="insertDeclare">
 		insert into declare values(seq_did.nextval, sysdate, default, #{declareType}, #{declareTo}, #{userId})
 	</insert>
+	
+	<update id="deleteReplyFromBoard">
+		update reply set status = 'N' where board_id = #{boardId}
+	</update>
+	
+	<select id="mainPageUsedList"  resultMap="attmResultSet">
+		select * from attachment where board_id = #{boardId}
+	</select>
 	
 </mapper>

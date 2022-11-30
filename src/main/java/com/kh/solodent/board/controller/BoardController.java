@@ -104,7 +104,13 @@ public class BoardController {
 	}
 	
 	@RequestMapping("enrollUsed.bo")
-	public String enrollUsed() {
+	public String enrollUsed(HttpServletRequest req) {
+		Member loginUser = ((Member)req.getSession().getAttribute("loginUser"));
+		
+		if(loginUser == null) {
+			throw new BoardException("로그인 후 이용해주세요.");
+		}
+		
 		return "enrollUsed";
 	}
 	
@@ -680,6 +686,7 @@ public class BoardController {
 		
 		int bResult = bService.deleteBoard(boardId);
 		int tResult = bService.deleteTip(boardId);
+		int deleteReply = bService.deleteReplyFromBoard(boardId);
 		
 		if(bResult + tResult == 2) {
 			return "redirect:tipList.bo";

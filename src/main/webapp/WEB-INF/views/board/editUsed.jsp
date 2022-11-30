@@ -64,7 +64,7 @@
 				          		<select class="form-select d-flex" aria-label="Default select example" style="width:  150px; margin-right: 10px;" name="gugun1" id="gugun1">
 						          
 						        </select>
-						        <select class="form-select d-flex" aria-label="Default select example" style="width:  150px;" name="productCate">
+						        <select class="form-select d-flex" aria-label="Default select example" style="width:  150px;" name="productCate" id="productCate">
 						          <option value="디지털/가전"  <c:if test="${ u.productCate eq  '디지털/가전' }">selected</c:if>>디지털/가전</option>
 						          <option value="의류" <c:if test="${ u.productCate eq  '의류' }">selected</c:if>>의류</option>
 						          <option value="액세서리" <c:if test="${ u.productCate eq  '액세서리' }">selected</c:if>>액세서리</option>
@@ -76,16 +76,16 @@
 				          </div>
               </div>
 	              <div class="mb-3">
-					<label for="exampleFormControlInput1" class="form-label" >가격</label>
-					<input type="text" class="form-control" id="exampleFormControlInput1" name="price"  style="width: 50%;" onkeyup="inputNumberFormat(this);" value="${ u.price }">
+					<label for="productPrice" class="form-label" >가격</label>
+					<input type="text" class="form-control" id="productPrice" name="price"  style="width: 50%;" onkeyup="inputNumberFormat(this);" value="${ u.price }">
 				</div>
 	              <div class="mb-3">
-					<label for="exampleFormControlInput1" class="form-label">상품명</label>
-					<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="상품명" name="boardTitle" value="${ b.boardTitle }">
+					<label for="productName" class="form-label">상품명</label>
+					<input type="text" class="form-control" id="productName" placeholder="상품명" name="boardTitle" value="${ b.boardTitle }">
 				</div>
 				<div class="mb-3">
-					<label for="exampleFormControlTextarea1" class="form-label">물품 상세내용</label>
-					<textarea class="form-control" id="exampleFormControlTextarea1" rows="10" name="boardContent">${ b.boardContent }</textarea>
+					<label for="productExplain" class="form-label">물품 상세내용</label>
+					<textarea class="form-control" id="productExplain" rows="10" name="boardContent">${ b.boardContent }</textarea>
 				</div>
 				<div class="mb-3">
 					 <label for="formFile" class="form-label">상품 사진</label>
@@ -192,7 +192,22 @@
     	    
     	    const form = document.getElementById('usedForm');
     	    document.getElementById('submitBtn').addEventListener('click', ()=> {
-    	    	form.submit();
+    	    	const productLocal = document.getElementById('gugun1').value;
+    	    	const productCate = document.getElementById('productCate').value;
+    	    	const productPrice = document.getElementById('productPrice').value;
+    	    	const productName = document.getElementById('productName').value;
+    	    	const productExplain = document.getElementById('productExplain').value;
+    	    	const productImage = document.getElementsByClassName('myFiles').length;
+    	    	
+    	    	if(productLocal != '' && productCate != '' && productPrice != '' && productName != '' 
+    	    					&& productExplain != '' && productImage != 0) {
+	    	    	form.submit();
+    	    	} else {
+    	    		const gradeModalText = document.getElementById('dongjunModalText');
+    	    		gradeModalText.innerHTML = '제품의 상세정보를 <br>전부 입력해주세요.<br>(사진 첨부 1개 이상)';
+    	    		$('#dongjunModal').modal('show');
+    	    	}
+    	    
     	    });
     	    
     	    const arr = document.getElementsByClassName('delIcon');
