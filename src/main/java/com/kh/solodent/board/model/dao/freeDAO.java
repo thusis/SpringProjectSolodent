@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.PageInfo;
+import com.kh.solodent.board.model.vo.Reply;
 
 @Repository("fDAO")
 public class freeDAO {
@@ -60,9 +61,32 @@ public class freeDAO {
 		
 	}
 
-	public int insertDboardInsert(SqlSessionTemplate sqlSession, String id) {
+	public int insertDboardInsert(SqlSessionTemplate sqlSession, Reply r) {
 		// TODO Auto-generated method stub
-		return sqlSession.insert("freeMapper.DboardInsert", id);
+		return sqlSession.insert("freeMapper.DboardInsert", r);
 	}
 
-}
+	public Board selectBoardb(SqlSessionTemplate sqlSession, int bId) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("freeMapper.selectBoardb", bId);
+	}
+
+	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("freeMapper.updateBoard", b);
+	}
+
+	public ArrayList<Reply> selectReply(SqlSessionTemplate sqlSession, int bId) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("boardMapper.selectReply", bId);
+	}
+
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("freeMapper.insertReply", r);
+	}
+
+
+	}
+
+

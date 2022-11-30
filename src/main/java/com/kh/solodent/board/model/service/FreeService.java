@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.PageInfo;
+import com.kh.solodent.board.model.vo.Reply;
 
 @Service
 public interface FreeService {
@@ -36,7 +37,37 @@ public interface FreeService {
 
 
 
-	int insertDboard(String id);
+	int insertDboard(Reply r);
+
+
+
+	Board selectBoardb(int bId);
+
+
+
+	
+
+
+
+	int UpdateBoard(Board b);
+
+
+	ArrayList<Reply> selectReply(int bId);
+
+
+
+	int insertReply(Reply r);
+
+
+
+	
+
+
+
+
+
+
+
 
 
 

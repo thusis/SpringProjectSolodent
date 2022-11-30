@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.solodent.board.model.dao.freeDAO;
 import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.PageInfo;
+import com.kh.solodent.board.model.vo.Reply;
 
 
 @Service("fService")
@@ -75,10 +76,39 @@ public class FreeServiceimpl implements FreeService {
 	}
 
 	@Override
-	public int insertDboard(String id) {
+	public int insertDboard(Reply r) {
 		// TODO Auto-generated method stub
-		return fDAO.insertDboardInsert(sqlSession, id);
+		return fDAO.insertDboardInsert(sqlSession, r);
 	}
+
+	@Override
+	public Board selectBoardb(int bId) {
+		// TODO Auto-generated method stub
+		return fDAO.selectBoardb(sqlSession, bId);
+	}
+
+	@Override
+	public int UpdateBoard(Board b) {
+		// TODO Auto-generated method stub
+		return fDAO.updateBoard(sqlSession, b);
+	}
+
+	@Override
+	public ArrayList<Reply> selectReply(int bId) {
+		// TODO Auto-generated method stub
+		return fDAO.selectReply(sqlSession, bId);
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		// TODO Auto-generated method stub
+		return fDAO.insertReply(sqlSession, r);
+	}
+
+
+
+
+	
 
 	
 }

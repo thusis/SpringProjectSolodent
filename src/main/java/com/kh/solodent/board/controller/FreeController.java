@@ -1,7 +1,9 @@
 package com.kh.solodent.board.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.kh.solodent.board.common.Pagination;
 import com.kh.solodent.board.model.exception.BoardException;
 import com.kh.solodent.board.model.service.FreeService;
 import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.PageInfo;
+import com.kh.solodent.board.model.vo.Reply;
 import com.kh.solodent.member.model.service.MemberService;
 import com.kh.solodent.member.model.vo.Member;
 
@@ -97,7 +103,9 @@ public class FreeController {
 			 yn = true;
 		 }
 		 Board b = fService.selectBoard(bId, yn);
+		 ArrayList<Reply>list = fService.selectReply(bId);
 		 if(b != null) {
+			 mv.addObject("list",list);
 			 mv.addObject("b", b);
 			 mv.addObject("page", page);
 			 mv.setViewName("freeDetail");
@@ -107,26 +115,85 @@ public class FreeController {
 		 }
 		
 	 }
+	 
+	 
+	 @RequestMapping("selectMainBoard.fe")
+	 public ModelAndView selectBoard(@RequestParam("bId") int bId, @RequestParam("writer")String writer,
+			 					 HttpSession session, ModelAndView mv
+			 					) {
+		 Member m = (Member)session.getAttribute("loginUser");
+		 String login = null;
+		 
+		 System.out.println("bid는" + bId);
+		 
+		 if(m != null) {
+			 login = m.getId();
+		 }
+		 boolean yn = false;
+		 if(!writer.equals(login)) {
+			 yn = true;
+		 }
+		 Board b = fService.selectBoard(bId, yn);
+		 ArrayList<Reply>list = fService.selectReply(bId);
+		 if(b != null) {
+			 mv.addObject("list",list);
+			 mv.addObject("b", b);
+			
+			 mv.setViewName("freeDetail");
+			 return mv;
+		 }else {
+			 throw new BoardException("게시글 상세보기 실패");
+		 }
+		
+	 }
+	 
+	 
+	 
 
 	 @RequestMapping("freeUpdate.fe")
-	 public String updateBoard(HttpSession session, Model model) {
-		 Board b = ((Board) session.getAttribute("b"));
-		 System.out.println("b" + b);
-		 model.addAttribute("b",b);
+	 public String updateBoard(HttpSession session, Model model, @RequestParam("bId") int bId) {
+		 
+		 System.out.println("b" + bId);
+		Board b = fService.selectBoardb(bId);
+		model.addAttribute("b",b );
 		 return "freeEdit";
 	 }
-	 @RequestMapping(value ="DboardInsert.fe", method = RequestMethod.POST) 
-	  public String DboardInsert(HttpSession session) { 
-		  String id =((Member)session.getAttribute("loginUser")).getId(); 
+	 
+	 @RequestMapping(value = "insertReply.fe")
+		public void insertReply(@ModelAttribute Reply r, HttpServletResponse response) {
+			
+			int result = fService.insertReply(r);
+			System.out.println(r + "dsfdsfs");
+			if(result>0) {
+				System.out.println("댓글달기성공");
+			}
+			ArrayList<Reply> list = fService.selectReply(r.getBoardId());
+
+			response.setContentType("application/json; charset=UTF-8");
+
+			GsonBuilder gb = new GsonBuilder();
+			GsonBuilder gb2 = gb.setDateFormat("yyyy-MM-dd"); // 형식 지정 후
+			Gson gson = gb2.create(); // gson만들기
+			try {
+				gson.toJson(list, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		}	
+
+		  
+	  
+	 @RequestMapping("freeEdit.fe")
+	 public String updateBoard(@RequestParam("bId") int bId, @ModelAttribute Board b) {
+		 b.setBoardId(bId);
 		 
-		  
-		  int result = fService.insertDboard(id); 
-		  
-		  if(result > 0) {
+		 int result = fService.UpdateBoard(b); 
+		 if(result > 0) {
 			  return "redirect:freeHome.fe";
 		  }else {
 			  throw new BoardException("게시글 작성 실패");
 		  }
-		  
-	  }
+		 
+		 
+	 }
 }

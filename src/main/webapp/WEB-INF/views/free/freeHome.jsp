@@ -209,7 +209,7 @@
    				const trTds = this.parentElement.querySelectorAll('td');
    				const bId = trTds[0].innerText;
    				const writer = trTds[2].innerText;
-   				location.href='${contextPath}/selectBoard.fe?bId=' + bId + '&writer=' + writer + '&page=' + ${pi.currentPage};
+   				location.href='${contextPath}/selectBoard.fe?bId=' + bId + '&writer=' + writer + '&page=' + 1;
    			});
    		}
    	}

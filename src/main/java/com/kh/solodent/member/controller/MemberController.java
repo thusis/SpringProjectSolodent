@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Reply;
 import com.kh.solodent.member.model.exception.MemberException;
 import com.kh.solodent.member.model.service.MemberService;
 import com.kh.solodent.member.model.vo.Member;
@@ -204,5 +206,23 @@ public class MemberController {
 		}else {
 			throw new MemberException("비밀번호 변경이 작동되지 않았습니다.");
 		}
+	}
+	@RequestMapping("myInfoBoard.me")
+	public String myInfoBoard(HttpSession session, Model model) {
+		String id = ((Member)session.getAttribute("loginUser")).getId();
+		
+		ArrayList<Board> b = mService.myInfoBoard(id);
+		model.addAttribute("b",b);
+		return "myInfoBoard";
+		
+	}
+	@RequestMapping("myInfoDoard.me")
+	public String myInfoDoard(HttpSession session, Model model) {
+		String id = ((Member)session.getAttribute("loginUser")).getId();
+		
+		ArrayList<Reply> r = mService.myInfoDoard(id);
+		model.addAttribute("r",r);
+		return "myInfoDoard";
+		
 	}
 }
