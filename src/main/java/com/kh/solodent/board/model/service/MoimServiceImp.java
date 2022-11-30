@@ -16,6 +16,7 @@ import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
 import com.kh.solodent.board.model.vo.Reply;
+import com.kh.solodent.board.model.vo.ReplyLike;
 
 @Service("moimService")
 public class MoimServiceImp implements MoimService {
@@ -43,6 +44,7 @@ public class MoimServiceImp implements MoimService {
 
 	@Override
 	public int insertMoim(Moim moim, ArrayList<Attachment> list) {
+		System.out.println("이곳은 moimservice의 insertMoim" + moim+"/"+list);
 		return mDAO.insertMoim(sqlSession, moim, list);
 	}
 
@@ -154,6 +156,53 @@ public class MoimServiceImp implements MoimService {
 	@Override
 	public void deleteScrap(BoardScrap scrapvo) {
 		mDAO.deleteScrap(sqlSession, scrapvo);
+	}
+
+	@Override
+	public int deleteReply(int replyId) {
+		return mDAO.deleteReply(sqlSession, replyId);
+	}
+
+	@Override
+	public ArrayList<Integer> getisReplyLikeList(ArrayList<Reply> replyList, String loginId) {
+		return mDAO.getisReplyLikeList(sqlSession, replyList, loginId);
+	}
+
+	@Override
+	public int isReplyLike(ReplyLike rLikevo) {
+		return mDAO.isReplyLike(sqlSession, rLikevo);
+	}
+
+	@Override
+	public int setReplyLike(ReplyLike rLikevo) {
+		return mDAO.setReplyLike(sqlSession, rLikevo);
+	}
+
+	@Override
+	public int deleteReplyLike(ReplyLike rLikevo) {
+		return mDAO.deleteRepyLike(sqlSession,rLikevo);
+	}
+
+	@Override
+	public int deleteAttm(ArrayList<String> delRename) {
+		System.out.println("여기는 서비스임플 deleteAttm");
+		return mDAO.deleteAttm(sqlSession, delRename);
+	}
+
+	@Override
+	public void updateAttmLevel(int boardId) {
+		System.out.println("여기는 서비스임플 updateAttmLevel");
+		mDAO.updateAttmLevel(sqlSession, boardId);
+	}
+
+	@Override
+	public int updateMoim(Moim moim) {
+		return mDAO.updateMoim(sqlSession, moim);
+	}
+
+	@Override
+	public int insertNewAttmUpdate(Moim moim, ArrayList<Attachment> list) {
+		return mDAO.insertNewAttmUpdate(sqlSession, moim, list);
 	}
 
 	

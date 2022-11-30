@@ -21,7 +21,7 @@
 <body >
 	<jsp:include page="../home/menubar.jsp"/>
 	<!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact" style="margin-top: 70px;">
+    <section id="contact" class="contact">
       <div class="container" data-aos="fade-up">
 
         <div class="section-header">

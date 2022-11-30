@@ -1,7 +1,6 @@
 package com.kh.solodent.chatTest.model.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,32 +32,5 @@ public class ChatService {
 		return chatDAO.selectFirstChatList(sqlSession, roomNo);
 	}
 
-
-
-	public List<Chat> messageList(Chat chat) {
-	
-		return chatDAO.messageList(sqlSession, chat);
-	}
-
-
-
-	public void updateReadCnt(Chat chat) {
-		 chatDAO.updateReadCnt(sqlSession, chat);		
-	}
-
-
-
-	public List<Chat> messageNotificationList(Chat chat) {
-		return chatDAO.messageNotificationList(sqlSession, chat);
-	}
-
-
-
-	public void endChat(Chat chat) {
-		 chatDAO.endChat(sqlSession, chat);		
-	}
-
-	
-	
 
 }

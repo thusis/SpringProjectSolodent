@@ -3,106 +3,23 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chatMapper">
-
-	<resultMap type="chat" id="chatResult">
-		<id column="CHATROOM_ID" property="chatroomId"/>
-		<result column="SEND_ID" property="sendId"/>
-		<result column="RECEIVED_ID" property="receivedId"/>
-		<result column="content" property="content"/>
-		<result column="sendName" property="sendName"/>
-		<result column="READ_CNT" property="readCnt"/>
-		<result column="SEND_DATE" property="sendDate"/>
-		<result column="READ_DATE" property="readDate"/>
-	</resultMap>
-	
-
-
-	
-	<insert id="insertChat">
-		INSERT INTO TBL_CHATROOM
-			(CHATROOM_ID, SEND_ID, RECEIVED_ID, CONTENT,  SEND_DATE)
-		VALUES(SEQ_CHATROOM.nextval, #{sendId},#{receivedId}, #{content}, sysdate)
-	</insert>
-
-
-
-	
-	<select id="messageList"  resultMap="chatResult">
-	SELECT  * FROM(
-		SELECT * FROM(
-		
-			SELECT 
-			tc1.* , (SELECT USER_NAME FROM  MEMBER  WHERE USER_ID = tc1.SEND_ID) AS sendName
-			 
-			FROM TBL_CHATROOM tc1 WHERE SEND_ID =#{otherId} AND RECEIVED_ID =#{myId}
-			
-			UNION 
-			
-			SELECT 
-			tc2.* , (SELECT USER_NAME FROM  MEMBER  WHERE USER_ID = tc2.SEND_ID) AS receiveName
-			 
-			FROM TBL_CHATROOM tc2 WHERE SEND_ID =#{myId} AND RECEIVED_ID =#{otherId}
-		
-		
-		) RE ORDER BY SEND_DATE DESC
-		
-	) fi ORDER BY send_DATE  ASC
-			
-	</select>
-
-
-
-	<update id="updateReadCnt">
-		UPDATE TBL_CHATROOM SET  READ_CNT=READ_CNT+1, READ_DATE=sysdate   WHERE SEND_ID=#{receivedId} AND RECEIVED_ID=#{sendId} AND READ_CNT=0		
-	</update>
-
-
-	
-	<select id="messageNotificationList" resultMap="chatResult">
-	
-	 SELECT A.*  FROM
-	  (
-
-		SELECT tc.* , 
-		
-			(SELECT USER_NAME FROM MEMBER WHERE USER_ID=tc.send_Id) AS sendName
-									
-			FROM TBL_CHATROOM tc 
-		
-		INNER JOIN MEMBER m   ON tc.RECEIVED_ID=m.USER_ID  
-		
-	) A WHERE A.RECEIVED_ID =#{receivedId}  AND A.READ_CNT=0   ORDER BY a.chatroom_id DESC
-	
-	</select>
-
-
-	<delete id="endChat">	
-		DELETE FROM TBL_CHATROOM 
-		WHERE 
-		( RECEIVED_ID =#{receivedId} AND 	SEND_ID =#{sendId}  )
-				OR
-		( RECEIVED_ID =#{sendId} AND 	SEND_ID =#{receivedId}  )
-	</delete>
-
-
-
-	<insert id="insertChat2">
-		insert into
-		chatMessage
-		values(
-		seq_chatting_no.nextval,
-		#{memberId},
-		#{srNo},
-		#{chatContent},
-		default
-		)
-		<selectKey resultType="int" keyProperty="no" order="AFTER">
-			select
-			seq_chatting_no.currval
-			from
-			dual
-		</selectKey>
-
-	</insert>
+<insert id="insertChat">
+ 	insert into
+ 		chatMessage
+ 	values(
+ 		seq_chatting_no.nextval,
+ 		#{memberId},
+ 		#{srNo},
+ 		#{chatContent},
+ 		default
+ 	)
+ 	<selectKey resultType="int" keyProperty="no" order="AFTER">
+         select
+				seq_chatting_no.currval
+			from 
+				dual
+    </selectKey> 
+ 	
+ </insert>
 
 </mapper>

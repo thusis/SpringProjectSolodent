@@ -314,7 +314,7 @@
 	                        <span class="col text-end">
 	                            <i class="view fa-solid fa-eye"></i>&nbsp;${moim.boardCount}&nbsp;
 	                            <i class="like fa-regular fa-heart"></i>&nbsp;${likeCount[status.index]} &nbsp;&nbsp;
-	                          	<i class="fa-regular fa-comment-dots"></i>&nbsp; ${replyLikeCount[status.index]} &nbsp;&nbsp;
+	                          	<i class="fa-regular fa-comment-dots"></i>&nbsp; ${replyCount[status.index]} &nbsp;&nbsp;
 	                            <i class="save fa-regular fa-bookmark"></i>&nbsp;${scrapCount[status.index] }
 	                        </span>
 	                     </div>

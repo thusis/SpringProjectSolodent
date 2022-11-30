@@ -21,7 +21,7 @@
 </head>
 <body>
 	<jsp:include page="../home/menubar.jsp"/>
-	 <section id="portfolio-details" class="portfolio-details" style="margin: 70px;">
+	 <section id="portfolio-details" class="portfolio-details">
       <div class="container" data-aos="fade-up" >
 
         <div class="position-relative h-100">
@@ -65,13 +65,13 @@
 	            	</c:if>
             			<span id="likeCount" style="margin-right: 10px;">${ likeCount }</span>
 <!--             			<div style="display: inline;"> -->
-	            			<button type="button" class="btn btn-outline-info" onclick="chatModal('${ b.userId }')">판매자 채팅</button>
-		            		<button type="button" class="btn btn-outline-info" id="declareBtn">게시글 신고</button>
+	            			<button type="button" class="btn btn-outline-info">판매자 채팅</button>
 	            			<form action="${ contextPath }/declareBoard.bo" method="post" id="declareForm">
 	            				<input type="hidden" value="${ b.userId }"  name="boardWriter">
 	     						<input type="hidden" value="${ b.boardTitle }"  name="boardTitle">	
 	<%--      						<input type="hidden" value="${ loginUser.id }" id="loginUserId"> --%>
 								<input type="hidden" value="${ b.boardId }"  name="boardId">
+		            			<button type="button" class="btn btn-outline-info" id="declareBtn" style="display: inline-block;">게시글 신고</button>
 	            			</form>
 <!--             			</div> -->
 	            </c:if>

@@ -9,13 +9,13 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.solodent.board.model.vo.Attachment;
-import com.kh.solodent.board.model.vo.Board;
 import com.kh.solodent.board.model.vo.BoardScrap;
 import com.kh.solodent.board.model.vo.Declare;
 import com.kh.solodent.board.model.vo.Like;
 import com.kh.solodent.board.model.vo.Moim;
 import com.kh.solodent.board.model.vo.PageInfo;
 import com.kh.solodent.board.model.vo.Reply;
+import com.kh.solodent.board.model.vo.ReplyLike;
 
 @Repository("moimDAO")
 public class MoimDAO {
@@ -77,6 +77,7 @@ public class MoimDAO {
 		return (ArrayList)sqlSession.selectList("moimMapper.getBoardReplyList", boardId);
 	}
 
+	///////////////////여기 replylikecount는 좋아요 수(전체멤버의) 카운트
 	public ArrayList<Integer> getBoardReplyLikeCount(SqlSessionTemplate sqlSession, ArrayList<Reply> replyList) {
 		return (ArrayList)sqlSession.selectList("moimMapper.getBoardReplyLikeCount", replyList);
 	}
@@ -108,7 +109,6 @@ public class MoimDAO {
 	
 	public ArrayList<Moim> selectTopThree(SqlSessionTemplate sqlSession){
 		ArrayList<Integer> boardIds = (ArrayList)sqlSession.selectList("moimMapper.selectTopThree");
-		System.out.println(boardIds);
 		return (ArrayList)sqlSession.selectList("moimMapper.selectTopBoard",boardIds);
 	}
 
@@ -138,6 +138,61 @@ public class MoimDAO {
 
 	public void deleteScrap(SqlSessionTemplate sqlSession, BoardScrap scrapvo) {
 		sqlSession.delete("moimMapper.deleteScrap",scrapvo);
+	}
+
+	public int deleteReply(SqlSessionTemplate sqlSession, int replyId) {
+		return sqlSession.update("moimMapper.deleteReply", replyId);
+	}
+	
+	///////////////////여기 replylikecount는 나의 좋아요 수(1 or 0) 카운트
+	public ArrayList<Integer> getisReplyLikeList(SqlSessionTemplate sqlSession, 
+			ArrayList<Reply> replyList,	String loginId) {
+		ArrayList<Integer> isReplyLikeCountList = new ArrayList<Integer>();
+		for(int i=0; i<replyList.size(); i++) {
+			ReplyLike rl = new ReplyLike(loginId, replyList.get(i).getReplyId());
+			isReplyLikeCountList.add(sqlSession.selectOne("moimMapper.isReplyLike", rl));
+		}
+		return isReplyLikeCountList;
+	}
+
+	public int isReplyLike(SqlSessionTemplate sqlSession, ReplyLike rLikevo) {
+		return sqlSession.selectOne("moimMapper.isReplyLike", rLikevo);
+	}
+
+	public int setReplyLike(SqlSessionTemplate sqlSession, ReplyLike rLikevo) {
+		return sqlSession.insert("moimMapper.setReplyLike", rLikevo);
+	}
+
+	public int deleteRepyLike(SqlSessionTemplate sqlSession, ReplyLike rLikevo) {
+		return sqlSession.delete("moimMapper.deleteReplyLike", rLikevo);
+	}
+
+	public int deleteAttm(SqlSessionTemplate sqlSession, ArrayList<String> delRename) {
+		System.out.println("여기는 DAO deleteAttm");
+		int result= sqlSession.delete("boardMapper.deleteAttm", delRename);
+		System.out.println(result);
+		return result;
+	}
+
+	public void updateAttmLevel(SqlSessionTemplate sqlSession, int boardId) {
+		System.out.println("여기는 DAO updateAttmLevel");
+		System.out.println(boardId);
+		int result = sqlSession.update("boardMapper.updateAttmLevel", boardId);
+		System.out.println("after"+result);
+	}
+
+	public int updateMoim(SqlSessionTemplate sqlSession, Moim moim) {
+		int result1 = sqlSession.update("moimMapper.updateBoard",moim);
+		int result2 = sqlSession.update("moimMapper.updateBoardMoim", moim);
+		return result1 + result2 ;
+	}
+
+	public int insertNewAttmUpdate(SqlSessionTemplate sqlSession, Moim moim, ArrayList<Attachment> list) {
+		int boardId = moim.getBoardId();
+		for(Attachment a: list) {
+			a.setBoardId(boardId);
+		}
+		return sqlSession.insert("moimMapper.insertNewAttmUpdate", list);
 	}
 
 

@@ -88,7 +88,8 @@
 		SELECT COUNT(REPLY_ID)
 		FROM BOARD 
 		LEFT JOIN REPLY USING (BOARD_ID)
-		WHERE BOARD_ID IN (
+		WHERE REPLY.STATUS = 'Y'
+		AND BOARD_ID IN (
 		<foreach collection="list" item="item" separator=",">
 			#{item.boardId}
 		</foreach>
@@ -196,23 +197,19 @@
 	<insert id="setBoardLike">INSERT INTO BOARD_LIKE VALUES (#{userId},#{boardId})</insert>
 	<delete id="deleteBoardLike">DELETE FROM BOARD_LIKE WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</delete>
 		
-	<!-- 댓글에 대한 좋아요 -->
-	<select id="isReplyLike" resultType="int">SELECT COUNT(*) FROM REPLY_LIKE WHERE REPLY_ID=#{replyId} AND USER_ID=#{userId}</select>
+	<!-- 댓글(1)에 대한 좋아요 -->
+	<select id="isReplyLike" resultType="int">SELECT COUNT(*) FROM REPLY_LIKE WHERE USER_ID=#{userId} and REPLY_ID=#{replyId}</select>
 	<insert id="setReplyLike">INSERT INTO REPLY_LIKE VALUES (#{userId},#{replyId})</insert>
 	<delete id="deleteReplyLike">DELETE FROM REPLY_LIKE WHERE REPLY_ID=#{replyId} AND USER_ID=#{userId}</delete>
 	
+	<!-- 댓글(1)을 입력 / 삭제 -->
+	<update id="deleteReply">UPDATE REPLY SET STATUS = 'N' WHERE REPLY_ID = #{replyId}</update>
+	<insert id="insertReply" parameterType="Reply">INSERT INTO REPLY VALUES(SEQ_RID.NEXTVAL, #{replyContent}, SYSDATE, DEFAULT, #{userId}, #{boardId})</insert>
+
 	<!-- 게시글에 대한 스크랩 -->
 	<select id="isScrap" resultType="int">SELECT COUNT(*) FROM BOARD_SCRAP WHERE USER_ID=#{userId} AND BOARD_ID=#{boardId}</select>
 	<insert id="setScrap">INSERT INTO BOARD_SCRAP VALUES (#{userId},#{boardId})</insert>
 	<delete id="deleteScrap">DELETE BOARD_SCRAP WHERE BOARD_ID=#{boardId} AND USER_ID=#{userId}</delete>
-
-	<insert id="insertReply" parameterType="Reply">
-		INSERT INTO REPLY VALUES(SEQ_RID.NEXTVAL, #{replyContent}, SYSDATE, DEFAULT, #{userId}, #{boardId})
-	</insert>
-
-	<insert id="insertScrap">
-		INSERT INRO BOARD_SCRAP VALUES()
-	</insert>
 
 	<!-- 탑랭크 게시글 상위 세 개 반환 -->
 	<select id="selectTopThree" resultType="int">
@@ -223,6 +220,8 @@
 			LEFT JOIN BOARD_LIKE USING (BOARD_ID)
 			LEFT JOIN BOARD_SCRAP USING (BOARD_ID)
 			WHERE BOARD_ID IN (SELECT BOARD_ID FROM BOARD WHERE BOARD_CODE = 4) 
+			AND BOARD.STATUS = 'Y'
+			AND REPLY.STATUS = 'Y'
 			GROUP BY BOARD_ID, BOARD_COUNT ORDER BY RANK DESC
 			) 
 		<![CDATA[WHERE ROWNUM <= 3]]> 
@@ -288,5 +287,43 @@
 	</insert>
 	
 	<select id="getIsDeclared" resultType="int">SELECT COUNT(*) FROM DECLARE WHERE DECLARE_TO = #{declareTo} AND USER_ID = #{userId} </select>
+
+
+
+
+<!-- 	======게시글을 수정하기 위한====== -->
+	<update id="updateBoard">
+		UPDATE BOARD SET BOARD_TITLE=#{boardTitle}, BOARD_CONTENT=#{boardContent}, MODIFY_DATE=SYSDATE
+		WHERE BOARD_ID=#{boardId}
+	</update>
 	
+	<update id="updateBoardMoim">
+		UPDATE BOARD_GROUP SET GROUP_CATE = #{moimCategory} , 
+		GROUP_START = #{moimStart}, GROUP_END = #{moimEnd} , LOCAL = #{local} 
+		WHERE BOARD_ID = #{boardId}
+	</update>
+
+	<delete id="deleteAttm">
+		DELETE FROM ATTACHMENT WHERE EDITFILE_NAME IN
+		<foreach collection="list" open="(" close=")" separator="," item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="updateAttmLevel" parameterType="int" >
+		UPDATE ATTACHMENT SET IS_THUM = 'Y' 
+		WHERE FILE_ID = ( SELECT MIN(FILE_ID) FROM ATTACHMENT WHERE BOARD_ID = #{boardId} )
+	</update>
+	
+	<insert id="insertNewAttmUpdate">
+		insert all
+		<foreach collection = "list" item="item" separator=" ">
+			 into attachment values( new_fid, sysdate, #{item.rawname}, #{item.rename}, #{item.fileRoute}, 4, #{item.boardId} ,#{item.isThum} ) 
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>	
+
+
+
+
 </mapper>
