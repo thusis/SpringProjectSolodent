@@ -20,4 +20,6 @@ public class Reply {
 	private char status;
 	private String userId;
 	private int boardId;
+	private String nickName;
+	
 }

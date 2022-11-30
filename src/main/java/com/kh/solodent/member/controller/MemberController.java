@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Reply;
 import com.kh.solodent.member.model.exception.MemberException;
 import com.kh.solodent.member.model.service.MemberService;
 import com.kh.solodent.member.model.vo.Member;
@@ -142,9 +144,9 @@ public class MemberController {
 		String pwd = null;
 		System.out.println("확인" + m);
 		System.out.println(pwd1);
-		if (!pwd1.trim().equals("")) {
-			pwd = "${ loginUser.pwd }";
-			m.setPwd(pwd);
+		if (pwd1.trim().equals("")) {
+			String nuPwd = pwd1;
+			m.setPwd(nuPwd);
 		} else {
 			m.setPwd(bcrypt.encode(pwd1));
 		}
@@ -159,14 +161,7 @@ public class MemberController {
 
 	}
 
-	// 이메일 인증
-	@RequestMapping("mailCheck.me")
-	@ResponseBody
-	public String mailCheck(String email) {
-		System.out.println("이메일 인증 요청이 들어옴!");
-		System.out.println("이메일 인증 이메일 : " + email);
-		return email;
-	}
+	
 
 	@RequestMapping("deal.me")
 	public String deal() {
@@ -177,5 +172,57 @@ public class MemberController {
 	public String dealRegister() {
 		return "dealRegister";
 	}
-
+	@RequestMapping("findIdDetail.me")
+	public String findIdDetail(@RequestParam("email") String email, Model model) {
+		String findEmail = mService.finEmail(email);
+		if(findEmail !=null){
+			model.addAttribute("findEmail", findEmail);
+			return "findIdDetail";
+		}else {
+			throw new MemberException("등록된 이메일이 없습니다.");
+		}
+	}
+	@RequestMapping("findPwdDetail.me")
+	public String findPwdDetail(@ModelAttribute Member m, Model model) {
+		String findPwd = mService.findPwd(m);
+		if(findPwd != null) {
+			model.addAttribute("findPwd", findPwd);
+			return "changePwd";
+		}else {
+			throw new MemberException("등록된 회원정보가 없습니다.");
+		}
+		
+	}
+	@RequestMapping("changePwd.me")
+	public String changePwd(@RequestParam("findPwd") String id, @ModelAttribute Member m) {
+		String bpwd = bcrypt.encode(m.getPwd());
+		m.setPwd(bpwd);
+		m.setId(id);
+		System.out.println(m);
+		int change = mService.changePwd(m);
+		System.out.println(change);
+		if(change > 0) {
+			return "login";
+		}else {
+			throw new MemberException("비밀번호 변경이 작동되지 않았습니다.");
+		}
+	}
+	@RequestMapping("myInfoBoard.me")
+	public String myInfoBoard(HttpSession session, Model model) {
+		String id = ((Member)session.getAttribute("loginUser")).getId();
+		
+		ArrayList<Board> b = mService.myInfoBoard(id);
+		model.addAttribute("b",b);
+		return "myInfoBoard";
+		
+	}
+	@RequestMapping("myInfoDoard.me")
+	public String myInfoDoard(HttpSession session, Model model) {
+		String id = ((Member)session.getAttribute("loginUser")).getId();
+		
+		ArrayList<Reply> r = mService.myInfoDoard(id);
+		model.addAttribute("r",r);
+		return "myInfoDoard";
+		
+	}
 }

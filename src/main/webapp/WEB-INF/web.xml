@@ -98,6 +98,20 @@
 	</servlet-mapping>
 	
 	<!-- 자유 게시판 -->
+	<servlet>
+		<servlet-name>freeServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/free-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>freeServlet</servlet-name>
+		<url-pattern>*.fe</url-pattern>
+	</servlet-mapping>
 	
 	
 	<!--  인코딩 필터 -->

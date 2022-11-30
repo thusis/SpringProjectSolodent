@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!doctype html>
 <html lang="en">
   <head>
@@ -285,9 +286,9 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;}	
-	#bu1{
+	#memailconfirm{
 	width: 60%;}
-	#bu2{
+	#checkEmail{
 	width:24%;
 	border: none;
 	border-radius: 10px;
@@ -295,7 +296,7 @@
 	color:#92badd;
 	}
 	
-	#bu2:hover{
+	#checkEmail:hover{
 	color: #277BC0;
 	  
 	font-weight: 800;
@@ -318,15 +319,16 @@
 			  <li >dent</li>
 			</ul>
     </div>
-	<form>
+	<form action="${ contextPath }/findIdDetail.me" method="POST" id="for">
 					<div class="in1">
-				<input type="text" class="in fadeIn second input" name="email"  placeholder="이메일">
+					
+				<input type="text" class="in fadeIn second input" name="email" id="memail" placeholder="이메일">
 					</div>
 					<div id="bu">
-						<input type="text" id="bu1" name="email1" class="fadeIn third input" placeholder="인증번호">
-						<button id="bu2" class="fadeIn third">인증번호<br> 받기</button>
+						<input type="text" id="memailconfirm" name="email1" class="fadeIn third input" placeholder="인증번호">
+						<button type="button" id="checkEmail" class="fadeIn third">인증번호<br> 받기</button>
 					</div>
-					 <input type="submit" class="fadeIn fourth" value="아이디 찾기">
+					 <input type="button" id="sub" class="fadeIn fourth" value="아이디 찾기">
 	</form>
  
     <div id="formFooter">
@@ -337,5 +339,53 @@
   </div>
 </div>
 <jsp:include page="../home/menubar.jsp"/>
+	<script>
+	let okEmail = false;
+	window.onload = () =>{
+		$(function() {
+			
+			
+			var $checkEmail = $("#checkEmail"); // 인증번호 발송 버튼
+			var $memailconfirm = $("#memailconfirm"); // 인증번호 확인input
+			var $memailconfirmTxt = $("#memailconfirmTxt"); // 인증번호 확인 txt
+			
+		// 이메일 인증번호
+		$checkEmail.click(function() {
+			$.ajax({
+				type : "POST",
+				url : '${ contextPath}/pleaseMail.me',
+				data : {
+					"email" : document.getElementById("memail").value
+				},
+				success : function(data){
+					alert("해당 이메일로 인증번호 발송이 완료되었습니다. \n 확인부탁드립니다.")
+					console.log("data : "+data);
+					findEail(data, $memailconfirm);
+				}
+			});
+		});
+			function findEail(data, $memailconfirm){
+				$('#sub').click(function(){
+			
+				if (data != $memailconfirm.val()) { //
+					alert("인증번호가 일치하지 않습니다");
+						
+						
+					
+					//console.log("중복아이디");
+				} else { // 아니면 중복아님
+					
+					$('#for').submit();
+				}
+			});
+				}
+		});
+		
+			
+
+		}
+	
+	
+	</script>
   </body>
 </html>
