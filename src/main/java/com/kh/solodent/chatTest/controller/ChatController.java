@@ -48,7 +48,7 @@ public class ChatController {
 		if(member==null) return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("loginFail");		
 		
 		chat.setSendId(member.getId());
-	    System.out.println("chat  : " + chat.toString());
+	    //System.out.println("chat  : " + chat.toString());
 	    
 		chatService.insertChat(chat);
 		return ResponseEntity.status(HttpStatus.OK).body(member.toString());
@@ -96,7 +96,7 @@ public class ChatController {
 		chat.setReceivedId(member.getId());
 		
 		List<Chat> notificationList =chatService.messageNotificationList(chat);	
-		System.out.println("notificationList  :  " +notificationList.size());
+		//System.out.println("notificationList  :  " +notificationList.size());
 		model.addAttribute("notificationList" ,notificationList);
 		return "/chat/notification";
 	}
