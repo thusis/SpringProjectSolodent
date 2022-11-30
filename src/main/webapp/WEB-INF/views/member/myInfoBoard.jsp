@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  </head>
+  <body style="background:#F2F2F2; margin-top:12%">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+     <jsp:include page="../home/menubar.jsp"/>
+     	<div class="container-fluid text-center">
+	  		<div class="row justify-content-center" style="width: 100%">
+                    <div class="col "  >
+	  					
+		     				<div style="font-size: 50px; font-weight:700">내가 쓴글</div>
+		     				<div style="width: 700px; height:500px; backgroind:white; box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3); display:inLine-block" >
+		     				
+		     				
+		     			</div>
+     			</div>
+     		</div>
+     	</div>
+  </body>
+</html>

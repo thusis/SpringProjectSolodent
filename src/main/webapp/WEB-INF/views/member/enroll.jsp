@@ -364,6 +364,7 @@
 				let okId = false;
 				let okPwd = false;
 				let okEmail = false;
+				let okNickName = false;
 					window.onload = ()=>{
 						document.getElementById("id").addEventListener('keyup', function(){
 							const idResult = document.getElementById('checkId');
@@ -408,6 +409,7 @@
 									if(data.trim() == 'yes'){
 										nickNameResult.innerText = "사용가능한 닉네임 입니다.";
 										nickNameResult.style.color= "#0D6EFD";
+										okNickName = true;
 									}else if(data.trim() == 'no'){
 										nickNameResult.innerText = "중복된 닉네임 입니다.";
 										nickNameResult.style.color= "red";
@@ -476,8 +478,13 @@
 					
 					
 					$('.in.VV').click(function(){
-						
+						if(okId || okNickName || okEmail){
 							$('#insertForm').submit();
+						}else{
+							alert("옮바르지 않은 회원가입입니다.")
+							
+						}
+						
 						
 					});
 			

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html lang="en">
   <head>
@@ -65,7 +66,12 @@
 			  				<div class="dtm">
 			  					<ul>
 			  					<li style="font-weight: 700; font-size: 40px; margin-top: 20px; border-bottom: 1px solid black; width:100%;">     ${ b.boardTitle }  
-			  					<div class="butt2"><button class="butt1" onclick="location.href='${contextPath}/freeUpdate.fe'" style="margin-right:10px;">수정</button><button class="butt1"">삭제</button></div>
+			  					<div class="butt2">
+			  					<c:if test="${ loginUser.id eq b.userId }">
+			  					<button class="butt1" onclick="location.href='${contextPath}/freeUpdate.fe?bId= '+' ${b.boardId}'" style="margin-right:10px;">수정</button>
+			  					<button class="butt1">삭제</button>
+			  					</c:if>
+			  					</div>
 			  					 </li>
 			  					
 			  					
@@ -96,21 +102,78 @@
 	  				</div>
 	  				<div class="row row1 justify-content-md-center">
 	  				<div class="col col1">
+	  					<form action="${ contextPath }/DboardInsert.fe?bId= '+' ${ b.boardId }">
 	  					<div style="margin-top:820px; width: 73%; margin-left:14.5%;
 	  								height:100%; " >
-			  						<input type="text" style="width:78%; height:100px; float: left; border-radius:10px; 
-			  										border: none;   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);">
-			  						<button style="height: 100px; width:20%; float:right;;
+			  						<input type="text" id="replyContent" style="width:78%; height:100px; float: left; border-radius:10px; 
+			  										border: none;   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);" name="replyContent;" >
+			  						<button type="button" id="replySubmit" style="height: 100px; width:20%; float:right; 
 			  						border-radius:10px; border-radius:10px;  box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);
 			  						border:none; background: white; font-weight: 700"
-			  						onclick="location.href='${ contextPath }/DboardInsert.fe'">댓글</button>
-			  						
+			  						>댓글</button>
+			  					
 			  			</div>			
-			  			
+			  			</form>	
+			  			<table>
+			  			<tbody>
+	  					<c:forEach items="${ list }" var="r">
+	  						<tr>
+	  							<td>${ r.userId }</td>
+	  							<td>${ r.replyContent }</td>
+	  							<td>${ r.createDate }</td>
+	  							
+	  						</tr>
 	  					
+	  					</c:forEach>
+	  				</tbody>
+	  					</table>
 	  					</div>
 	  				</div>
 	  			
-	  				</div>  					  			
+	  				</div>  	
+	  	<script>
+	  	window.onload=()=>{
+			document.getElementById('replySubmit').addEventListener('click', ()=>{
+				$.ajax({
+				   url: '${contextPath}/insertReply.fe',
+				   data: {
+					    replyContent: document.getElementById('replyContent').value,
+						boardId:'${ b.boardId}', 
+						userId:'${ loginUser.id}'
+					},
+				    success: (data)=>{
+
+				      const tbody = document.querySelector('tbody');
+				      tbody.innerHTML = ""
+				      
+				      
+				      for(const r of data){
+				    	 const tr = document.createElement('tr');
+				    	 
+				    	 const writerTd = document.createElement('td');
+				    	 writerTd.innerText = r.userId;
+				    	 
+				    	 const ContentTd = document.createElement('td');
+				    	 ContentTd.innerText = r.replyContent;
+				    	 
+				    	 const createDateTd = document.createElement('td');
+				    	 createDateTd.innerText = r.createDate;
+				    	 
+				    	 
+				    	 tr.append(writerTd);
+				    	 tr.append(ContentTd);
+				    	 
+				    	 tr.append(createDateTd);
+				    	 tbody.append(tr);
+				      }
+				      document.getElementById("replyContent").value = '';
+				   },
+				   error: (data)=>{
+					  alert("실패!");
+				   }
+				});
+	       	 });
+	  	}
+	  	</script>				  			
   </body>
 </html>

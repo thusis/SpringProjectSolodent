@@ -47,12 +47,12 @@
 												3px 3px 6px rgba(0, 0, 0, .2),
 												4px 4px 11px rgba(0, 0, 0, .1);}
    	.info2>h4{
-   	margin-top:25px;}
+   	margin-top:15px;}
    	
    	.inf2{
    	margin-top: 50px;}
    	.inf5{
-   	height: 335px;
+   	height: 400px;
    	background: #60CFFF;
    	 border-radius: 10px;
    	  box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
@@ -122,6 +122,11 @@
    	 	border-top: 2px solid black;}
    	 	td{
    	 	border: 1px solid black;}
+   	 	.t111{
+   	 	color: white;
+   	 	border : none;
+   	 	margin-left:20px;
+   	 	padding: 10px 20px;   	 	}
     </style>
   </head>
   <body style= "background:#F2F2F2;">
@@ -141,10 +146,12 @@
 			  				</div>
 	  						
 		  					<ul class="ul">
-			  					<li><a href="">방문</a></li>
-			  					<li><a href="">내가 쓴 글 보기</a></li>
-			  					<li><a href="">내가 쓴 댓글보기</a></li>
-			  					<li><a href="">내 거래내역 보기</a></li>
+			  					
+			  					<li><a href="${ contextPath }/myInfoBoard.me">내가 쓴 글 보기</a></li>
+			  					<li><a href="${ contextPath }/myInfoDoard.me">내가 쓴 댓글보기</a></li>
+			  				<c:if test ="${ loginUser.isManager eq 'Y' }" >
+			  					<li><a href="">신고 내역 보기</a></li>
+			  				</c:if>
 			  				</ul>
 			  			</div>
 			  		
@@ -153,26 +160,57 @@
 	  			<label id="sc" style="color:  #474E68">스크랩한 글</label>
 	  			
 	  			<div class="inf5">
-	  			<div class="h-100 p-5 bg-light border rounded-3">
-						<h2>My Boards Top 5</h2>
-						<table style="text-align: center; width: 100%;">
+	  			<div >
+						
+						<table class="t111">
 							<tr>
-								<th class="t1">번호</th>
+								<th  class="t1">번호</th>
 								<th class="t1">제목</th>
-								<th class="t1">날짜</th>
-								<th class="t1">조화수</th>
+								<th class="t1"></th>
+								<th class="t1">작성일</th>
+								
+								
 							</tr>
 							<c:forEach items="${ list }" var="b">
 								
 									<tr>
-										<td>${ b.BOARD_ID }</td>
+										<td  id="bId" class="bId">${ b.BOARD_ID }</td>
 										<td>${ b.BOARD_TITLE }</td>
+										<td id="writer" class="writer">${ b.userId }</td>
 										<td>${ b.CREATE_DATE }</td>
-										<td>${ b.BOARD_COUNT }</td>
+									
 									</tr>
 								
 							</c:forEach>
 						</table>
+						
+    		<nav aria-label="Standard pagination example" style="margin-left: 30%; margin-top: 20px;">
+			  <ul class="pagination">
+			    <li class="page-item">
+			    	<c:url var="goBack" value="${ loc }">
+			    		<c:param name="page" value="${ pi.currentPage-1 }"></c:param>
+			    	</c:url>
+			      <a class="page-link" href="${ goBack }" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <c:forEach begin="${ pi.startPage }" end="${ pi.endPage }" var="p">
+			    	<c:url var="goNum" value="${ loc }">
+			    		<c:param name="page" value="${ p }"></c:param>
+			    	</c:url>
+			    	<li class="page-item"><a class="page-link" href="${ goNum }">${ p }</a></li>
+			    </c:forEach>
+			    <li class="page-item">
+			    	<c:url var="goNext" value="${ loc }">
+			    		<c:param name="page" value="${ pi.currentPage+1 }"></c:param>
+			    	</c:url>
+			    	<a class="page-link" href="${ goNext }" aria-label="Next">
+				        <span aria-hidden="true">&raquo;</span>
+				      </a>
+				</li>
+			   
+			  </ul>
+			</nav>
 					</div>
 	  			</div>
 	  		</div>
@@ -264,5 +302,26 @@
 	  	</div>
 	</div>
 	</div>
+	 <script>
+   	window.onload = () =>{
+   		
+   		
+   		const tbody = document.querySelector('tbody');
+   		const tds = tbody.querySelectorAll('td');
+   		for(const td of tds){
+   			td.addEventListener('click',function(){
+   				
+   				
+   				const trTds = this.parentElement.querySelectorAll('td');
+   				const bId = trTds[0].innerText;
+   				const writer = trTds[2].innerText;
+   				location.href='${contextPath}/selectMainBoard.fe?bId=' + bId + '&writer=' + writer;
+   			});
+   		}
+   	}
+   	
+   </script>
   </body>
+ 
+  
 </html>

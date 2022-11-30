@@ -334,7 +334,7 @@
     <!-- Login Form -->
     <form action="${ contextPath }/login.me" method="post">
       <input type="text" id="login" class="fadeIn second input" name="id" placeholder="아이디">
-      <input type="text" id="password" class="fadeIn third input" name="pwd" placeholder="비밀번호">
+      <input type="password" id="password" class="fadeIn third input" name="pwd" placeholder="비밀번호">
       <input type="submit" class="fadeIn fourth" value="로그인">
     </form>
 

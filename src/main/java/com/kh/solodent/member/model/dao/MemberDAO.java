@@ -6,6 +6,8 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Reply;
 import com.kh.solodent.member.model.vo.Member;
 
 @Repository("mDAO")
@@ -55,6 +57,16 @@ public class MemberDAO {
 	public int changePwd(SqlSessionTemplate sqlSession, Member m) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("memberMapper.changePwd", m);
+	}
+
+	public ArrayList<Board> myInfoBoard(SqlSessionTemplate sqlSession, String id) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("memberMapper.myInfoBoard", id);
+	}
+
+	public ArrayList<Reply> myInfoDoard(SqlSessionTemplate sqlSession, String id) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("memberMapper.myInfoDoard", id);
 	}
 
 	

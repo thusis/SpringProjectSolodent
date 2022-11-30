@@ -25,6 +25,21 @@
   		<result column="USER_RATE" property="rate"/>
   	</resultMap>
   	
+  	
+		<resultMap type="Board" id="freeResultSet">
+		<id column="BOARD_ID" property="boardId"/>
+		<result column="BOARD_CODE" property="boardCode"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="IS_NOTICE" property="isNotice"/>
+		<result column="BOARD_COUNT" property="boardCount"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	
+  	
   	<insert id="insertMember">
   	insert into member
   	values(#{id}, #{name}, #{pwd}, #{nickName}, #{email}, #{phone}, #{address},#{gender}, #{birthDate}, default, default, sysdate, default)
@@ -76,4 +91,27 @@
   		set PASSWORD=#{pwd}
   		WHERE USER_ID = #{id}
   	</update>
+  	
+  	<select id="myInfoBoard" resultMap="freeResultSet">
+  		select *
+  		from board
+  		where user_id = #{id}
+  	
+  	
+  	</select>
+  	<resultMap type="Reply" id="replyResultSet">
+		<id column="REPLY_ID" property="replyId"/>
+		<result column="REPLY_CONTENT" property="replyContent"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="BOARD_ID" property="boardId"/>
+		<result column="NICKNAME" property="nickName"/>
+	</resultMap>
+  	<select id="myInfoDoard" resultMap="replyResultSet">
+  		select *
+  		from reply
+  		where user_id = #{id}
+  	
+  	</select>
   </mapper>

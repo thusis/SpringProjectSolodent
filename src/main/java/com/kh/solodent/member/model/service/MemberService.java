@@ -3,6 +3,8 @@ package com.kh.solodent.member.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.kh.solodent.board.model.vo.Board;
+import com.kh.solodent.board.model.vo.Reply;
 import com.kh.solodent.member.model.vo.Member;
 
 public interface MemberService {
@@ -28,6 +30,10 @@ public interface MemberService {
 	
 
 	int changePwd(Member m);
+
+	ArrayList<Board>myInfoBoard(String id);
+
+	ArrayList<Reply> myInfoDoard(String id);
 
 	
 	

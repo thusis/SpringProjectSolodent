@@ -64,18 +64,18 @@
 		  			<div class="fw">글 등록</div>
 		  			<div class="fw2">
 		  				<div class="fw-bg">
-		  				<form action="${contextPath }/freeEdit.fe" method="post">
+		  				<form action="${contextPath }/freeEdit.fe?bId= '+'${ b.boardId }" method="post">
 		  				<div><label for="boardTitle">제목</label>
 		  					<input type="text" name="boardTitle" class="ty" style="width: 500px; margin-top:30px;" value="${ b.boardTitle}">
 		  				</div>
 		  				<div >
 		  					<div>
 		  						<label for="boardCoundt">제목</label>
-		  					<textarea rows="10" name="boardContent" style="resize: none" class="tx" "></textarea>
+		  					<textarea rows="10" name="boardContent" style="resize: none" class="tx" >${ b.boardContent }</textarea>
 		  					</div>
 		  				</div>
 		  				<div>
-		  				<button class="bbb">수정</button>
+		  				<button class="bbb" type="submit">수정</button>
 		  				</div>
 		  				</form>
 		  			</div>
