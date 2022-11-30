@@ -17,7 +17,6 @@
 	<!-- css -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 	
-
     <!-- =======================================================
     * Template Name: Impact - v1.1.1
     * Template URL: https://bootstrapmade.com/impact-bootstrap-business-website-template/
@@ -44,7 +43,8 @@
 
           <div class="col-lg-12">
 
-            <form action="${contextPath }/updateBoard.moim" method="post" enctype="multipart/form-data" id="moimForm">
+            <form action="${contextPath }/updateBoard.moim" method="post" 
+            enctype="multipart/form-data" id="moimForm">
             
                 <div class="container">
                   <div class="mb-3 row align-items-center">
@@ -53,7 +53,10 @@
                     	<input type="hidden" value="${moim.boardId }" name="boardId">
                     	<input type="hidden" value="${moim.userId }" name="userId">
                     	<input type="hidden" value="${page}" name="page">
-                      <input type="text" id="boardTitle" name="boardTitle" class="form-control col-lg-8" value="${moim.boardTitle }">
+                    	<input type="hidden" value="${moim.createDate}" name="createDate">
+                    	<input type="hidden" value="${moim.boardCount}" name="boardCount">
+                    	<input type="hidden" value="${moim.moimWriter}" name="moimWriter">
+                      <input type="text" id="boardTitle" name="boardTitle" class="form-control col-lg-8" value="${moim.boardTitle}">
                     </div>
                   </div>
           
@@ -200,16 +203,19 @@
                   </div>
 
                   <div class="mb-3 row form-floating">
-                    <textarea class="form-control" id="boardContent" name="boardContent" style="height: 500px">${moim.boardContent }</textarea>
+                    <textarea class="form-control" id="boardContent" name="boardContent" style="height: 500px">${moim.boardContent}</textarea>
                     <label for="boardContent">내용을 작성하세요</label>
                   </div>
 				
+				
+<!-- 	=======================첨부파일란 시작==========================  -->
 				<div class="row">
 				<c:forEach items="${list}" var="a">
-					<div class="col-sm">
+					<div class="col-sm mb-3">
 						<img src="${contextPath }/resources/uploadFiles/${a.rename}" alt="" class="img-fluid" width="100px" height="100px">
 	                    <a href="${contextPath}/resources/uploadFiled/${a.rename}" download="${a.rawname}">${a.rawname}</a>
-	                    <button type="button" class="btn btn-outline-dark" id="delete-${a.rename}/${a.isThum}">삭제하기</button>
+	                    <button type="button" class="btn btn-outline-dark deleteAttm" id="delete-${a.rename}/${a.isThum}">삭제취소</button>
+	                    <input type="hidden" name="deleteAttm"> <!-- 삭제 버튼을 눌렀을때 hidden deleteAttm에 파일에 대한 정보가 담김 -->
                     </div>
 				</c:forEach>
 				</div>
@@ -220,10 +226,10 @@
 	                    <button type="button" class="btn btn-outline-secondary" id="addFile">파일 추가하기</button>
                   </div>
 				</div>
+<!-- 	=======================첨부파일란 끝==========================  -->
                 
                   <div class="row mb-3">
-                    <button type="button" class="btn btn-lg col-lg-12" style="background-color: var(--color-primary); color: white;" id="btnSubmit">작성하기</button>
-                    <!-- 버튼type="button"으로 설정한 후 스크립트 통해 제출한다. btnSubmit 아이디는 스크립트에서 사용 -->
+                    <button type="button" class="btn btn-lg col-lg-12" style="background-color: var(--color-primary); color: white;" id="submitForm">작성하기</button>
                   </div>
               </div>
 
@@ -260,47 +266,66 @@
   		})
   	}
   	
-    const delBtns = document.getElementsByClassName('deleteAttm');
-    console.log("delBtns"+delBtns); // 잘 들어왔나? 생각이 되면 꼭 찍어보세요.
-    
-    for(const btn of delBtns){
-       btn.addEventListener('click', function(){
-          console.log(this); // 잘 들어왔나? 생각이 되면 꼭 찍어보세요.
-          const nextHidden = this.nextElementSibling;
-          console.log("nh"+nextHidden);
-          if(nextHidden.value==''){
-             this.style.background = 'black';
-             this.style.color = 'white';
-             this.innerText = '삭제 ON';
-             nextHidden.value = this.id.split("-")[1];
-          } else {
-             this.style.background = 'none';
-             this.style.color = 'black';
-             this.innerText = '삭제 OFF';
-          }
-       });
-    }
-    
-  		// 파일 보내기
-		const form = document.getElementById('moimForm');
-		document.getElementById('btnSubmit').addEventListener('click', ()=>{
-			const attachments = document.getElementsByName('attachment');
-			let isEmpty = true;
-			for(const f of attachments){
-				if(f.value != ''){
-					isEmpty = false;
-				}
-			}
-			if(isEmpty){
-				$('#modalChoice').modal('show');
-			} else {
-// 				document.getElementById('moimForm').submit();
-				form.submit();
-// 				$('#moimForm').submit(); //첨부파일 있는 경우에만 제출 가능
-			}
-		}); 
-  	
-  </script>
+	    const delBtns = document.getElementsByClassName('deleteAttm');
+	    console.log("delBtns"+delBtns); // 잘 들어왔나? 생각이 되면 꼭 찍어보세요.
+	    
+	    for(const btn of delBtns){
+	       btn.addEventListener('click', function(){
+	        	var delBtn = this;
+	        	nextHidden = delBtn.nextElementSibling;
+	         
+	        	console.log("넥히"+nextHidden);
+	        	
+	          if(nextHidden.value==''){
+	        	// (현) 삭제하기 버튼(삭제를 안한다는 뜻) =[클릭하면]=> (후) 삭제를 할거임! ㅡㅡ
+	             this.style.background = 'red';
+	             this.style.color = 'white';
+	             this.innerText = '삭제하기';
+	             nextHidden.value = this.id.split("-")[1]; //${a.rename}/${a.isThum} 라는 값이 value 로 담길 것임
+	             
+	          } else {
+	        	// (현) 삭제취소 버튼(삭제를 한다는 뜻) =[클릭하면]=> (후) 삭제를 안 할거임ㅎㅎ
+	             this.style.background = 'none';
+	             this.style.color = 'black';
+	             this.innerText = '삭제취소';
+	             nextHidden.removeAttribute('value');
+	          }
+	          
+	       });
+	    }
+	    
+	    
+
+	    const form = document.getElementById('moimForm');
+	    document.getElementById('submitForm').addEventListener('click',()=>{
+	    	const attachments = document.getElementsByName('attachment');
+	    	
+	    	// 삭제를 안한다면 삭제 OFF /  
+
+	    	let isEmpty = true;
+	    	console.log("어태치"+attachments);
+	    	for(const f of attachments){
+	    		if(f.value != ''){
+	    			isEmpty = false;
+	    		}
+	    	}
+	    	
+	    	let isAllRemove = true;
+	    	for(const btn of delBtns){
+	    		if(btn.innerText == '삭제취소'){
+	    			isAllRemove = false;
+	    		}
+	    	}
+	    	
+	    	if(isEmpty && isAllRemove){
+	    		$('#modalChoice').modal('show');
+	    	} else {
+// 	    		console.log("제출준비완료");
+	    		form.submit();
+	    	}
+	    });
+			
+</script>
 
 
     <!-- Vendor JS Files --> <!--이거 없으면 화면 안 나옴-->

@@ -218,7 +218,7 @@
   </main><!-- End #main -->
   
   <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
-  	<div class="modal-dialog" role="document">
+  	<div class="modal-dialog modal-dialog-centered" role="document">
   		<div class="modal-content rounded-3 shadow">
   			<div class="modal-body p-4 text-center">
   				<h4 class="mb-0">❌첨부파일이 삽입되지 않았습니다❌</h4>
@@ -245,9 +245,7 @@
   		})
   	}
   	
-  	
   	// 파일 보내기
-  		
 		const form = document.getElementById('moimForm');
 		document.getElementById('btnSubmit').addEventListener('click', ()=>{
 			const attachments = document.getElementsByName('attachment');
@@ -260,9 +258,7 @@
 			if(isEmpty){
 				$('#modalChoice').modal('show');
 			} else {
-// 				document.getElementById('moimForm').submit();
 				form.submit();
-// 				$('#moimForm').submit(); //첨부파일 있는 경우에만 제출 가능
 			}
 		}); 
   	
