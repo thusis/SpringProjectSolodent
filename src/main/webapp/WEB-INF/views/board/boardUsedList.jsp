@@ -7,7 +7,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<!-- jQuery menubar.jsp 에 있어서 지워도 될 것 같아요. -->
 <style type="text/css">
 	#listCard:hover {
 		cursor: pointer;
@@ -16,14 +15,20 @@
 </head>
 <body>
 	<jsp:include page="../home/menubar.jsp"/>
-	
+	<input type="hidden" value="${ loginUser.id }" id="checkLogin">
 	<!-- ======= Portfolio Section ======= -->
     <section id="portfolio" class="portfolio sections-bg" style="margin-top: 70px;">
       <div class="container" data-aos="fade-up">
 
         <div class="section-header">
           <h2>중고거래</h2>
+          <c:if test="${ loginUser != null }">
           	<button type="button" class="btn btn-primary btn-lg" onclick="location.href='${ contextPath }/enrollUsed.bo'">중고 등록하기</button>
+          </c:if>
+          <c:if test="${ loginUser == null }">
+          	<button type="button" class="btn btn-primary btn-lg" onclick="isLogin();">중고 등록하기</button>
+          </c:if>
+          
           	
         </div>
 
@@ -149,9 +154,15 @@
     		 div.addEventListener('click', function() {
     			 const boardId = this.querySelector('.bId').value;
     			 const writer = this.querySelector('.uId').value;
-    			 console.log(boardId);
-    			 console.log(writer);
-    			 location.href = '${ contextPath }/selectUsed.bo?bId=' + boardId + '&writer=' + writer;
+    			 const checkLogin = document.getElementById('checkLogin').value;
+    			 
+    			 if(checkLogin == '') {
+        			const gradeModalText = document.getElementById('dongjunModalText');
+ 					gradeModalText.innerHTML = '로그인 후 이용가능합니다..';
+ 					$('#dongjunModal').modal('show');
+        			 } else {
+	           			 location.href = '${ contextPath }/selectUsed.bo?bId=' + boardId + '&writer=' + writer;
+        			 }
     		 });
     	 }
     	 
@@ -187,14 +198,23 @@
     			 } else {
     				 paramStr = paramStr + '&searchWhere=' + titleOrContent + '&word=' + word;
     			 }
-    		 }
+    		 } else {
+					const gradeModalText = document.getElementById('dongjunModalText');
+					gradeModalText.innerHTML = '검색 분류를 선택하고<br> 키워드를 검색하세요.';
+					$('#dongjunModal').modal('show');
+				}
     		 
     		 if(paramStr != '?') {
     		 location.href='${ contextPath }/searchUsed.bo' + paramStr;
     		 }
     	 });
     	});
-
+	
+    	function isLogin() {
+    		const gradeModalText = document.getElementById('dongjunModalText');
+    		gradeModalText.innerHTML = '로그인 후 이용해주세요.';
+    		$('#dongjunModal').modal('show');
+    	}
     </script>
 </body>
 </html>

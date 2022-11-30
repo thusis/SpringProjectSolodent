@@ -34,7 +34,7 @@
 	<link href="/solodent/resources/assets/css/main.css" rel="stylesheet">
 		
     <style>
-	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed;}
+	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed; z-index: 99999;}
 	    
 		a{
 		text-decoration: none;
@@ -119,7 +119,12 @@
 	    		</div>
 	    		
 			    <div class="col-lg-1 d-none d-sm-block middle">
-			    	<a href="${ contextPath }/tipList.bo">자취꿀팁</a>
+			    	<c:if test="${ loginUser.rate == '1' }">
+				    	<a href="${ contextPath }/tipList.bo">자취꿀팁</a>
+			    	</c:if>
+			    	<c:if test="${ loginUser.rate == '0' or loginUser == null }">
+			    		<a href="javascript:rateFail();">자취꿀팁</a>
+			    	</c:if>
 			    </div>
 			    
 			    <div class="col-lg-1 d-none d-md-block middle">
@@ -154,6 +159,21 @@
 		</div>
 	</nav>
 	</header>   
+	
+	<div class="modal fade" tabindex="-1" role="dialog" id="dongjunModal" style="top: 40%; ">
+		<div class="modal-dialog" role="document">
+    		<div class="modal-content rounded-3 shadow">
+      			<div class="modal-body p-4 text-center">
+        			<h3 class="mb-0" id="dongjunModalText"></h3>
+      			</div>
+      			<div class="modal-footer flex-nowrap p-0">
+        			<button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-12 m-0 rounded-0 border-end"  id="scrapConfirm" data-bs-dismiss="modal">
+        				<strong>확인</strong>
+        			</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
    
 <!-- Vendor JS Files --> <!--이거 없으면 화면 안 나옴-->
     <script src="/solodent/resources/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -166,6 +186,12 @@
 
     <!-- Template Main JS File -->
     <script src="/solodent/resources/assets/js/main.js"></script>
-    
+    <script type="text/javascript">
+    	function rateFail() {
+    		const gradeModalText = document.getElementById('dongjunModalText');
+    		gradeModalText.innerHTML = '등급이 낮거나 로그인이 되어있지 않습니다.';
+    		$('#dongjunModal').modal('show');
+    	}
+    </script>
 	</body>
 </html>

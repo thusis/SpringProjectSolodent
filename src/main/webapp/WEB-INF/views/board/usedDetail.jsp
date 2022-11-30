@@ -101,7 +101,7 @@
 
       </div>
     </section><!-- End Portfolio Details Section -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice" style="top: 50%;">
 		<div class="modal-dialog" role="document">
     		<div class="modal-content rounded-3 shadow">
       			<div class="modal-body p-4 text-center">
@@ -171,6 +171,9 @@
 				location.href='${ contextPath }/delete.bo?boardId=${ b.boardId }';
 			});
 			
+			const declareBtn = document.getElementById('declareBtn');
+			if(declareBtn != null) {
+				
 			document.getElementById('declareBtn').addEventListener('click', function() {
 				var url = "${contextPath}/declareBoard.bo";
 			      var title = "신고창";
@@ -185,6 +188,7 @@
 			      window.open(url, title, status);
 			      form.submit();
 			});
+			}
 		}
   	</script> 
     

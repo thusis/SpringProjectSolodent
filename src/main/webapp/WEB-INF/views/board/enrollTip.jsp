@@ -42,7 +42,7 @@
                 <div class="container">
 							
 				          	<div class="container d-flex justify-content-end">
-						        <select class="form-select d-flex" aria-label="Default select example" style="width:  150px;" name="tipCate">
+						        <select class="form-select d-flex" aria-label="Default select example" style="width:  150px;" name="tipCate" id="tipCate">
 						          <option value="취미/여가" selected="selected">취미/여가</option>
 						          <option value="요리">요리</option>
 						          <option value="쇼핑">쇼핑</option>
@@ -53,12 +53,12 @@
               </div>
 	              
 	              <div class="mb-3">
-					<label for="exampleFormControlInput1" class="form-label">제목</label>
-					<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="제목" name="boardTitle">
+					<label for="tipTitle" class="form-label">제목</label>
+					<input type="text" class="form-control" id="tipTitle" placeholder="제목" name="boardTitle">
 				</div>
 				<div class="mb-3">
-					<label for="exampleFormControlTextarea1" class="form-label">내용</label>
-					<textarea class="form-control" id="exampleFormControlTextarea1" rows="10" name="boardContent"></textarea>
+					<label for="tipContent" class="form-label">내용</label>
+					<textarea class="form-control" id="tipContent" rows="10" name="boardContent"></textarea>
 				</div>
 				<div class="mb-3">
 					 <button type="button" class="btn btn-primary btn-sm" id="addFile" style="padding: 10px;">파일 추가</button>
@@ -103,7 +103,18 @@
     	    
     	    const form = document.getElementById('tipForm');
     	    document.getElementById('submitBtn').addEventListener('click', ()=> {
-    	    	form.submit();
+    	    	
+    	    	const tipTitle = document.getElementById('tipTitle').value;
+    	    	const tipCate = document.getElementById('tipCate').value;
+    	    	const tipContent = document.getElementById('tipContent').value;
+    	    	
+    	    	if(tipTitle != '' && tipCate != '' && tipContent != '') {
+			    	form.submit();
+				} else {
+					const gradeModalText = document.getElementById('dongjunModalText');
+					gradeModalText.innerHTML = '게시글의 내용들을 <br>전부 입력해주세요.';
+					$('#dongjunModal').modal('show');
+				}
     	    });
     	});
 

@@ -74,7 +74,7 @@
 
 	
 	<div class="container">
-	<div style="height: 35px;"></div>
+	<div style="height: 100px;"></div>
 		<div class="row row-cols-auto justify-content-end pb-4">
 			<select class="form-select d-flex" aria-label="Default select example" style="width:  150px;" name="tipCate" id="category">
 				<option value="" selected="selected">카테고리 선택</option>
@@ -210,6 +210,10 @@
 				
 				if(titleOrContent != '' && word.trim() != '') {
 						paramStr = paramStr + '&searchWhere=' + titleOrContent + '&word=' + word;
+				} else {
+					const gradeModalText = document.getElementById('dongjunModalText');
+					gradeModalText.innerHTML = '검색 분류를 선택하고<br> 키워드를 검색하세요.';
+					$('#dongjunModal').modal('show');
 				}
 				
 				if(paramStr != '?') {
@@ -227,7 +231,12 @@
 					location.href='${ contextPath }/selectTip.bo?bId=' + boardId + '&writer=' + writer;
 				});
 			}
+			
+			
 		}
+		
+		
+		
 	</script>
 	
 </body>

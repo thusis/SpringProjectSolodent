@@ -205,6 +205,15 @@ public class BoardService {
 		return bDAO.insertDeclare(sqlSession, d);
 	}
 
+	public int deleteReplyFromBoard(int boardId) {
+		return bDAO.deleteReplyFromBoard(sqlSession, boardId);
+	}
+
+	public Attachment mainPageUsedList(int boardId) {
+		return bDAO.mainPageUsedList(sqlSession, boardId);
+	}
+
+
 	
 
 

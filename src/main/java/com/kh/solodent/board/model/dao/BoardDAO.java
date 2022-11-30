@@ -206,6 +206,16 @@ public class BoardDAO {
 		return sqlSession.insert("boardMapper.insertDeclare", d);
 	}
 
+	public int deleteReplyFromBoard(SqlSessionTemplate sqlSession, int boardId) {
+		return sqlSession.update("boardMapper.deleteReplyFromBoard", boardId);
+	}
+
+	public Attachment mainPageUsedList(SqlSessionTemplate sqlSession, int boardId) {
+		return sqlSession.selectOne("boardMapper.mainPageUsedList", boardId);
+	}
+
+	
+
 
 	
 
