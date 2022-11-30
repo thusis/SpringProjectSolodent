@@ -95,4 +95,10 @@ public class MemberServiceImpl implements MemberService {
 		// TODO Auto-generated method stub
 		return mDAO.myInfoDoard(sqlSession,id);
 	}
+
+	@Override
+	public ArrayList<Board> selectMyScrab(String id) {
+		// TODO Auto-generated method stub
+		return mDAO.selectMyScrab(sqlSession,id);
+	}
 }

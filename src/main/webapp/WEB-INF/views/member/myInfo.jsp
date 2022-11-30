@@ -62,8 +62,7 @@
    	 border-radius: 10px;
    	 padding:10px;
    	 box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);}
-   	 table{
-   	 margin: 5px;}
+   	 
    	 #sc{
    	 font-size: 20px;
    	 font-weight: 900;}
@@ -80,8 +79,7 @@
    	 .ul>li>a:hover{
    	 color: black;
    	 font-weight: 900;}
-   	 table{
-   	 margin-top:10px;}
+   	 
    	 .lab{
    	 font-weight:600;
    	 font-size: 30px;}
@@ -116,20 +114,12 @@
    	 	.su:hover, .bo:hover{color:black}
    	 	.lab4{
    	 	margin-top:30px;}
-   	 	table{
-   	 	border: 1px solid black}
-   	 	.t1{
-   	 	border-top: 2px solid black;}
-   	 	td{
-   	 	border: 1px solid black;}
-   	 	.t111{
-   	 	color: white;
-   	 	border : none;
-   	 	margin-left:20px;
-   	 	padding: 10px 20px;   	 	}
+   	 	
+   	 	
+   	 		 	
     </style>
   </head>
-  <body style= "background:#F2F2F2;">
+  <body style= "background:#F2F2F2; margin-top:5%">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <jsp:include page="../home/menubar.jsp"/>
     
@@ -160,24 +150,24 @@
 	  			<label id="sc" style="color:  #474E68">스크랩한 글</label>
 	  			
 	  			<div class="inf5">
-	  			<div >
+	  			<div style="padding:20px;">
 						
-						<table class="t111">
-							<tr>
-								<th  class="t1">번호</th>
-								<th class="t1">제목</th>
-								<th class="t1"></th>
-								<th class="t1">작성일</th>
+						<table style="border-bottom: 1px solid white; font-weight:600 width: 100%; color: white">
+							<tr style="border-bottom: 1px solid white">
+								<th  >번호</th>
+								<th style="width:300px;">제목</th>
+								
+								<th >작성일</th>
 								
 								
 							</tr>
 							<c:forEach items="${ list }" var="b">
 								
-									<tr>
-										<td  id="bId" class="bId">${ b.BOARD_ID }</td>
+									<tr style="border-bottom: 1px solid white">
+										<td  id="bId" style="height:50px;"class="bId">${ b.BOARD_ID }</td>
 										<td>${ b.BOARD_TITLE }</td>
-										<td id="writer" class="writer">${ b.userId }</td>
-										<td>${ b.CREATE_DATE }</td>
+										<td id="writer" style="float:right;" class="writer">${ b.USER_ID }</td>
+										
 									
 									</tr>
 								
@@ -315,7 +305,7 @@
    				const trTds = this.parentElement.querySelectorAll('td');
    				const bId = trTds[0].innerText;
    				const writer = trTds[2].innerText;
-   				location.href='${contextPath}/selectMainBoard.fe?bId=' + bId + '&writer=' + writer;
+   				location.href='${contextPath}/selectMainBoard.fe?writer=' + writer;
    			});
    		}
    	}
