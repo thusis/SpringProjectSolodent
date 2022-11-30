@@ -15,13 +15,7 @@
 		<result column="STATUS" property="status"/>
 	</resultMap>
 	
-	 <select id="selectNoTice" resultMap="freeResultSet">
-  	select BOARD_TITLE
-  	from board
-  	where IS_NOTICE = 'Y'
-  		  and STATUS = 'Y'
-  		  and BOARD_CODE = 1
-  	</select>
+	
   	
   	<select id="selectBoardList" resultMap="freeResultSet">
   		select *
@@ -35,10 +29,63 @@
   	<select id="getListCount" resultType="_int">
   		select count(*)
   		from board
-  		where board_code = 4 and STATUS = 'Y'
+  		where board_code = 1 and STATUS = 'Y'
   	</select>
   	
   	<insert id="insertBoard">
+  		
+		insert into board values(seq_bid.nextval, 1, #{boardTitle}, #{boardContent}, #{userId},
+													sysdate, default, default, default, default)
+  	</insert>
+  	
+  	<update id="addCount">
+  		update board
+  		set board_count = board_count + 1
+  		where  BOARD_ID = #{bId}
+  	</update>
+  	
+  	<select id="selectBoard" resultMap="freeResultSet">
+  		select *
+  		from board 
+  		where status ='Y' and BOARD_ID = #{bId}
+  	</select>
+  	
+  	 <select id="selectNoticeList" resultMap="freeResultSet">
+  	 <![CDATA[
+  	        select *
+  	from board
+  	where IS_NOTICE = 'Y'
+  		  and STATUS = 'Y'
+  		  and BOARD_CODE = 1
+  		  and rownum <= 3 
+  		  order by  board_id desc  
+  		 ]]>
+  	</select>
+  	
+  	<select id="selectBoard5" resultMap="freeResultSet">
+  	 <![CDATA[
+  	        select *
+  	from board
+  	where IS_NOTICE = 'N'
+  		  and STATUS = 'Y'
+  		  and BOARD_CODE = 1
+  		  and rownum <= 5 
+  		  order by  BOARD_COUNT desc 
+  		 ]]>
+  	</select>
+  	
+  	<select id="selectBoardM" resultMap="freeResultSet">
+  	 <![CDATA[
+  	        select *
+  	from board
+  	where IS_NOTICE = 'N'
+  		  and STATUS = 'Y'
+  		  and BOARD_CODE = 4
+  		  and rownum <= 5 
+  		  order by  BOARD_COUNT desc 
+  		 ]]>
+  	</select>
+  	<insert id="DboardInsert">
   		
 		insert into board values(seq_bid.nextval, 1, #{boardTitle}, #{boardContent}, #{userId},
 													sysdate, default, default, default, default)

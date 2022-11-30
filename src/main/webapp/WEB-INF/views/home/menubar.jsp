@@ -34,7 +34,7 @@
 	<link href="/solodent/resources/assets/css/main.css" rel="stylesheet">
 		
     <style>
-	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed; z-index: 99999;}
+	    .nav1{height: 83px; background-color: #60CFFF; top:0px; left: 0px; width:100%; position: fixed; z-index:9999;}
 	    
 		a{
 		text-decoration: none;
@@ -95,11 +95,41 @@
 		width: 200px;
 		margin-left: 20px;
 		border-radius: 50px;}
-  	</style>
-  </head>
+		.dropdown-toggle{
+		    background: #60cfff;
+		    border:none;    
+		    color: white;
+		    font-weight: 700;
+		    text-shadow: 1px 1px 4px #cacaca, 2px 2px 4px rgb(0 0 0 / 30%), 3px 3px 6px rgb(0 0 0 / 20%), 4px 4px 11px rgb(0 0 0 / 10%);
+		}
+		.dropdown-toggle:hover, .dropdown-toggle:active{
+		    background: #60cfff;
+		     color: #dee2e6 !important;
+		}
+		.badge-danger {
+		    color: #fff;
+		          
+		    background-color: #e74a3b;
+		    /* width: 30px; */
+		    font-size: 10px;
+		    border: none;
+		    left: -10px;
+		    top: -13px !important;
+		    position: relative;
+		    position: relative !important;
+		}
+		.dropdown  .alert{
+		    position: absolute;
+		    top: -11px;
+		    left: -43px;
+		}       
+		  	</style>
+		  </head>
   
   
   <body>
+  	 <input type="hidden" id="home" value="${pageContext.request.contextPath}">  
+    <input type="hidden" id="loginUser" value="${loginUser}"> 
     <c:set var="contextPath" value="${ pageContext.request.contextPath }" scope="application"/>
     <header id="header"  align-items-center">
 	   <nav class="nav1">
@@ -119,12 +149,7 @@
 	    		</div>
 	    		
 			    <div class="col-lg-1 d-none d-sm-block middle">
-			    	<c:if test="${ loginUser.rate == '1' }">
-				    	<a href="${ contextPath }/tipList.bo">자취꿀팁</a>
-			    	</c:if>
-			    	<c:if test="${ loginUser.rate == '0' or loginUser == null }">
-			    		<a href="javascript:rateFail();">자취꿀팁</a>
-			    	</c:if>
+			    	<a href="${ contextPath }/tipList.bo">자취꿀팁</a>
 			    </div>
 			    
 			    <div class="col-lg-1 d-none d-md-block middle">
@@ -138,6 +163,23 @@
 			    
 			    
 	    		<div class="col-lg d-none d-lg-block "> </div>
+	    		
+                 <c:if test="${not empty loginUser }">
+                     <div class="col-lg-1 d-none d-md-block middle">
+                        <div class="dropdown" style="top: 32px;left: -65px;">
+                          <a class="btn  dropdown-toggle" href="#" style="position: relative;"
+                           role="button" id="notificationListBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                           <span  class="alert" >
+                               <i class="fas fa-bell fa-fw"></i>
+                               <span id="ntcntSpan"></span>                       
+                          </span>
+                            알림 메시지
+                          </a>
+                               <div  id="notificationList">
+                               </div>     
+                         </div>
+                     </div>
+                </c:if>    
 	    
 			    <div class="col-lg-1 d-none d-lg-block middle">
 			   		<c:if test="${ empty loginUser }">
@@ -159,21 +201,6 @@
 		</div>
 	</nav>
 	</header>   
-	
-	<div class="modal fade" tabindex="-1" role="dialog" id="dongjunModal" style="top: 40%; ">
-		<div class="modal-dialog" role="document">
-    		<div class="modal-content rounded-3 shadow">
-      			<div class="modal-body p-4 text-center">
-        			<h3 class="mb-0" id="dongjunModalText"></h3>
-      			</div>
-      			<div class="modal-footer flex-nowrap p-0">
-        			<button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-12 m-0 rounded-0 border-end"  id="scrapConfirm" data-bs-dismiss="modal">
-        				<strong>확인</strong>
-        			</button>
-      			</div>
-    		</div>
-  		</div>
-	</div>
    
 <!-- Vendor JS Files --> <!--이거 없으면 화면 안 나옴-->
     <script src="/solodent/resources/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -186,12 +213,51 @@
 
     <!-- Template Main JS File -->
     <script src="/solodent/resources/assets/js/main.js"></script>
-    <script type="text/javascript">
-    	function rateFail() {
-    		const gradeModalText = document.getElementById('dongjunModalText');
-    		gradeModalText.innerHTML = '등급이 낮거나 로그인이 되어있지 않습니다.';
-    		$('#dongjunModal').modal('show');
-    	}
-    </script>
+    
+    
+    <!-- ============================채팅=======================-->
+   <%--  <%@ include   file="../chat/chatModal.jsp" %> --%>
+	<script>
+	$(function(){
+	   const loginUser =$("#loginUser").val();
+	   //console.log(loginUser);
+	   if(loginUser!=""){   
+	      notificationList();
+	      setInterval(() => {
+	         //notificationList();
+	      }, 3000);
+	   }
+	});
+	
+	function notificationList(){
+	   const home=$("#home").val();   
+	   $.ajax({
+	      url:home+"/chat/notificationList.do",
+	      type:"post",      
+	      success:function(res){
+	         //console.log(" res : ", res);
+	         $("#notificationList").html(res);
+	         const notificationCnt=parseInt($("#notificationCnt").val());
+	         console.log("notificationCnt  : " + notificationCnt);
+	         
+	         if(notificationCnt==0){
+	            $(".badge-danger").hide();
+	            $("#notificationListBtn").on("click", function(){
+	               //alert("도착한 메시지가 없습니다.");
+	            })
+	         }else{
+	            const html ='<span class="badge badge-danger badge-counter " id="ntcntSpan">'+notificationCnt +'+</span>';
+	            $("#ntcntSpan").html(html);
+	         }
+	      },
+	      error:function(error){
+	         console.log("에러 : ",error);
+	      }      
+	   });
+	}
+	
+	
+	</script>    
+    
 	</body>
 </html>

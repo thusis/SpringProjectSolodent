@@ -17,9 +17,30 @@ public interface FreeService {
 
 	ArrayList<Board> selectBoardList(PageInfo pi);
 
-
-
 	int insertBoard(Board b);
+
+
+	Board selectBoard(int bId, boolean yn);
+
+
+
+	ArrayList<Board> selectNoticeList();
+
+
+
+	ArrayList<Board> selectBoard5();
+
+
+
+	ArrayList<Board> selectBoardM();
+
+
+
+	int insertDboard(String id);
+
+
+
+	
 
 
 

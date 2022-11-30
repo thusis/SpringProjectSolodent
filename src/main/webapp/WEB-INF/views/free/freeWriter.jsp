@@ -16,11 +16,13 @@
 	    font-weight: 700}
 	    .fw2{
 	    width: 100%;
-	  min-height: 100%;
+	  height: 420px;
 		display: flex;
 	  align-items: center;
 	  flex-direction: column; 
-	  justify-content: center;}
+	  justify-content: center;
+	  margin-top: 20px;}
+	  
 	.fw-bg{
 	width: 100%;
 	  min-height: 100%;
@@ -29,12 +31,25 @@
 	  flex-direction: column; 
 	  justify-content: center;
 		top-margin: 50px;
-		width:60%;
+		width:50%;
 		height: 100%;
 		box-shadow:1px 1px 4px #cacaca,
 		2px 2px 4px rgba(0, 0, 0, .3),
 		3px 3px 6px rgba(0, 0, 0, .2),
 		4px 4px 11px rgba(0, 0, 0, .1);}
+    	}
+    	.ty{
+    	width:500px;}
+    	.tx{
+    	width:500px;}
+    	.bbb{
+    	backgroind: F2F2F2;
+    	font-size: 15px;
+    	padding: 10px 0px;
+    	border : none;
+    	width: 80%;
+    		border-radius: 10px;
+    margin-top:20px;
     	}
     </style>
   </head>
@@ -49,16 +64,19 @@
 		  			<div class="fw">글 등록</div>
 		  			<div class="fw2">
 		  				<div class="fw-bg">
-		  				<form action="${contextPath }/freeInsert.fe">
+		  				<form action="${contextPath }/freeInsert.fe" method="post">
 		  				<div><label for="boardTitle">제목</label>
-		  					<input type="text" name="boardTitle">
+		  					<input type="text" name="boardTitle" class="ty" style="width: 500px; margin-top:30px;">
+		  				</div>
+		  				<div >
+		  					<div>
+		  						<label for="boardCoundt">제목</label>
+		  					<textarea rows="10" name="boardContent" style="resize: none" class="tx"></textarea>
+		  					</div>
 		  				</div>
 		  				<div>
-		  					<span>내용</span>
-		  					<textarea rows="10" name="boardContent" style="resize: none"></textarea>
-		  				</div>
-		  				<div>
-		  				<button>저장</button>
+		  				<button class="bbb">저장</button>
+		  				
 		  				</div>
 		  				</form>
 		  			</div>

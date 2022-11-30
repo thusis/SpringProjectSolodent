@@ -247,7 +247,7 @@
 	</style>
 	</head>
 	<body style= "background:#F2F2F2;">
-		<jsp:include page="../../../index.jsp"/>
+		<jsp:include page="../home/menubar.jsp"/>
 		
 		<div class="container-fluid m2 fadeInDown">
 	  		<div class="row ">

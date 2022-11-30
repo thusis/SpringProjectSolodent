@@ -42,5 +42,20 @@ public class MemberDAO {
 		return list;
 	}
 
+	public String findEmail(SqlSessionTemplate sqlSession, String email) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("memberMapper.findEmail", email);
+	}
+
+	public String finPwd(SqlSessionTemplate sqlSession, Member m) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("memberMapper.findPwd", m);
+	}
+
+	public int changePwd(SqlSessionTemplate sqlSession, Member m) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("memberMapper.changePwd", m);
+	}
+
 	
 }
