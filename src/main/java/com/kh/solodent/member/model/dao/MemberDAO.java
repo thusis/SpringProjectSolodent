@@ -69,5 +69,10 @@ public class MemberDAO {
 		return (ArrayList)sqlSession.selectList("memberMapper.myInfoDoard", id);
 	}
 
+	public ArrayList<Board> selectMyScrab(SqlSessionTemplate sqlSession, String id) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("memberMapper.selectMyScrab", id);
+	}
+
 	
 }

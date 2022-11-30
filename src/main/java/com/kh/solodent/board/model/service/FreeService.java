@@ -60,6 +60,10 @@ public interface FreeService {
 
 
 
+	Board selectBoard(int bId, boolean yn);
+
+
+
 	
 
 
