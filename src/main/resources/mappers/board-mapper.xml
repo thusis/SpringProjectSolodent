@@ -378,4 +378,8 @@
 		select * from attachment where board_id = #{boardId} and is_thum = 'Y'
 	</select>
 	
+	<select id="checkAlreadyDeclare" resultType="_int">
+		select count(*) from declare where user_id = #{userId} and declare_to = #{declareTo}
+	</select>
+	
 </mapper>

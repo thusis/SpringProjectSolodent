@@ -213,6 +213,10 @@ public class BoardService {
 		return bDAO.mainPageUsedList(sqlSession, boardId);
 	}
 
+	public int checkAlreadyDeclare(Declare d) {
+		return bDAO.checkAlreadyDeclare(sqlSession, d);
+	}
+
 
 	
 

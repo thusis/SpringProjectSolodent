@@ -857,10 +857,15 @@ public class BoardController {
 	public String insertDeclare(@ModelAttribute Declare d, Model model) {
 
 		//이미 신고했나 확인해야함
-		int result = bService.insertDeclare(d);
-
-		if(result > 0) {
-			model.addAttribute("dclmsg", "신고가 정상적으로 접수되었습니다.");
+		int checkAlreadyDeclare = bService.checkAlreadyDeclare(d);
+		if(checkAlreadyDeclare == 0) {
+			
+			int result = bService.insertDeclare(d);
+			
+			if(result > 0) {
+				model.addAttribute("dclmsg", "신고가 정상적으로 접수되었습니다.");
+			} 
+			
 		} else {
 			model.addAttribute("dclmsg", "이미 신고한 게시물이거나 접수되지 않았습니다.");
 		}
