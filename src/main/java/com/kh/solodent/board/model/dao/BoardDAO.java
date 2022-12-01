@@ -214,6 +214,10 @@ public class BoardDAO {
 		return sqlSession.selectOne("boardMapper.mainPageUsedList", boardId);
 	}
 
+	public int checkAlreadyDeclare(SqlSessionTemplate sqlSession, Declare d) {
+		return sqlSession.selectOne("boardMapper.checkAlreadyDeclare", d);
+	}
+
 	
 
 

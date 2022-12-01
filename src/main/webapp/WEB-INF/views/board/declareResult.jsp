@@ -17,7 +17,6 @@
         
         <div class="container">
             <h3>${ dclmsg}</h3>
-             신고가 정상제출되었습니다.
              <input type="button" value="닫기" class="btn" onclick="self.close();"/>
         </div>
 
