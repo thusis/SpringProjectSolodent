@@ -18,7 +18,7 @@
     	#mainIcon4{
 			display:flex;
 			font-weight: 900;
-			font-size: 80px;
+			font-size: 100px;
 			color: #60CFFF;
 			text-shadow:1.5px 1.5px 4px #cacaca,
 			3px 3px 4px rgba(0, 0, 0, .3),
@@ -46,30 +46,34 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <jsp:include page="menubar.jsp"/>
     
-    <div class="container-fluid text-center ">
-	  	<div class="row roro justify-content-md-center">
+  <div class="container-fluid text-center">
+	  		<div class="row justify-content-center" style="width: 100%">
+                 <div class="col "  >
+	  					<div>
+			  		<div style="width: 1000px;%; height:300px; display:inLine-block; ">
+	  					<div style="display:flex">
+	  						<img  alt="1" src="${contextPath }/resources/img/go.png" width="250px;" height="200px;" >
+ 	  			
 	  			
-	  			
-	  			<div class="col-2" style="margin-left:23%"> 
-	  				<img  alt="1" src="${contextPath }/resources/img/go.png" width="100%" height="200px;" >
- 	  			</div>
-	  			<div class="col-5">
-	  			
+	  			<div style="margin-left:1%;">
 					<ul id="mainIcon4">
 						<li>solo</li>
 						<li id="mainIcon5">.</li>
-						<li >dent</li>
+						<li >dent</li><br>
+						
 					</ul>
-					<br>
-					<div style="margin-top:-23px; color:#fbc093; font-size:27px; font-weight:600;   text-shadow: 0 30px 60px 0 rgba(0,0,0,0.3); margin-left:35px;" >자취하는 학생들의 커뮤니티</div>
+					
+					
+					<div style="margin-top:-200px; color:#fbc093; font-size:34px; font-weight:600; display:inLine-block;  text-shadow: 0 30px 60px 0 rgba(0,0,0,0.3); margin-left:35px;" >
+					자취하는 학생들의 커뮤니티</div>
 	  			
 	  			</div>
-				<div class="col-2" >
-	  				<img  alt="1" src="${contextPath }/resources/img/did.png" width="100%" height="200px;" >
+				
+	  				<img  alt="1" src="${contextPath }/resources/img/did.png" width="250px" height="200px;" style="margin-left:3%;">	
 	  			</div>
-	  				
+	  		</div>
 	  			</div>
-	  			
+	  		</div>
 
 	  		
 	  		
@@ -115,7 +119,8 @@
 	  		<div style="background:white;  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3); width:500px; margin-top: 20px; border-radius: 20px; height:320px;">
 	  			
 	  			<ul >
-	  			<div style="display:flex; padding:17px 0px;"><div style="width:50px;">번호</div><div style="width:150px; text-align:center">제목</div><div style="width:100px;">작성자</div>
+	  			<div style="display:flex; padding:17px 0px;">
+	  			<div style="width:50px;">번호</div><div style="width:150px; text-align:center">제목</div><div style="width:100px;">작성자</div>
 	  			<div style="width:100px;">작성일</div><div style="width:80px;">조회수</div></div>
 	  			<c:forEach items="${ mist }" var="m">
     					<div style="display:flex; border-bottom: 1.5px solid #2e3131; margin-top:10p;">
@@ -125,11 +130,14 @@
     						<li class="td" style="text-align: center; width:150px; height: 20px; ">${ m.createDate }</li>
     						<li class="td" style="text-align: center; width:60px; height: 20px; ">${ m.boardCount }</li>
     				</div>
+    				
     				<br>
     			</c:forEach>
+    			</div>
+    			
     </ul>
-    </div>
-	  		
+   
+	  	</div>
 	  	</div>
 	  </div>
 	  </div>

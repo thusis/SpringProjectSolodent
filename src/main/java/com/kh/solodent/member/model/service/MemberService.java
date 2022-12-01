@@ -35,6 +35,8 @@ public interface MemberService {
 
 	ArrayList<Reply> myInfoDoard(String id);
 
+	ArrayList<Board> selectMyScrab(String id);
+
 	
 	
 

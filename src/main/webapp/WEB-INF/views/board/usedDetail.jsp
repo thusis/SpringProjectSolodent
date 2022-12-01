@@ -21,7 +21,9 @@
 </head>
 <body>
 	<jsp:include page="../home/menubar.jsp"/>
+
 	 <section id="portfolio-details" class="portfolio-details" style="margin: 70px;">
+
       <div class="container" data-aos="fade-up" >
 
         <div class="position-relative h-100">
@@ -56,6 +58,7 @@
 				<br>
             </div>
             <div class="d-inline">
+
             	<c:if test="${ loginUser.id ne b.userId }">
 	            	<c:if test="${ isLike == 1 }">
 	            		<i class="bi bi-hand-thumbs-up-fill" style="background-color: #52cbffd3; color: white;" id="likeIcon"></i>
@@ -81,6 +84,7 @@
             		<button type="button" class="btn btn-outline-info"  onclick="location.href='${ contextPath }/editUsed.bo?bId=${ b.boardId }'">글 수정</button>
             		<button type="button" class="btn btn-outline-info"  id="deleteModal">글 삭제</button>
              	</c:if>
+
             </div>
           </div>
 
@@ -88,7 +92,9 @@
             <div class="portfolio-info">
               <h3>판매제품 정보</h3>
               <ul>
+
                 <li><strong>판매자 닉네임</strong><span>${ nickName }</span></li>
+
                 <li><strong>카테고리</strong> <span>${ u.productCate }</span></li>
                 <li><strong>가격</strong> <span>${ u.price }</span></li>
                 <li><strong>등록 일자</strong> <span>${ b.modifyDate }</span></li>
@@ -101,7 +107,9 @@
 
       </div>
     </section><!-- End Portfolio Details Section -->
+
     <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice" style="top: 50%;">
+
 		<div class="modal-dialog" role="document">
     		<div class="modal-content rounded-3 shadow">
       			<div class="modal-body p-4 text-center">

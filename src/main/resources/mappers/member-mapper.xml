@@ -64,7 +64,7 @@
   	</update>
   	
   	<select id="selectMyList" resultType="map">
-  	select b.BOARD_ID, BOARD_TITLE, CREATE_DATE, BOARD_COUNT
+  	select b.BOARD_ID, BOARD_TITLE, CREATE_DATE, BOARD_COUNT, b.USER_ID
 		from BOARD_SCRAP b
 		    join board A on b.BOARD_ID = a.BOARD_ID
 		    join member m on b.USER_ID = m.USER_ID

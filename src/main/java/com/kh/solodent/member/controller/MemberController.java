@@ -101,6 +101,9 @@ public class MemberController {
 		String id = ((Member) session.getAttribute("loginUser")).getId();
 
 		ArrayList<HashMap<String, Object>> list = mService.selectMyList(id);
+		/*
+		 * ArrayList<Board>b = mService.selectMyScrab(id); model.addAttribute("b",b);
+		 */
 		model.addAttribute("list", list);
 		return "myInfo";
 
@@ -212,6 +215,7 @@ public class MemberController {
 		String id = ((Member)session.getAttribute("loginUser")).getId();
 		
 		ArrayList<Board> b = mService.myInfoBoard(id);
+		System.out.println(b+ "dsakdklasjlasflka");
 		model.addAttribute("b",b);
 		return "myInfoBoard";
 		

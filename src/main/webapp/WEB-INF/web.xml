@@ -112,8 +112,22 @@
 		<servlet-name>freeServlet</servlet-name>
 		<url-pattern>*.fe</url-pattern>
 	</servlet-mapping>
-	
-	
+
+	<!-- 관리자페이지 -->
+    <servlet>
+        <servlet-name>manageServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/appServlet/manage-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+        
+    <servlet-mapping>
+        <servlet-name>manageServlet</servlet-name>
+        <url-pattern>*.mng</url-pattern>
+    </servlet-mapping>	
 	<!--  인코딩 필터 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
