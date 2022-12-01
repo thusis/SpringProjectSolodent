@@ -189,26 +189,6 @@
         </div>
     </div><!-- End Portfolio Section -->
 
-          <script type="text/javascript">
-          	window.onload=()=> {
-          		const dives = document.getElementsByClassName('card');
-           	 for(const div of dives) {
-           		 div.addEventListener('click', function() {
-           			 const boardId = this.querySelector('.bId').value;
-           			 const writer = this.querySelector('.uId').value;
-           			 const checkLogin = document.getElementById('checkLogin').value;
-           			 
-           			 if(checkLogin == '') {
-           				const gradeModalText = document.getElementById('dongjunModalText');
-    					gradeModalText.innerHTML = '로그인 후 이용가능합니다..';
-    					$('#dongjunModal').modal('show');
-           			 } else {
-	           			 location.href = '${ contextPath }/selectUsed.bo?bId=' + boardId + '&writer=' + writer;
-           			 }
-           		 });
-           	 }
-          	}
-          </script>
 	 <script>
    	window.onload = () =>{
    		
@@ -238,6 +218,22 @@
    			});
    		}
    		
+   		const dives = document.getElementsByClassName('card');
+      	 for(const div of dives) {
+      		 div.addEventListener('click', function() {
+      			 const boardId = this.querySelector('.bId').value;
+      			 const writer = this.querySelector('.uId').value;
+      			 const checkLogin = document.getElementById('checkLogin').value;
+      			 
+      			 if(checkLogin == '') {
+      				const gradeModalText = document.getElementById('dongjunModalText');
+					gradeModalText.innerHTML = '로그인 후 이용가능합니다..';
+					$('#dongjunModal').modal('show');
+      			 } else {
+          			 location.href = '${ contextPath }/selectUsed.bo?bId=' + boardId + '&writer=' + writer;
+      			 }
+      		 });
+      	 }
    	}
    	
    </script>
