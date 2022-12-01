@@ -178,7 +178,7 @@ public class FreeController {
 		model.addAttribute("b",b );
 		 return "freeEdit";
 	 }
-	 
+	
 	 @RequestMapping(value = "insertReply.fe")
 		public void insertReply(@ModelAttribute Reply r, HttpServletResponse response) {
 			
@@ -216,4 +216,18 @@ public class FreeController {
 		 
 		 
 	 }
+	 @RequestMapping("freeDelete.fe")
+	 public String freeDelete(@RequestParam("bId") int bId, @ModelAttribute Board b) {
+		 
+		 
+		 int result = fService.freeDelete(bId); 
+		 if(result > 0) {
+			  return "redirect:freeHome.fe";
+		  }else {
+			  throw new BoardException("게시글 삭제 실패");
+		  }
+		 
+		 
+	 }
+	 
 }

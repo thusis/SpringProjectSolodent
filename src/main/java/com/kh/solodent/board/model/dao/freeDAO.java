@@ -86,6 +86,11 @@ public class freeDAO {
 		return sqlSession.insert("freeMapper.insertReply", r);
 	}
 
+	public int freeDelete(SqlSessionTemplate sqlSession, int bId) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("freeMapper.freeDelete", bId);
+	}
+
 
 	}
 

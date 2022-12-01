@@ -188,6 +188,7 @@ public class MemberController {
 	@RequestMapping("findPwdDetail.me")
 	public String findPwdDetail(@ModelAttribute Member m, Model model) {
 		String findPwd = mService.findPwd(m);
+		System.out.println("나누누누누누누"+findPwd);
 		if(findPwd != null) {
 			model.addAttribute("findPwd", findPwd);
 			return "changePwd";
@@ -197,10 +198,13 @@ public class MemberController {
 		
 	}
 	@RequestMapping("changePwd.me")
-	public String changePwd(@RequestParam("findPwd") String id, @ModelAttribute Member m) {
+	public String changePwd(@ModelAttribute Member m, @RequestParam("bId")String bId) {
 		String bpwd = bcrypt.encode(m.getPwd());
+		m.setId(bId.trim());
 		m.setPwd(bpwd);
-		m.setId(id);
+		System.out.println(m + "m체크");
+		System.out.println(bId + "bId체크");
+		System.out.println(bpwd + "bpwd체크");
 		System.out.println(m);
 		int change = mService.changePwd(m);
 		System.out.println(change);
