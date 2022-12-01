@@ -52,7 +52,7 @@ public class HomeController {
 		 model.addAttribute("list", list);
 		 model.addAttribute("mist", mist);
 		model.addAttribute("serverTime", formattedDate );
-		
+
 		ArrayList<Board> AllBoardList = bService.selectUsedList(2);
 		ArrayList<Board> LatestUsedBoardList = new ArrayList<Board>();
 		ArrayList<Used> usedList = new ArrayList<>();
@@ -80,7 +80,6 @@ public class HomeController {
 			model.addAttribute("usedList", usedList);
 			model.addAttribute("usedAttmList", usedAttmList);
 		}
-
 
 		return "home/home";
 	}

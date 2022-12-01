@@ -12,7 +12,7 @@
     .fe2{
     display: flex;}
     .fe1{
-    	 margin-left:35%;
+    	 
     	font-size: 55px;
     	font-weight: 800;
     	text-shadow:1px 1px 4px #cacaca,
@@ -85,28 +85,24 @@
   <body style="margin-top: 10%;">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <jsp:include page="../home/menubar.jsp"/>
-    <div class="container-fluid">
-	  	<div class="row">
-	  		<div class="col">
-	  			<div class="fe2">
-    				<div class="fe1">자유게시판</div> 
-    			
-    					
-				        
-				  	
-				  		
-						</div>
-						
-						
-					
-					<div>
-				<img alt="1" src="${contextPath }/resources/img/spi.png" width="300px" height="200px;"  style="margin-left: 35%;">
+    <div class="container-fluid text-center">
+	  		<div class="row justify-content-center" style="width: 100%">
+                 <div class="col">
+	  					
+			  		<div style=" width: 500px; height:350px; float:right;">
+	  			
+    				<div  style="float:left; font-size:60px; display:inLine-block; font-weight:700; margin-left:10%">자유게시판</div> 
+    				<div style="float:left;">
+    				
+				<img alt="1" src="${contextPath }/resources/img/spi.png" width="400px" height="200px;"  >
 				</div>
-				</div>
+					</div>
+					</div>
 				<div class="col">
-				
+					<div style=" width: 550px; height:350px; ">
+					<div style="background: #F2F2F2; height:300px;">
 			
-					<button class="btn bttt" style="font-size:30px; padding: 10px 0px; font-weight:600"type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">공지사항</button>
+					<button class="btn bttt" style="font-size:30px; padding: 10px 0px; background:white;font-weight:600"type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">공지사항</button>
 
 					<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
 					  <div class="offcanvas-header">
@@ -115,17 +111,20 @@
 					  </div>
 					  <div class="offcanvas-body">
 					  <c:forEach items="${ notice }" var="n">
-					    <h4>${ n.boardTitle }</h4>
+					    <h4 style=" margin-top:50px;">${ n.boardTitle }</h4>
 					    <p>${ n.boardContent }</p>
 					    </c:forEach>
 					  </div>
 					</div>
-					<br>
-					<div class="fil">
+					
+					
+					
+					<div style="align-items:center; display:flex; margin-left:25%;">
+					
 					<img alt="1" src="${contextPath }/resources/img/spt.png" width="200px" height="100px;"  style="margin-top: 30px;">
-					<p style="color:red; font-size: 50px; margin-top: 30px; margin-left: 10px;">필독!</p>
+					<p style="color:red; font-size: 50px; margin-top: 30px; ">필독!</p>
 					</div>
-				    
+				    </div>
 				    </div>
 				    </div>
 				   </div>
@@ -133,27 +132,31 @@
 				   
 				   
 				 
-				 <div class="container-fluid">
-	  	<div class="row">
-	  		<div class="col">
-    			<button class="fe1-bu" onclick="location.href='${ contextPath }/freeWriter.fe'">글쓰기</button>
-    			<div class="mov">
+				 
+	  	<div class="row justify-content-center" style="width: 100%">
+                 <div class="col">
+                 <div style="  width: 1100px; font-weight:700; padding-bottom:50px; box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3); box-radius: 20px; padding-left:40px; height:100%; display:inLine-block;">
+               
+   			
+    			
     				
-    	<table>
+    				
+    				
+    	<table style="">
     		<thead>
     				<tr style="border-bottom: 1px solid black;">
-    					<th style="width: 8%; height:50px; text-align: center" >번호</th>
-    					<th style="width: 450px;">제목</th>
-    					<th style="width: 15%; text-align: center">작성자</th>
-    					<th style="width: 15%; text-align: center">작성일</th>
-    					<th style="width: 10%; text-align: center">조회수</th>
+    					<th style="width: 70px; height:50px; text-align: center" >번호</th>
+    					<th style="width: 700px;">제목</th>
+    					<th style="width: 100px;;text-align: center">작성자</th>
+    					<th style="width: 100px; text-align: center">작성일</th>
+    					<th style="width: 70px; text-align: center">조회수</th>
     				</tr>
     			</thead>
     			<tbody>
     				<c:forEach items="${ list }" var="b">
     					<tr style="border-bottom: 1px solid black;">
-    						<td class="bId td" id="bId" style="text-align: center;  height:40px;">${ b.boardId }</td>
-    						<td class="td">${ b.boardTitle }</td>
+    						<td class="bId td" id="bId" style="   height:50px;">${ b.boardId }</td>
+    						<td class="td" style="text-align:left;">${ b.boardTitle }</td>
     						<td class="writer userId td" id="writer" style="text-align: center">${ b.userId }</td>
     						<td class="td" style="text-align: center">${ b.createDate }</td>
     						<td class="td" style="text-align: center">${ b.boardCount }</td>
@@ -162,8 +165,14 @@
     			</tbody>
     			</table>
     			
+     <div style="display:flex; margin-top: 10px;">
      
-    		<nav aria-label="Standard pagination example" style="margin-left: 30%; margin-top: 20px;">
+     <button style="border: none; font-weight: 600; border-radius:10px; float: left; padding: 0px 100px; font-size: 25px; float:left; background:white;
+								    			box-shadow:1px 1px 4px #cacaca,
+												2px 2px 4px rgba(0, 0, 0, .3),
+												3px 3px 6px rgba(0, 0, 0, .2),
+												4px 4px 11px rgba(0, 0, 0, .1);}" onclick="location.href='${ contextPath }/freeWriter.fe'">글쓰기</button>
+    		<nav aria-label="Standard pagination example" style="margin-left: 12%; margin-top: 20px;">
 			  <ul class="pagination">
 			    <li class="page-item">
 			    	<c:url var="goBack" value="${ loc }">
@@ -190,12 +199,13 @@
 			   
 			  </ul>
 			</nav>
+			
+    			</div>
     			</div>
     		</div>
     		</div>
     		</div>
-    
-			
+    	
    <script>
    	window.onload = () =>{
    		

@@ -147,6 +147,26 @@ public class FreeController {
 		
 	 }
 	 
+	 @RequestMapping("selectMainBoard1.fe")
+	 public ModelAndView selectBoard(@RequestParam("bId") int bId, 
+			 					 HttpSession session, ModelAndView mv
+			 					) {
+	
+		 boolean yn = false;
+		System.out.println(bId + "나느나는");
+		 Board b = fService.selectBoard(bId, yn);
+		 ArrayList<Reply>list = fService.selectReply(bId);
+		 if(b != null) {
+			 mv.addObject("list",list);
+			 mv.addObject("b", b);
+			
+			 mv.setViewName("freeDetail");
+			 return mv;
+		 }else {
+			 throw new BoardException("게시글 상세보기 실패");
+		 }
+		
+	 }
 	 
 	 
 

@@ -258,7 +258,7 @@
 	         //console.log(" res : ", res);
 	         $("#notificationList").html(res);
 	         const notificationCnt=parseInt($("#notificationCnt").val());
-	         console.log("notificationCnt  : " + notificationCnt);
+	        // console.log("notificationCnt  : " + notificationCnt);
 	         
 	         if(notificationCnt==0){
 	            $(".badge-danger").hide();
@@ -271,7 +271,7 @@
 	         }
 	      },
 	      error:function(error){
-	         console.log("에러 : ",error);
+	         //console.log("에러 : ",error);
 	      }      
 	   });
 	}

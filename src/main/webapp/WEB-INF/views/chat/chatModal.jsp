@@ -3,7 +3,7 @@
 
         <!-- Modal -->
 <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false" data-backdrop="static">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" >
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">판매자 채팅</h5>
@@ -23,6 +23,11 @@
 				<div class="mesgs">
 					<div class="msg_history">
 					
+					
+					
+					
+					
+					<span></span>
 					
 					</div>
 					<div class="type_msg">
@@ -49,7 +54,7 @@
 <script type="text/javascript">
 let messageInterval;
 function chatModal(receivedId){	
-	console.log("receivedId : ", receivedId);	
+	//console.log("receivedId : ", receivedId);	
 	messageList(receivedId);	
 	
 	$("#chatModal").modal("show");			
@@ -81,7 +86,7 @@ $(function(){
 	})
 	
 	$("#chatModal .btn-close").on("click", function(e){
-		console.log(" 메시지 갱신 종료");
+		//console.log(" 메시지 갱신 종료");
 		//메시지 갱신 종료
 		clearTimeout(messageInterval);		
 	})
@@ -100,7 +105,7 @@ function messageList(receivedId){
 			$(".msg_history").scrollTop($(".msg_history")[0].scrollHeight);
 		},
 		error:function(error){
-			console.log("에러 : ",error);
+			//console.log("에러 : ",error);
 		}		
 	});
 }
@@ -127,7 +132,7 @@ function messageSend(){
 			$(".write_msg").val("");
 		},
 		error:function(error){
-			console.log("에러 : ",error);
+			//console.log("에러 : ",error);
 		}		
 	});
 	
@@ -144,14 +149,14 @@ function endChat(){
 				receivedId
 			},
 			success:function(res){
-				console.log(res);
+				//console.log(res);
 				if(res=="success"){
 					$("#chatModal .btn-close").click();
 					$("#chatModal").modal("hide");
 				}				
 			},
 			error:function(error){
-				console.log("에러 : ",error);
+				//console.log("에러 : ",error);
 			}		
 		});
 

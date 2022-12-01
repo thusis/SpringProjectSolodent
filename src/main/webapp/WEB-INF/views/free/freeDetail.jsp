@@ -59,10 +59,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
      <jsp:include page="../home/menubar.jsp"/>
      	<div class="container-fluid ">
-	  		<div class="row row1 justify-content-md-center">
+	  		<div class="row justify-content-center">
 	  			<div class="col col1">
-			  				<div>
-			  				<img alt="1" src="${contextPath }/resources/img/read.png" width="200px" height="100px;"  style="margin-left: 0%;" class="Z1">
+	  			
+			  				<div style="display:inLine-block">
+			  				<%-- <img alt="1" src="${contextPath }/resources/img/read.png" width="200px" height="100px;"  style="margin-left: 0%;" class="Z1"> --%>
 			  				<div class="dtm">
 			  					<ul>
 			  					<li style="font-weight: 700; font-size: 40px; margin-top: 20px; border-bottom: 1px solid black; width:100%;">     ${ b.boardTitle }  
@@ -96,18 +97,20 @@
 						  			</ul>
 						  		
 						  			</div>
+						  			</div>
 						  		</div>
-						  	</div>
-			  					
-	  				</div>
-	  				<div class="row row1 justify-content-md-center">
-	  				<div class="col col1">
+	  					</div>
+						</div>
+					<div class="container-fluid text-center">
+	  					<div class="row justify-content-center" style="width: 100%">
+                    <div class="col "  >
+	  					<div style=" background:white; margin-left:2%; margin-top: 430px; display:inLine-block; width:74%; border-radius: 20px;" >
 	  					<form action="${ contextPath }/DboardInsert.fe?bId= '+' ${ b.boardId }">
-	  					<div style="margin-top:820px; width: 73%; margin-left:14.5%;
-	  								height:100%; " >
-			  						<input type="text" id="replyContent" style="width:78%; height:100px; float: left; border-radius:10px; 
-			  										border: none;   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);" name="replyContent;" >
-			  						<button type="button" id="replySubmit" style="height: 100px; width:20%; float:right; 
+	  					<div style="display: flex;" >
+	  						
+			  						<textarea rows="3" id="replyContent" style=" height:100px;  width: 72%; border-radius:10px; 
+			  										border: none;   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);" name="replyContent;" ></textarea>
+			  						<button type="button" id="replySubmit" style="height: 100px; width:25%; float:right; margin-left:3%;
 			  						border-radius:10px; border-radius:10px;  box-shadow: 0 10px 20px 0 rgba(0,0,0,0.3);
 			  						border:none; background: white; font-weight: 700"
 			  						>댓글</button>
@@ -118,19 +121,21 @@
 			  			<tbody>
 	  					<c:forEach items="${ list }" var="r">
 	  						<tr>
-	  							<td>${ r.userId }</td>
-	  							<td>${ r.replyContent }</td>
-	  							<td>${ r.createDate }</td>
+	  							<td><img alt="" src="${contextPath }/resources/img/sign.png" width=50px height=50px;></td>
+	  							<td style="font-size: 20px; padding-top:10px; width:10%">${ r.userId }</td>
+	  							<td style="font-size: 20px; padding-top:10px; width:70%; text-align:left" >${ r.replyContent }</td>
+	  							<td style="font-size: 20px; padding-top:10px; width:20%;">${ r.createDate }</td>
 	  							
 	  						</tr>
 	  					
 	  					</c:forEach>
 	  				</tbody>
+	  					
 	  					</table>
 	  					</div>
 	  				</div>
-	  			
-	  				</div>  	
+	  			</div>
+	  		</div>  	
 	  	<script>
 	  	window.onload=()=>{
 			document.getElementById('replySubmit').addEventListener('click', ()=>{
