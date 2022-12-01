@@ -225,12 +225,12 @@
 		select * from board join board_tip using(board_id) where
 		<if test="category != null">
 			tip_cate = #{category}
-			<if test="word != null">
-					<if test="searchWhere == 'boardContent'" >
-						and board_content like '%' || #{word} || '%'
-					</if>
+			<if test="word  != null">
 					<if test="searchWhere == 'boardTitle'">
 						and board_title like '%' || #{word} || '%'
+					</if>
+					<if test="searchWhere == 'boardContent'" >
+						and board_content like '%' || #{word} || '%'
 					</if>
 			</if>
 		</if>
@@ -252,11 +252,11 @@
 		<if test="category != null">
 			tip_cate = #{category}
 			<if test="word != null">
-				<if test="searchWhere == boardTitle">
-					and board_title = '%' || #{word} || '%'
+				<if test="searchWhere == 'boardTitle'">
+					and board_title like  '%' || #{word} || '%'
 				</if>
-				<if test="searchWhere == boardContent">
-					and board_content = '%' || #{word} || '%'
+				<if test="searchWhere == 'boardContent'">
+					and board_content like  '%' || #{word} || '%'
 				</if>
 			</if>
 		</if>
