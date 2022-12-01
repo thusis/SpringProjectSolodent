@@ -31,6 +31,7 @@
         </div>
 
             <form action="${ contextPath }/updateTip.bo" method="post" enctype="multipart/form-data" class="php-email-form" id="usedForm">
+<%-- 		<c:if test="${ fn:length(aList) == 0 }"><input type="hidden" name="deleteAttm"></c:if> --%>
         <div class="row gx-lg-0 gy-4">
 
           <div class="col-lg-4">
