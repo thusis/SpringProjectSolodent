@@ -40,15 +40,13 @@ public interface MoimService {
 	ArrayList<Integer> getBoardReplyLikeCount(ArrayList<Reply> replyList);
 
 	int getBoardScrapCount(int boardId);
-
 	int getBoardLikeCount(int boardId);
+	ArrayList<Integer> getisReplyLikeList(ArrayList<Reply> replyList, String loginId);
 
 	int insertReply(Reply r);
 
 	int isLike(Like like);
-
 	void setBoardLike(Like likevo);
-
 	void deleteBoardLike(Like likevo);
 
 	ArrayList<Moim> getTopBoard();
@@ -58,14 +56,24 @@ public interface MoimService {
 	ArrayList<Moim> searchMoim(HashMap paramap);
 
 	int declareBoard(Declare dcl);
-
 	int getIsDeclared(Declare dcl);
 
 	int isScrap(BoardScrap scrap);
-
 	void setScrap(BoardScrap scrapvo);
-
 	void deleteScrap(BoardScrap scrapvo);
+
+	int deleteReply(int replyId);
+
+	int isReplyLike(ReplyLike rLikevo);
+	int setReplyLike(ReplyLike rLikevo);
+	int deleteReplyLike(ReplyLike rLikevo);
+
+	int deleteAttm(ArrayList<String> delRename);
+
+	void updateAttmLevel(int boardId);
+	int updateMoim(Moim moim);
+
+	int insertNewAttmUpdate(Moim moim, ArrayList<Attachment> list);
 
 
 }

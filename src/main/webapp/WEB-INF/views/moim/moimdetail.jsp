@@ -51,7 +51,7 @@
 					<c:if test="${loginUser.id eq moim.userId }">
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="${contextPath}/update.moim?bId=${moim.boardId}&pi=${page}">수정하기</a></li>
-							<li><a class="dropdown-item" href="${contextPath}/delete.moim?bId=${moim.boardId}">삭제하기</a></li>
+							<li><a class="dropdown-item" onclick="deleteBoard();">삭제하기</a></li>
 						</ul>
 					</c:if>
 					<c:if test="${ !empty loginUser && loginUser.id ne moim.userId }">
@@ -156,6 +156,7 @@
               <ul style="font-weight: 900; color:#0067a3; font-size:1.2rem;">
                 <li class="col-lg">댓글작성자</li>
                 <li class="col-lg-6">내용</li>
+                <li class="col-lg"> </li>
                 <li class="col-lg">추천</li>
                 <li class="col-lg">작성날짜</li>
               </ul>
@@ -168,17 +169,34 @@
 	              
 	              <c:if test="${ replyList.size()!=0 }">
 		              <c:forEach items="${replyList}" var="r" varStatus="Rstatus">
-<%-- 		              	<c:if test="${ loginUser.id eq }"> --%>
 			              <ul>
-			                <li class="col-lg">${r.userId}</li>
+			              	<li hidden="hidden" class="replyId">${ r.replyId }</li>
+			                <li class="col-lg">${r.nickName}</li> 
 			                <li class="col-lg-6"><div>${r.replyContent}</div></li>
-			                <li class="col-lg">${replyLikeCount[Rstatus.index]}</li>
+			                
+			              	<c:if test="${ loginUser.id ne r.userId }">
+				                <li class="col-lg"><button class="btn" type="button"> </button></li><!-- 비어있는 버튼(공간용) -->
+				          	</c:if>
+			              	<c:if test="${ loginUser.id eq r.userId }">
+				                <li class="col-lg"><button class="btn" type="button" onclick="deleteReply(this)" style="color:red;">X</button></li>
+				          	</c:if>
+				          	
+			                <li class="col-lg"><span>${replyLikeCount[Rstatus.index]}</span>
+					          	<c:if test="${isReplyLikeCountList[Rstatus.index]==1}">
+					              	<button type="button" class="btn" onclick="changeReplyHeart(this)" id="btnr" style="color:red;">
+					              	<i class="bn_btnr bi bi-suit-heart-fill"></i></button>
+		             			</c:if>
+		              
+		              			<c:if test="${isReplyLikeCountList[Rstatus.index]!=1}">
+					              	<button type="button" class="btn" onclick="changeReplyHeart(this)"id="btnr" style="color:grey;">
+					              	<i class="bn_btnr bi bi-suit-heart"></i></button>
+		              			</c:if>
+				          	</li>
+				          	
 			                <li class="col-lg">${r.createDate}</li>
 			              </ul>
-<%-- 			          	</c:if> --%>
 		              </c:forEach>
 	              </c:if>
-              
               </div>
               
             </div>
@@ -190,12 +208,38 @@
         </div>
       </div>
     </section><!-- End Blog Details Section -->
+    
+    
+<!-- ===================모달modal====================== -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+  	<div class="modal-dialog modal-dialog-centered" role="document">
+  		<div class="modal-content rounded-3 shadow">
+  			<div class="modal-body p-4 text-center">
+  				<h4 class="mb-0">‼‼ 정말 삭제하시겠습니까? ‼‼</h4>
+  				<p class="mb-0">삭제된 후 복구할 수 없습니다!</p>
+  			</div>
+  			<div class="modal-footer flex-nowrap p-0">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">삭제하지 않고 닫기</button>
+		        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="location.href='${contextPath}/delete.moim?bId=${moim.boardId}'">삭제하기</button>
+  			</div>
+  		</div>
+  	</div>
+  </div>
 
   </main><!-- End #main -->
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <div id="preloader"></div>
-  
+
+
+
+<!-- ====================스크립트script시작===============================   -->
+
   <script>
+  	//=======게시글 삭제========
+  	function deleteBoard(){
+		$('#modalChoice').modal('show');
+  	}
+  	
 	//=======신고===========
 	function openPopUp(){
 		var url = "${contextPath}/declare-popup.moim";
@@ -211,8 +255,8 @@
 		window.open(url, title, status);
 		form.submit();
 	}
- 	//=======좋아요 불러오기
 
+	//=======좋아요 불러오기
  	var boardId = ${moim.boardId};
  	var userId = '${loginUser.id}';
 	var isLike = ${isLike};
@@ -220,7 +264,7 @@
 	var isScrap = ${isScrap};
 	
 	function changeHeart(){
-		console.log("isLike은" + isLike +" 이고, boardLikeCountSpan은 " + boardLikeCountSpan.innerText);
+// 		console.log("isLike은" + isLike +" 이고, boardLikeCountSpan은 " + boardLikeCountSpan.innerText);
 		
 		if(isLike==1){
    			$.ajax({
@@ -251,8 +295,9 @@
 		}
 	} // changeHeart 함수 끝
 	
+	//=======스크랩하기
 	function changeScrap(){
-		console.log("isScrap은" + isScrap);
+// 		console.log("isScrap은" + isScrap);
 		
 		if(isScrap==1){
    			$.ajax({
@@ -278,8 +323,8 @@
   			}); // ajax 좋아요 추가
 		}
 	} // changeScrap 함수 끝
-
-	//=====================댓글 달기===========================
+	
+	//=====================눈물의 댓글 달기===========================
 	window.onload=()=>{
 		document.getElementById('replySubmit').addEventListener('click', ()=>{
 			$.ajax({
@@ -294,27 +339,81 @@
 			      const replyDiv = document.querySelector('#boxOfReplies');
 			      replyDiv.innerHTML = "" ;
 			      
-			      for(const r of data){
+			      console.log(data.list)
+			      console.log(data.replyLikeCount)
+			      console.log(data.isReplyLikeCountList)
+			   	
+			      for(var i=0; i<data.list.length; i++){
 			    	 const ul = document.createElement('ul');
+			    	 
+			    	 const idLi = document.createElement('li');
+			    	 idLi.setAttribute("hidden", "hidden");
+			    	 idLi.classList.add = "replyId";
+			    	 idLi.innerText = data.list[i].replyId;
 			    	 
 			    	 const writerLi = document.createElement('li');
 			    	 writerLi.classList.add('col-lg');
-			    	 writerLi.innerText = r.userId;
+			    	 writerLi.innerText = data.list[i].nickName;
 			    	 
 			    	 const ContentLi = document.createElement('li');
 			    	 ContentLi.classList.add('col-lg-6');
-			    	 ContentLi.innerText = r.replyContent;
+			    	 ContentLi.innerText = data.list[i].replyContent;
+			    	 
+			    	 const replyDeleteLi = document.createElement('li');
+			    	 replyDeleteLi.classList.add('col-lg');
+			    	 
+				    	 const deleteButton = document.createElement("button");
+				    	 deleteButton.classList.add('btn');
+				    	 deleteButton.setAttribute("type", "button");
+				    	 
+				    	 if( userId == data.list[i].userId ){
+				    		 deleteButton.setAttribute("onclick", "deleteReply(this);");
+				    		 deleteButton.innerText = "X";
+				    		 deleteButton.style.color = "red";
+				    	 } // 만약 유저 아이디("userId") 와 댓글 작성자 (r.userId)가 동일하면 
+	
+				    	 replyDeleteLi.appendChild(deleteButton);
 			    	 
 			    	 const replyLikeCountLi = document.createElement('li');
-			    	 replyLikeCountLi.classList.add('col-lg');				    		 
-			    	 replyLikeCountLi.innerText = "${replyLikeCount[status.index]}";
+			    	 replyLikeCountLi.classList.add('col-lg');
+			    	 //<li class="col-lg"></li>
 			    	 
+			    	 	const rLikeSpan = document.createElement("span");
+			    	 	rLikeSpan.innerText = data.replyLikeCount[i];
+			    	 	//<span>0</span>
+			    	 
+				    	 const replyLikeButton = document.createElement("button");
+				    	 replyLikeButton.classList.add('btn');
+				    	 replyLikeButton.id = 'btnr';
+				    	 replyLikeButton.setAttribute("type", "button");
+				    	 //<button class="btn" id="btnr" type="button" onclick="changeReplyHeart();"></button>
+				    	 
+				    	 const replyLikeButtonHeart = document.createElement("i")
+				    	 if(data.isReplyLikeCountList[i]==1){
+					    	 replyLikeButtonHeart.setAttribute("class","bn_btnr bi bi-suit-heart-fill" );
+					    	 replyLikeButton.style.color = "red";
+				    	 } else {
+					    	 replyLikeButtonHeart.setAttribute("class","bn_btnr bi bi-suit-heart" );
+					    	 replyLikeButton.style.color = "grey";
+				    	 }
+				    	 replyLikeButton.setAttribute("onclick", "changeReplyHeart(this);");
+				    	 // <i class="bn_btnr bi bi-suit-heart"></i>
+
+				    	 replyLikeButton.appendChild(replyLikeButtonHeart);
+				    	 //<button class="btn" id="btnr" type="button" onclick="changeReplyHeart();"><i class="bn_btnr bi bi-suit-heart"></i></button>
+				    	 
+			    		 replyLikeCountLi.appendChild(rLikeSpan);
+			    		 replyLikeCountLi.appendChild(replyLikeButton);
+			    		 //<li class="col-lg"><span>0</span><button class="btn" id="btnr" type="button" onclick="changeReplyHeart();"><i class="bn_btnr bi bi-suit-heart"></i></button></li>
+		              	
 			    	 const createDateLi = document.createElement('li');
 			    	 createDateLi.classList.add('col-lg');
-			    	 createDateLi.innerText = r.createDate;
+			    	 createDateLi.innerText = data.list[i].createDate;
 			    	 
+			    	 ul.append(idLi);
 			    	 ul.append(writerLi);
 			    	 ul.append(ContentLi);
+			    	 ul.append(replyDeleteLi);
 			    	 ul.append(replyLikeCountLi);
 			    	 ul.append(createDateLi);
 			    	 replyDiv.append(ul);
@@ -326,7 +425,75 @@
 			   }
 			});
        	 });
+	} //댓글 달기 끝 
+	
+	//=======댓글 삭제
+	function deleteReply(delBtn){
+		var delLi = delBtn.parentNode;
+		var delUl = delLi.parentNode; 
+		var deleteReplyId = delUl.querySelectorAll('li')[0].innerText;
+		
+		console.log(delLi);
+		console.log(delUl);
+		console.log(deleteReplyId);
+		
+ 		$.ajax({
+   			url:'${contextPath}/deleteReply.moim',
+   			data :{replyId : deleteReplyId},
+   			success : (data)=>{
+   				console.log("댓글 잘 삭제되었는지 : "+data);
+   				if(data==1){
+   					delUl.remove();
+   				}
+   				console.log("댓글ul 삭제 성공");
+   			}
+   		}); 
+	} //댓글삭제 끝
+	
+	
+	//=======댓글 좋아요 취소 / 추가
+// 	좋아요 누르면 전달될 데이터는 loginId와 replyId
+// 	백 ) 
+// 	[case1]isReplyLikeCountList[Rstatus.index]==1 일 때 deleteReplyLike => 삭제 => 반환값 1or0(성공or실패)
+// 	[case2]isReplyLikeCountList[Rstatus.index]==0 일 때 setReplyLike => 추가 => 반환값 1or0
+// 	프론트 )
+// 	[case1]반환 데이터가 1이면 => style.color = grey, 하트 아이콘 bi-suit-heart, replyLikeCount li의 innerText의 값 -1
+// 	[case2]반환 데이터가 1이면 => style.color = red, 하트 아이콘 bi-suit-heart-fill, replyLikeCount li의 innerText의 값 +1
+	
+	function changeReplyHeart(chBtn){
+		var chLi = chBtn.parentNode;
+		let likeNum = chLi.querySelector('span').innerText;
+		
+		var chUl = chLi.parentNode; 
+		var chLikeReplyId = chUl.querySelectorAll('li')[0].innerText*1;		
+		
+		if(chBtn.style.color=='grey'){
+			$.ajax({
+				url:'${contextPath}/setReplyLike.moim',
+				data :{replyId:chLikeReplyId,userId:userId},
+				success : (data)=>{
+					if(data==1){
+						chBtn.childNodes[1].classList.replace('bi-suit-heart', 'bi-suit-heart-fill');
+						chBtn.style.color = "red";
+						chLi.querySelector('span').innerText = parseInt(likeNum)+1;
+					}
+				}
+			})
+		} else {
+			$.ajax({
+				url:'${contextPath}/deleteReplyLike.moim',
+				data :{replyId:chLikeReplyId,userId:userId},
+				success : (data)=>{
+					if(data==1){
+						chBtn.childNodes[1].classList.replace('bi-suit-heart-fill', 'bi-suit-heart');
+						chBtn.style.color = "grey";
+						chLi.querySelector('span').innerText = parseInt(likeNum) - 1;
+					}
+				}
+				
+			})
+		}
 	}
-		</script>
+	</script>
 </body>
 </html>
