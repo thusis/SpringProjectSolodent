@@ -56,21 +56,30 @@ public class HomeController {
 		ArrayList<Board> AllBoardList = bService.selectUsedList(2);
 		ArrayList<Board> LatestUsedBoardList = new ArrayList<Board>();
 		ArrayList<Used> usedList = new ArrayList<>();
-		for(int i=0 ; i < 4 ; i++) {
-			LatestUsedBoardList.add(AllBoardList.get(i));
-			usedList.add(bService.selectUsed(LatestUsedBoardList.get(i).getBoardId()));
+		if(AllBoardList.size() != 0) {
+			if(AllBoardList.size() > 4) {
+				for(int i=0 ; i < 4 ; i++) {
+					LatestUsedBoardList.add(AllBoardList.get(i));
+					usedList.add(bService.selectUsed(LatestUsedBoardList.get(i).getBoardId()));
+				}
+			} else {
+				for(int i=0 ; i<AllBoardList.size() ; i++) {
+					LatestUsedBoardList.add(AllBoardList.get(i));
+					usedList.add(bService.selectUsed(LatestUsedBoardList.get(i).getBoardId()));
+				}
+			}
+			
+			AllBoardList.clear();
+			
+			ArrayList<Attachment> usedAttmList = new ArrayList<Attachment>();
+			for(int i=0 ; i<LatestUsedBoardList.size() ; i++) {
+				usedAttmList.add(bService.mainPageUsedList(LatestUsedBoardList.get(i).getBoardId()));
+			}
+			
+			model.addAttribute("LatestUsedBoardList", LatestUsedBoardList);
+			model.addAttribute("usedList", usedList);
+			model.addAttribute("usedAttmList", usedAttmList);
 		}
-
-		AllBoardList.clear();
-
-		ArrayList<Attachment> usedAttmList = new ArrayList<Attachment>();
-		for(int i=0 ; i<LatestUsedBoardList.size() ; i++) {
-			usedAttmList.add(bService.mainPageUsedList(LatestUsedBoardList.get(i).getBoardId()));
-		}
-
-		model.addAttribute("LatestUsedBoardList", LatestUsedBoardList);
-		model.addAttribute("usedList", usedList);
-		model.addAttribute("usedAttmList", usedAttmList);
 
 
 		return "home/home";
