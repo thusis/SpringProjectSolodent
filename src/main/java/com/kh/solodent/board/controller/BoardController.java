@@ -104,13 +104,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping("enrollUsed.bo")
-	public String enrollUsed(HttpServletRequest req) {
-		Member loginUser = ((Member)req.getSession().getAttribute("loginUser"));
-		
-		if(loginUser == null) {
-			throw new BoardException("로그인 후 이용해주세요.");
-		}
-		
+	public String enrollUsed() {
 		return "enrollUsed";
 	}
 	
@@ -499,12 +493,19 @@ public class BoardController {
 		ArrayList<Tip> tList = bService.selectTipList();
 		ArrayList<Attachment> aList = bService.selectAttmList(null);
 		
+		ArrayList<Integer> likeCountList = new ArrayList<Integer>();
+		
+		for(Board b : bList) {
+			likeCountList.add(bService.boardLikeCount(b.getBoardId()));
+		}
+		
 		if(bList != null) {
 			model.addAttribute("bList", bList);
 			model.addAttribute("tList", tList);
 			model.addAttribute("aList", aList);
 			model.addAttribute("pi", pi);
 			model.addAllAttributes(map);
+			model.addAttribute("likeCountList", likeCountList);
 			
 			return "boardTipList";
 		} else {
@@ -523,7 +524,7 @@ public class BoardController {
 		if(loginId != null) {
 			login = loginId;
 		}
-		
+		System.out.println(writer);
 		boolean yn = false;
 		if(!writer.equals(login)) {
 			yn = true;
@@ -588,25 +589,27 @@ public class BoardController {
 	}
 	
 	@RequestMapping("updateTip.bo")
-	public String updateTip(@RequestParam("deleteAttm") String[] deleteAttm, @ModelAttribute Board b,
+	public String updateTip(@RequestParam(value = "deleteAttm", required = false) String[] deleteAttm, @ModelAttribute Board b,
 											HttpServletRequest req, Model model,
-											@RequestParam("file") ArrayList<MultipartFile> files,
+											@RequestParam(value = "file", required = false) ArrayList<MultipartFile> files,
 											@RequestParam("tipCate") String category ) {
 		
 		
 		
 		b.setBoardCode(3);
 		ArrayList<Attachment> list = new ArrayList<Attachment>();
-		for(int i=0 ; i<files.size() ; i++) {
-			MultipartFile upload = files.get(i);
-			if(!upload.getOriginalFilename().equals("")) {
-				String[] returnArr = saveFile(upload, req);
-				if(returnArr[1] != null) {
-					Attachment a = new Attachment();
-					a.setRawname(upload.getOriginalFilename());
-					a.setRename(returnArr[1]);
-					a.setFileRoute(returnArr[0]);
-					list.add(a);
+		if(files != null) {
+			for(int i=0 ; i<files.size() ; i++) {
+				MultipartFile upload = files.get(i);
+				if(!upload.getOriginalFilename().equals("")) {
+					String[] returnArr = saveFile(upload, req);
+					if(returnArr[1] != null) {
+						Attachment a = new Attachment();
+						a.setRawname(upload.getOriginalFilename());
+						a.setRename(returnArr[1]);
+						a.setFileRoute(returnArr[0]);
+						list.add(a);
+					}
 				}
 			}
 		}
@@ -674,7 +677,7 @@ public class BoardController {
 		
 		if(updateAttmResult +updateBoardResult + updateTipResult == list.size() + 2) {
 			model.addAttribute("bId", b.getBoardId());
-			model.addAttribute("writer", ((Member)req.getSession().getAttribute("loginUser")).getNickName());
+			model.addAttribute("writer", ((Member)req.getSession().getAttribute("loginUser")).getId());
 			return "redirect:selectTip.bo";
 		} else {
 			throw new BoardException("꿀팁 게시글 수정 실패");
@@ -686,7 +689,6 @@ public class BoardController {
 		
 		int bResult = bService.deleteBoard(boardId);
 		int tResult = bService.deleteTip(boardId);
-		int deleteReply = bService.deleteReplyFromBoard(boardId);
 		
 		if(bResult + tResult == 2) {
 			return "redirect:tipList.bo";
@@ -838,32 +840,33 @@ public class BoardController {
 			e.printStackTrace();
 		}
 	}
-	
 	@RequestMapping("declareBoard.bo")
 	public String declareBoard(@RequestParam("boardWriter") String writer, @RequestParam("boardId") int boardId,
 												   @RequestParam("boardTitle") String boardTitle, HttpServletRequest req, Model model) {
-		
+
 		model.addAttribute("boardId", boardId);
 		model.addAttribute("boardWriter", writer);
 		model.addAttribute("boardTitle", boardTitle);
 		model.addAttribute("loginUser", ((Member)req.getSession().getAttribute("loginUser")).getId());
-		
+
 		System.out.println("팝업");
 		return "dPopup";
 	}
-	
+
 	@RequestMapping("insertDeclare.bo")
 	public String insertDeclare(@ModelAttribute Declare d, Model model) {
-		
+
 		//이미 신고했나 확인해야함
 		int result = bService.insertDeclare(d);
-		
+
 		if(result > 0) {
 			model.addAttribute("dclmsg", "신고가 정상적으로 접수되었습니다.");
 		} else {
 			model.addAttribute("dclmsg", "이미 신고한 게시물이거나 접수되지 않았습니다.");
 		}
-		
+
 		return "declareResult";
 	}
+	
+	
 }

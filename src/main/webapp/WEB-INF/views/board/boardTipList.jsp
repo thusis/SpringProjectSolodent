@@ -200,7 +200,6 @@
 				const category = document.getElementById('category').value;
 				const titleOrContent = document.getElementById('titleOrContent').value;
 				const word = document.getElementById('searchWord').value;
-// 				const page = 
 				
 				let paramStr = '?';
 				
@@ -210,14 +209,22 @@
 				
 				if(titleOrContent != '' && word.trim() != '') {
 						paramStr = paramStr + '&searchWhere=' + titleOrContent + '&word=' + word;
-				} else {
-					const gradeModalText = document.getElementById('dongjunModalText');
-					gradeModalText.innerHTML = '검색 분류를 선택하고<br> 키워드를 검색하세요.';
-					$('#dongjunModal').modal('show');
-				}
+				} 
+				
 				
 				if(paramStr != '?') {
-					location.href='${ contextPath }/searchTip.bo' + paramStr;
+					if((titleOrContent != '' && word.trim() == '') || (titleOrContent == '' && word.trim() != '')) {
+						const gradeModalText = document.getElementById('dongjunModalText');
+	 					gradeModalText.innerHTML = '검색 분류를 선택하고<br> 키워드를 검색하세요.';
+	 					$('#dongjunModal').modal('show');
+					
+					} else {
+						location.href='${ contextPath }/searchTip.bo' + paramStr;
+					}
+				} else {
+					const gradeModalText = document.getElementById('dongjunModalText');
+ 					gradeModalText.innerHTML = '검색 분류를 선택하고<br> 키워드를 검색하세요.';
+ 					$('#dongjunModal').modal('show');
 				}
 				
 			});

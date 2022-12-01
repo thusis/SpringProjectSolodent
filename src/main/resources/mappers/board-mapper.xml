@@ -375,7 +375,7 @@
 	</update>
 	
 	<select id="mainPageUsedList"  resultMap="attmResultSet">
-		select * from attachment where board_id = #{boardId}
+		select * from attachment where board_id = #{boardId} and is_thum = 'Y'
 	</select>
 	
 </mapper>
