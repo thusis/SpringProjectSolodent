@@ -372,7 +372,7 @@ public class BoardController {
 		
 		if(updateAttmResult +updateBoardResult + updateUsedResult == list.size() + 2) {
 			model.addAttribute("bId", b.getBoardId());
-			model.addAttribute("writer", ((Member)req.getSession().getAttribute("loginUser")).getNickName());
+			model.addAttribute("writer", ((Member)req.getSession().getAttribute("loginUser")).getId());
 			return "redirect:selectUsed.bo";
 		} else {
 			throw new BoardException("중고거래 게시글 수정 실패");
