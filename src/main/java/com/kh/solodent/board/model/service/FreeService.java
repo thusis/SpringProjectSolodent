@@ -60,7 +60,11 @@ public interface FreeService {
 
 
 
-	Board selectBoard(int bId, boolean yn);
+	Board selectBoard1(int bId, boolean yn);
+
+
+
+	int freeDelete(int bId);
 
 
 

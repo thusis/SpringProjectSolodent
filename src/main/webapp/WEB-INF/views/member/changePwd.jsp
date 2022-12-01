@@ -70,6 +70,7 @@
 	#formFooter {
 	  background-color: #f6f6f6;
 	  border-top: 1px solid #dce8f1;
+	  margin-top:30px;
 	  
 	  margin-bottom:0px;
 	  text-align: center;
@@ -318,20 +319,22 @@
 			  <li id="mainIcons2">.</li>
 			  <li >dent</li>
 			</ul>
+			
+			
     </div>
-	<form action="${ contextPath }/changePwd.me" method="POST" id="for">
+	<form action="${ contextPath }/changePwd.me?bId=+${ findPwd }" method="POST" id="for">
 					<div class="in1">
 					
-				<input type="text" class="in fadeIn second input" name="email" id="memail" placeholder="비밀번호">
+				<input type="text" class="in fadeIn second input" name="pwd" id="memail" placeholder="비밀번호">
 				
-				<input type="text" class="in fadeIn second input" name="email" id="memail" placeholder="비밀번호 확인">
+				<input type="text" class="in fadeIn second input" name="pwd1" id="memail" placeholder="비밀번호 확인">
 					</div>
 					
-					 <button  id="sub" class="fadeIn fourth" >비밀번호 변경</button>
+					 <button  id="sub" style="width:85%; height:50px; border:none; maring-top:20px; border-radius:5px;"  class="fadeIn fourth" >비밀번호 변경</button>
 	</form>
  
     <div id="formFooter">
-      <a class="lo fadeIn five" href="${ contextPath }/loginView.me">로그인</a>
+      <a class="lo fadeIn five" "href="${ contextPath }/loginView.me">로그인</a>
        
     </div>
 

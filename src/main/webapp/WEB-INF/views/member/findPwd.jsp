@@ -356,7 +356,7 @@
 			  <li >dent</li>
 			</ul>
     </div>
-	<form action="${ contextPath }/changePwd.me" method="POST" id="for">
+	<form action="${ contextPath }/findPwdDetail.me" method="POST" id="for">
 				<div class="in1">
 				<input type="text" class="in fadeIn second input" name="id"  placeholder="아이디">
 					</div>

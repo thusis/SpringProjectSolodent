@@ -105,6 +105,18 @@ public class FreeServiceimpl implements FreeService {
 		return fDAO.insertReply(sqlSession, r);
 	}
 
+	@Override
+	public int freeDelete(int bId) {
+		// TODO Auto-generated method stub
+		return fDAO.freeDelete(sqlSession, bId);
+	}
+
+	@Override
+	public Board selectBoard1(int bId, boolean yn) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 	

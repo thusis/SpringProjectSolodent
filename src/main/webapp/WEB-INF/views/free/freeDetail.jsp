@@ -70,7 +70,7 @@
 			  					<div class="butt2">
 			  					<c:if test="${ loginUser.id eq b.userId }">
 			  					<button class="butt1" onclick="location.href='${contextPath}/freeUpdate.fe?bId= '+' ${b.boardId}'" style="margin-right:10px;">수정</button>
-			  					<button class="butt1">삭제</button>
+			  					<button class="butt1" onclick="location.href='${contextPath}/freeDelete.fe?bId= '+' ${b.boardId}'">삭제</button>
 			  					</c:if>
 			  					</div>
 			  					 </li>

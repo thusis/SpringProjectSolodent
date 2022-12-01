@@ -92,7 +92,7 @@
   	<select id="selectBoardb" resultMap="freeResultSet">
   		select *
   		from board
-  		where BOARD_ID = #{bId}
+  		where BOARD_ID = #{bId} and status = 'Y'
   	</select>
   	<update id="updateBoard">
   		update board
@@ -117,4 +117,10 @@
 	<insert id="insertReply">
 		insert into reply values(seq_rid.nextval, #{replyContent}, sysdate, default, #{userId}, #{boardId})
 	</insert>
+	
+	<update id="freeDelete">
+  		update board
+  		set status = 'N'
+  		where  BOARD_ID = #{bId}
+  	</update>
   </mapper>
