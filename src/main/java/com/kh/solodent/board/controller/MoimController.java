@@ -41,42 +41,17 @@ import com.kh.solodent.member.model.vo.Member;
 @Controller
 public class MoimController {
 	
-	/**
-	 * 남은 것****************************
-	 * [ ]✳ 게시글 상세 수정
-	 * [v]✳ 댓글 삭제
-	 * [v]✳ 댓글 좋아요
-	 * [ ]✳ 오라클 스케줄러 세팅
-	 * [ ]   메인 페이지 최신 글 모아 보여주기
-	 * [ ]   댓글 수정 ? 
-	 * [ ]   게시글 줄 바꿈 적용 (안 될 듯)
-	 * *********************************
-	 */
-
 	@Autowired
 	private MoimService mService;
 
-	/** 모임게시판 리스트 조회
-	 */
 	@RequestMapping("list.moim")
 	public String selectMoimList(@RequestParam(value="page", required=false) Integer page, Model model) {
-		
-		/**
-		 * 멤버DB랑 로그인 메소드 구현하기 전까지 
-		 * application 영역에 id 랑 닉네임 관리자로 설정
-		 * 추후 삭제 예정
-		 *******************************************/
-//		ServletContext application = request.getSession().getServletContext();
-//		application.setAttribute("memberId", "admin");
-//		application.setAttribute("nickname", "관리자");
-		/*******************************************/
 		
 		int currentPage = 1;
 		if(page!=null) {
 			currentPage = page;
 		}
 		int listCount =  mService.getListCount();
-//		System.out.println("모임 listcount :" + listCount);
 		
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 6);
 		ArrayList<Moim> list = mService.selectMoimList(pi);
@@ -113,7 +88,6 @@ public class MoimController {
 	}
 	
 	/**모임 게시글 삽입
-	 * 
 	 * @param moim
 	 * @param moimdate
 	 * @param sido
@@ -174,8 +148,6 @@ public class MoimController {
 			}
 		}
 		
-//		System.out.println("insertBoard.moim에서 모임: " + moim);
-		
 		int result = mService.insertMoim(moim,list);
 		if(result>0) {
 			return "redirect:list.moim";
@@ -184,9 +156,7 @@ public class MoimController {
 		}
 	}
 	
-	/** Attachment 저장
-	 * 
-	 */
+	/** Attachment 저장 */
 	private String[] saveFile(MultipartFile attachment, HttpServletRequest request) {
 		String root = request.getSession().getServletContext().getRealPath("resources"); // WEBAPP > resources까지 접근
 		String savePath = root + "\\uploadFiles"; //DB에 전달할 값
@@ -201,10 +171,6 @@ public class MoimController {
 		String rawname = attachment.getOriginalFilename();
 		String rename = sdf.format(new Date(System.currentTimeMillis())) + ranNum + rawname.substring(rawname.lastIndexOf("."));
 		String fileRoute = folder + "\\" + rename; //fileRoute는 실제로 저장하는 곳, savePath는 DB전달값
-		
-//		System.out.println("original"+rawname);
-//		System.out.println("rename"+rename);
-//		System.out.println("fileRoute"+fileRoute);
 
 		try {
 			attachment.transferTo(new File(fileRoute));
@@ -258,12 +224,6 @@ public class MoimController {
 		}
 		int boardScrapCount = mService.getBoardScrapCount(boardId);
 		int boardLikeCount = mService.getBoardLikeCount(boardId);
-		
-		/*
-		replyList랑 loginId를 넘겨,
-		마지막 단계(DAO)에서 for 문 돌려서
-		replyList.get(i).replyId 랑 loginId를 통해 1이나 0을 받아와 그냥 SELECT COUNT(*)를 LIST사이즈만큼 돌려! 매퍼 길게 쓸 생각xxx
-		*/
 		
 		// 로그인시 1이나 0을 반영하는 좋아요 조회
 		int isLike = 0;
@@ -385,7 +345,7 @@ public class MoimController {
 		}
 	}
 	
-	//****************************댓글******************************ㄴ******//
+	//****************************댓글********************************//
 	/** 댓글 작성**/
 	@RequestMapping(value = "insertReply.moim")
 	public void insertReply(@ModelAttribute Reply r, HttpServletResponse response) {
@@ -418,7 +378,6 @@ public class MoimController {
 	@ResponseBody
 	public int deleteReply(@RequestParam("replyId") int replyId,
 			HttpServletResponse response) {
-		// 일단 성공하면 1, 실패하면 0 반환하자
 		return mService.deleteReply(replyId);
 	}
 	
@@ -436,10 +395,6 @@ public class MoimController {
 		if(isReplyLike(rLikevo)==0) { // 한 번 더 문턱 걸기
 			result = mService.setReplyLike(rLikevo);
 		}
-		System.out.println(result);
-//		int count = mService.getBoardLikeCount(likevo.getBoardId());
-//		스크랩이나 게시글 좋아요는 count도 불러와서 다시 세팅해줬지만, 각 댓글의 좋아요는 view 단에서 list로 관리하고 있기 때문에 현 구조상 불러오기 어려움.
-//		DB에 값 세팅(insert/delete)만 해주고 그 결과값인 1만 리턴하자. 각 댓글의 좋아요수는 view에서 자바스크립트로 처리
 		return result+"";
 	}
 	
@@ -561,13 +516,11 @@ public class MoimController {
 			@ModelAttribute Declare dcl, 
 			Model model) {
 		int isDeclared = mService.getIsDeclared(dcl);
-//		System.out.println(isDeclared);
 		if(isDeclared>0) {
 			model.addAttribute("dclmsg","이미 신고한 게시글입니다.");
 			return "declared-popup";
 		} else {
 			int result = mService.declareBoard(dcl);
-//			System.out.println("신고결과"+result);
 			if (result > 0) {
 				model.addAttribute("dclmsg", "신고한 게시글입니다.");
 				return "declared-popup";
@@ -577,7 +530,6 @@ public class MoimController {
 			}
 		}
 	}
-	
 	
 	/**
 	 * 모임게시글 수정하고 해당 모임게시글 페이지로 **********************************
@@ -593,14 +545,11 @@ public class MoimController {
 			@RequestParam("attachment") ArrayList<MultipartFile> files,
 			HttpServletRequest request, Model model	) {
 		
-		
 		/*moimdate*/
 		Date start = Date.valueOf(moimdate.split(" 부터 ")[0]);
 		Date end = Date.valueOf(moimdate.split(" 부터 ")[1]);
 		moim.setMoimStart(start);
 		moim.setMoimEnd(end);
-		System.out.println(22);
-		System.out.println(moim);
 		
 		/*local*/
 		String local = null;
@@ -609,43 +558,27 @@ public class MoimController {
 		}
 		moim.setLocal(local);
 		
-		System.out.println(moim);
-		System.out.println(page);
-		
 		for(String s: deleteAttm) { // 기존에 있는 파일들 중 삭제할 파일 =>
 			s = s.trim();
-			System.out.println("삭제할놈들입니다: "+s);
 		}
-		
-		System.out.println(11);
-		System.out.println("모델입니다:"+ model);
-		
 		
 		/************attachment= list(=attach) ==> 새로 추가할 친구들******/
 		ArrayList<Attachment> list = new ArrayList<Attachment>();
 		for(int i=0; i<files.size(); i++) {
 			MultipartFile upload = files.get(i);
 			
-			System.out.println("44, 업로드될 놈들입니다: "+upload);
-			
 			if(!upload.getOriginalFilename().equals("")) {
 				String[] returnArr = saveFile(upload, request);
-				System.out.println("55, 새로 저장될 친구들의 savePath입니다 "+returnArr[0]);
-				System.out.println("55, 새로 저장될 친구들의 rename입니다 "+returnArr[1]);
 				
 				if(returnArr[1]!=null) {
 					Attachment attach = new Attachment();
 					attach.setRawname(upload.getOriginalFilename());
 					attach.setRename(returnArr[1]);
 					attach.setFileRoute(returnArr[0]);
-					
-					System.out.println("66, 저장이 잘 되었다면 true가 반환됩니다."+list.add(attach));
-					System.out.println("77, 새로이 추가될 Attachment 객체입니다."+ attach);
 				}
 			}
 		}
 		
-		System.out.println("675st code : " + moim);
 		for(int i=0; i<list.size();i++) {
 			System.out.println(list.get(i));
 		}
@@ -654,15 +587,12 @@ public class MoimController {
 		ArrayList<String> delRename = new ArrayList<>();
 		ArrayList<String> isThum = new ArrayList<>(); //썸네일인지
 		
-		System.out.println("77"+delRename + " / " + isThum);
 		for(String rename : deleteAttm) {  //name="deleteAttm"으로 받아온 값들의 value 2022113019315270991814.JPG/N
-			System.out.println("88"+rename);
 			if(!rename.equals("")) {
 				String[] split = rename.split("/");
 				delRename.add(split[0]);
 				isThum.add(split[1]);
 			}
-			System.out.println("delRename과 isThum (ArrayList<String>)"+delRename+ " "+isThum);
 		}
 		
 		int deleteAttmResult = 0;
@@ -670,27 +600,21 @@ public class MoimController {
 		
 		if(!delRename.isEmpty()) {
 			deleteAttmResult = mService.deleteAttm(delRename); // DB에서 삭제
-			System.out.println("1010, 만약 삭제할 칭구들의 rename이 빈 값이 아니라면 deleteAttm의 결과는 :  "+ deleteAttmResult);
 			if(deleteAttmResult>0) {
 				for(String rename:delRename) {
 					deleteFile(rename, request); //프로젝트에서 삭제
-					System.out.println("1111 "+ rename + ": deleted");
 				}
-				System.out.println(1212);
 			}
 			if(delRename.size()==deleteAttm.length) { //기존파일을 전부 삭제하겠다고 한 경우
 				existBeforeAttm = false;
 				if(list.isEmpty()) { // 기존 파일도 모두 삭제하고, 새로 등록한 파일목록도 비워져있는 경우를 상정
-					System.out.println("새로 등록한 파일 목록이 비워져있는, 즉 새 파일이 없는 경우. modal 팝업으로 막아놓아 발생할 수 없는 경우이다.");
 				}
 			} else { // 기존 파일이 남아있다면
 				for(String th : isThum) {
 					if(th.equals("Y") ) {
-						System.out.println("남아있는 파일이 썸네일이며, 썸네일에서 바꿔야할 경우 updateAttmLevel 메소드 진행");
 						mService.updateAttmLevel(moim.getBoardId());
 						break;
 					}
-					System.out.println("1414, 땡!" +  th +"는 N임");
 				}
 			}
 		}
@@ -699,17 +623,13 @@ public class MoimController {
 			Attachment a = list.get(i);
 			a.setBoardId(moim.getBoardId());
 			
-			System.out.println("1515 새로 첨부할 친구"+i+"번째: "+ a);
 			if(existBeforeAttm) {
 				a.setIsThum("N");
-				System.out.println(1616);
 			} else {
 				if(i==0) {
 					a.setIsThum("Y");
-					System.out.println(1717);
 				} else {
 					a.setIsThum("N");
-					System.out.println(1818);
 				}
 			}
 		} // =======여기까지가 세팅 끝=============
@@ -717,9 +637,7 @@ public class MoimController {
 		int updateMoimResult = mService.updateMoim(moim);
 		int updateAttmResult = 0;
 		if(!list.isEmpty()) {
-			System.out.println(list);
 			updateAttmResult = mService.insertNewAttmUpdate(moim, list);
-			System.out.println("1919, 새로 올라갈 파일들의 목록과 그를 insert 한 값을 반환" +list+" "+list.size()+" "+ updateAttmResult);
 		}
 		
 		model.addAttribute("moim", moim);
@@ -727,26 +645,7 @@ public class MoimController {
 		model.addAttribute("userId",moim.getUserId() );
 		model.addAttribute("page", page);
 		return "redirect:selectMoim.moim";
-		
-//		if(updateAttmResult ==list.size()+1) {
-//			if(delRename.size() == deleteAttm.length && updateAttmResult == 0) {
-//				// 아무것도 수정되지 않은 경우
-//				System.out.println(2020);
-//				model.addAttribute("boardId", moim.getBoardId());
-//				model.addAttribute("userId",moim.getUserId() );
-//				model.addAttribute("page", page);
-//				return " redirect: selectMoim.moim";
-//			} else {
-//				model.addAttribute("boardId", moim.getBoardId());
-//				model.addAttribute("userId",moim.getUserId() );
-//				model.addAttribute("page", page);
-//				System.out.println(2121);
-//				return "redirect:selectMoim.moim" ; 
-//			}
-//		} else {
-//			System.out.println(2222);
-//			throw new BoardException("첨부파일 게시글 수정 실패");
-//		}
+
 	}
 
 	private void deleteFile(String fileName, HttpServletRequest request) {
