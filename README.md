@@ -40,10 +40,6 @@
 - SourceTree
 <br>
 
-## Database Structure (ERD)
-( 수정사항을 반영하여 업데이트 예정입니다 ) 
-<br><br>
-
 ## 서비스 기능
 - 자취꿀팁 게시판
 - 중고거래 게시판
